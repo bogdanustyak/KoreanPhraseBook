@@ -1,8 +1,6 @@
 package com.leoart.koreanphrasebook.chapters
 
-import com.leoart.koreanphrasebook.chapters.models.Chapter
 import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
-import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 

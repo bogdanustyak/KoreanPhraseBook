@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(ChapterFragment.newInstance(), "Chapter")
-        adapter.addFragment(DialogsFragment.newInstance(dialogs), "Dialogs")
+        adapter.addFragment(DialogsFragment.newInstance(), "Dialogs")
         adapter.addFragment(VocabularyFragment(), "Vocabulary")
         viewPager.adapter = adapter
     }

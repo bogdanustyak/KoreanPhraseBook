@@ -11,40 +11,52 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.chapters.models.DialogsModel
 import com.leoart.koreanphrasebook.dialogs.dialog.DialogActivity
 import com.leoart.koreanphrasebook.dialogs.models.Dialog
 
-class DialogsFragment : Fragment(), DialogsRecyclerAdapter.DialogsListInteractionListener {
+class DialogsFragment : Fragment(), DialogsView, DialogsRecyclerAdapter.DialogsListInteractionListener {
 
-    private var dialogs: List<Dialog>? = null
+    private var adapter: DialogsRecyclerAdapter? = null;
+    var rvDialogs: RecyclerView? = null
+
+    override fun showDialogs(dialogs: List<DialogsModel>?) {
+        adapter?.setDialogs(dialogs)
+
+    }
+
+    private var dialogs: List<DialogsModel>? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_dialogs, container, false)
 
-        val rvDialogs = view.findViewById(R.id.rv_dialogs) as RecyclerView
+        rvDialogs = view.findViewById(R.id.rv_dialogs) as RecyclerView
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        rvDialogs.layoutManager = layoutManager
-        rvDialogs.itemAnimator = DefaultItemAnimator()
+        rvDialogs?.layoutManager = layoutManager
+        rvDialogs?.itemAnimator = DefaultItemAnimator()
 
-        rvDialogs.adapter = DialogsRecyclerAdapter(dialogs, this)
+        adapter = DialogsRecyclerAdapter(dialogs, this)
+        rvDialogs?.adapter = adapter
+
+        DialogsPresenter(this)
+                .requestDialogs()
 
         return view
     }
 
-    override fun onDialogClick(dialog: Dialog) {
-        val intent = Intent(activity, DialogActivity::class.java)
-        intent.putExtra(DialogActivity.DIALOG, dialog)
-        startActivity(intent)
+    override fun onDialogClick(dialog: DialogsModel) {
+//        val intent = Intent(activity, DialogActivity::class.java)
+//        intent.putExtra(DialogActivity.DIALOG, dialog)
+//        startActivity(intent)
     }
 
     companion object {
 
-        fun newInstance(dialogs: List<Dialog>): DialogsFragment {
+        fun newInstance(): DialogsFragment {
             val fragment = DialogsFragment()
             val args = Bundle()
             fragment.arguments = args
-            fragment.dialogs = dialogs
             return fragment
         }
     }
