@@ -1,6 +1,5 @@
 package com.leoart.koreanphrasebook.dialogs
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
@@ -9,11 +8,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.chapters.models.DialogsModel
-import com.leoart.koreanphrasebook.dialogs.dialog.DialogActivity
-import com.leoart.koreanphrasebook.dialogs.models.Dialog
 
 class DialogsFragment : Fragment(), DialogsView, DialogsRecyclerAdapter.DialogsListInteractionListener {
 

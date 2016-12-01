@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.chapters;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -68,12 +69,12 @@ public class ChaptersRecyclerAdapter extends RecyclerView.Adapter<ChaptersRecycl
     }
 
     static class ChapterViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout ll_chapter;
+        CardView ll_chapter;
         TextView tvChapterName;
 
-        public ChapterViewHolder(View itemView) {
+        ChapterViewHolder(View itemView) {
             super(itemView);
-            ll_chapter = (LinearLayout) itemView.findViewById(R.id.ll_chapter);
+            ll_chapter = (CardView) itemView.findViewById(R.id.ll_chapter);
             tvChapterName = (TextView) itemView.findViewById(R.id.tv_chapter_name);
         }
     }

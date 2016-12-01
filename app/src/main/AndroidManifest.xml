@@ -19,7 +19,7 @@
         </activity>
         <activity android:name=".chapters.phrase.PhraseListActivity" />
         <activity android:name=".chapters.category.CategoryScreenActivity" />
-        <activity android:name=".dialogs.dialog.DialogActivity"></activity>
+        <activity android:name=".dialogs.dialog.DialogActivity"/>
     </application>
 
 </manifest>
