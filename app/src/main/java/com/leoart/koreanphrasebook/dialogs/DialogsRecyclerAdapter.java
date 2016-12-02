@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.leoart.koreanphrasebook.R;
 import com.leoart.koreanphrasebook.chapters.models.DialogsModel;
+import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse;
 import com.leoart.koreanphrasebook.dialogs.models.Dialog;
 
 import java.util.List;
@@ -18,10 +19,10 @@ import java.util.List;
  */
 public class DialogsRecyclerAdapter extends RecyclerView.Adapter<DialogsRecyclerAdapter.DialogViewHolder> {
 
-    private List<DialogsModel> dialogs;
+    private List<DialogResponse> dialogs;
     private DialogsListInteractionListener interactionListener;
 
-    public DialogsRecyclerAdapter(List<DialogsModel> dialogs, DialogsListInteractionListener interactionListener) {
+    public DialogsRecyclerAdapter(List<DialogResponse> dialogs, DialogsListInteractionListener interactionListener) {
         this.dialogs = dialogs;
         this.interactionListener = interactionListener;
     }
@@ -44,7 +45,7 @@ public class DialogsRecyclerAdapter extends RecyclerView.Adapter<DialogsRecycler
 
     @Override
     public void onBindViewHolder(DialogViewHolder holder, int position) {
-        final DialogsModel dialog = dialogs.get(position);
+        final DialogResponse dialog = dialogs.get(position);
         if (dialog != null) {
             if (!TextUtils.isEmpty(dialog.getName())) {
                 holder.tv_dialog_name.setText(dialog.getName());
@@ -62,7 +63,7 @@ public class DialogsRecyclerAdapter extends RecyclerView.Adapter<DialogsRecycler
         return 0;
     }
 
-    public void setDialogs(List<DialogsModel> dialogs){
+    public void setDialogs(List<DialogResponse> dialogs){
         this.dialogs = dialogs;
         notifyDataSetChanged();
     }
@@ -77,6 +78,6 @@ public class DialogsRecyclerAdapter extends RecyclerView.Adapter<DialogsRecycler
     }
 
     public interface DialogsListInteractionListener {
-        void onDialogClick(DialogsModel dialog);
+        void onDialogClick(DialogResponse dialog);
     }
 }

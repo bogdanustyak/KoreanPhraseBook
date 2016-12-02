@@ -6,9 +6,14 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.text.TextUtils
 import android.view.MenuItem
 import com.leoart.koreanphrasebook.R
-import com.leoart.koreanphrasebook.dialogs.models.Dialog
+import com.leoart.koreanphrasebook.data.network.firebase.DialogsRequest
+import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
+import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
+import rx.Subscriber
+import java.util.*
 
 class DialogActivity : AppCompatActivity(), DialogMessagesView {
 
@@ -16,13 +21,15 @@ class DialogActivity : AppCompatActivity(), DialogMessagesView {
         val DIALOG = "dialog"
     }
 
-    var dialog: Dialog? = null
+    var dialog: DialogResponse? = null
+
+    private val adapter = DialogMessagesRecyclerAdapter(ArrayList<Replic>())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dialog)
 
-       setupToolbar()
+        setupToolbar()
 
         val layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
         val rvDialog = findViewById(R.id.rv_dialog) as RecyclerView
@@ -30,12 +37,31 @@ class DialogActivity : AppCompatActivity(), DialogMessagesView {
         rvDialog.itemAnimator = DefaultItemAnimator()
 
         dialog = intent.getParcelableExtra(DIALOG)
-        rvDialog.adapter = DialogMessagesRecyclerAdapter(dialog?.messages)
+        rvDialog.adapter = adapter
+
+        if (dialog != null)
+            if (!TextUtils.isEmpty(dialog!!.uid))
+                DialogsRequest().getAllDialogReplics(dialog!!.uid)
+                        .subscribe(object : Subscriber<List<Replic>>() {
+                            override fun onError(e: Throwable?) {
+                                throw UnsupportedOperationException("not implemented")
+                            }
+
+                            override fun onCompleted() {
+
+                            }
+
+                            override fun onNext(t: List<Replic>?) {
+                                adapter.updateReplics(t)
+                            }
+
+                        })
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId){
-            R.id.home ->{
+        when (item?.itemId) {
+            R.id.home -> {
                 onBackPressed()
             }
         }

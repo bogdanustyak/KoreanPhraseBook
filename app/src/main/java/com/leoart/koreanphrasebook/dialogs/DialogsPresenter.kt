@@ -1,6 +1,8 @@
 package com.leoart.koreanphrasebook.dialogs
 
 import com.leoart.koreanphrasebook.data.network.firebase.DialogsRequest
+import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
+import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
@@ -10,13 +12,20 @@ import rx.schedulers.Schedulers
 class DialogsPresenter(val view: DialogsView?) {
 
     fun requestDialogs() {
-        DialogsRequest()
-                .getAllDialogs()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe ({
-                    dialogs ->
-                    view?.showDialogs(dialogs)
+        DialogsRequest().getAllDialogNames()
+                .subscribe(object : Subscriber<List<DialogResponse>>() {
+                    override fun onError(e: Throwable?) {
+                        throw UnsupportedOperationException("not implemented")
+                    }
+
+                    override fun onCompleted() {
+
+                    }
+
+                    override fun onNext(dialogs: List<DialogResponse>?) {
+                        view?.showDialogs(dialogs)
+                    }
+
                 })
     }
 }

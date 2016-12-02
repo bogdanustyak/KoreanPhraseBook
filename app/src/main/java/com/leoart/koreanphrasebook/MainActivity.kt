@@ -27,6 +27,19 @@ class MainActivity : AppCompatActivity() {
 
         val tabLayout = findViewById(R.id.tabs) as TabLayout
         tabLayout.setupWithViewPager(viewPager)
+
+
+        //        try {
+//            val writer = DialogsWriter()
+//            val dialog = DialogsStream(assets.open("dialog1.txt")).parse()
+//            for (message in dialog.getMessages()) {
+//                writer.addReplica("dialog5", message)
+//                println(message.toString())
+//            }
+//        } catch (e: IOException) {
+//            e.printStackTrace()
+//        }
+
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
