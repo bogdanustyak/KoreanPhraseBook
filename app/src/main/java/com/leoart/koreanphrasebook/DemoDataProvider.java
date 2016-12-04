@@ -1,11 +1,11 @@
 package com.leoart.koreanphrasebook;
 
-import com.leoart.koreanphrasebook.chapters.models.Category;
-import com.leoart.koreanphrasebook.chapters.models.Chapter;
-import com.leoart.koreanphrasebook.chapters.models.Phrase;
-import com.leoart.koreanphrasebook.dialogs.models.Author;
-import com.leoart.koreanphrasebook.dialogs.models.Dialog;
-import com.leoart.koreanphrasebook.dialogs.models.Message;
+import com.leoart.koreanphrasebook.ui.chapters.models.Category;
+import com.leoart.koreanphrasebook.ui.chapters.models.Chapter;
+import com.leoart.koreanphrasebook.ui.chapters.models.Phrase;
+import com.leoart.koreanphrasebook.ui.dialogs.models.Author;
+import com.leoart.koreanphrasebook.ui.dialogs.models.Dialog;
+import com.leoart.koreanphrasebook.ui.dialogs.models.Message;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,11 +7,13 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import com.google.firebase.database.*
 
-import com.leoart.koreanphrasebook.chapters.ChapterFragment
-import com.leoart.koreanphrasebook.chapters.models.Chapter
-import com.leoart.koreanphrasebook.dialogs.DialogsFragment
-import com.leoart.koreanphrasebook.dialogs.models.Dialog
-import com.leoart.koreanphrasebook.vocabulary.VocabularyFragment
+import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
+import com.leoart.koreanphrasebook.ui.chapters.models.Chapter
+import com.leoart.koreanphrasebook.data.parsers.vocabulary.DictionaryParser
+import com.leoart.koreanphrasebook.ui.ViewPagerAdapter
+import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
+import com.leoart.koreanphrasebook.ui.dialogs.models.Dialog
+import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,16 +31,8 @@ class MainActivity : AppCompatActivity() {
         tabLayout.setupWithViewPager(viewPager)
 
 
-        //        try {
-//            val writer = DialogsWriter()
-//            val dialog = DialogsStream(assets.open("dialog1.txt")).parse()
-//            for (message in dialog.getMessages()) {
-//                writer.addReplica("dialog5", message)
-//                println(message.toString())
-//            }
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//        }
+        //DictionaryParser(baseContext).writeToFirebaseDB()
+
 
     }
 

@@ -5,7 +5,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
-import com.leoart.koreanphrasebook.dialogs.models.Dialog
+import com.leoart.koreanphrasebook.ui.dialogs.models.Dialog
 import rx.Observable
 import java.util.*
 
