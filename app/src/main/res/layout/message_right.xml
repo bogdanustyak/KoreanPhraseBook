@@ -8,72 +8,27 @@
     android:paddingTop="5dp">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentStart="true">
+        android:id="@+id/relView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="25dp"
+        android:background="@drawable/sent_message1"
+        android:padding="12dp">
 
         <TextView
-            android:id="@+id/txtSender"
+            android:id="@+id/txtMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:paddingBottom="6dp"
-            android:paddingEnd="10dp"
-            android:paddingStart="0dp"
-            android:singleLine="true"
-            android:text="Sender Ipsum"
+            android:paddingEnd="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingStart="12dp"
+            android:text="Hello, how are you?"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/txtDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="3dp"
-            android:layout_toEndOf="@+id/devivery"
-            android:paddingBottom="1dp"
-            android:paddingEnd="0dp"
-            android:paddingStart="2dp"
-            android:text="14:54"
-            android:textColor="@color/colorPrimaryDark"
-            android:visibility="visible" />
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/devivery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:src="@drawable/sent"
-            android:visibility="invisible" />
-
-        <RelativeLayout
-            android:id="@+id/relView1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/txtDate"
-            android:layout_marginStart="25dp"
-            android:background="@drawable/sent_message1"
-            android:padding="12dp">
-
-            <TextView
-                android:id="@+id/txtMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:paddingEnd="12dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingStart="12dp"
-                android:text="Hello, how are you?"
-                android:textColor="@android:color/black"
-                android:textIsSelectable="true"
-                android:textSize="14sp" />
-
-        </RelativeLayout>
+            android:textIsSelectable="true"
+            android:textSize="14sp" />
     </RelativeLayout>
+
 </RelativeLayout>

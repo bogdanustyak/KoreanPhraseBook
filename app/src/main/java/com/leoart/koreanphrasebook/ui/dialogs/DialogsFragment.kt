@@ -19,9 +19,8 @@ class DialogsFragment : Fragment(), DialogsView, DialogsRecyclerAdapter.DialogsL
     private var adapter: DialogsRecyclerAdapter? = null;
     var rvDialogs: RecyclerView? = null
 
-    override fun showDialogs(dialogs: List<DialogResponse>?) {
-        adapter?.setDialogs(dialogs)
-
+    override fun showDialogs(chapters: List<DialogResponse>?) {
+        adapter?.setDialogs(chapters)
     }
 
     private var dialogs: List<DialogResponse>? = null

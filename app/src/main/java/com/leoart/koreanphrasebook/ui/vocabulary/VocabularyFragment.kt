@@ -2,6 +2,7 @@ package com.leoart.koreanphrasebook.ui.vocabulary
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,15 +39,17 @@ class VocabularyFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : Subscriber<Dictionary>(){
                     override fun onError(e: Throwable?) {
-                        throw UnsupportedOperationException("not implemented")
+                        e?.printStackTrace()
+                        //throw UnsupportedOperationException("not implemented")
                     }
 
                     override fun onNext(t: Dictionary?) {
-                        throw UnsupportedOperationException("not implemented")
+                        Log.d("TAG", t.toString())
+                        //throw UnsupportedOperationException("not implemented")
                     }
 
                     override fun onCompleted() {
-                        throw UnsupportedOperationException("not implemented")
+                       // throw UnsupportedOperationException("not implemented")
                     }
 
                 })
