@@ -3,8 +3,8 @@ package com.leoart.koreanphrasebook.data.network.firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.leoart.koreanphrasebook.chapters.models.Category
-import com.leoart.koreanphrasebook.chapters.models.Chapter
+import com.leoart.koreanphrasebook.ui.chapters.models.Category
+import com.leoart.koreanphrasebook.ui.chapters.models.Chapter
 import rx.Observable
 import java.util.*
 

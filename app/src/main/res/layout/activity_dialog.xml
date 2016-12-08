@@ -5,7 +5,7 @@
     android:id="@+id/activity_dialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.leoart.koreanphrasebook.dialogs.dialog.DialogActivity">
+    tools:context=".ui.dialogs.dialog.DialogActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
