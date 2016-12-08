@@ -6,7 +6,9 @@ import java.util.*
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
 
-class Dictionary @JvmOverloads constructor(private val data: HashMap<Char, List<Word>>) {
+class Dictionary(private var data: HashMap<Char, List<Word>>) {
+
+    constructor(): this(HashMap())
 
     fun add(letter: Char, words: List<Word>) {
         this.data.put(letter, words)
