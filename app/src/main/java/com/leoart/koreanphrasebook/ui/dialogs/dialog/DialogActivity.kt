@@ -44,6 +44,7 @@ class DialogActivity : AppCompatActivity(), DialogMessagesView {
                 DialogsRequest().getAllDialogReplics(dialog!!.uid)
                         .subscribe(object : Subscriber<List<Replic>>() {
                             override fun onError(e: Throwable?) {
+                                e?.printStackTrace()
                                 throw UnsupportedOperationException("not implemented")
                             }
 
@@ -60,13 +61,14 @@ class DialogActivity : AppCompatActivity(), DialogMessagesView {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.home -> {
+        when (item?.itemId){
+            android.R.id.home -> {
                 onBackPressed()
             }
         }
         return super.onOptionsItemSelected(item)
     }
+
 
     private fun setupToolbar() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar
