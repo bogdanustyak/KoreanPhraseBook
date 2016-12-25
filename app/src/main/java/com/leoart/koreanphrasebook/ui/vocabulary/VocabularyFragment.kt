@@ -38,15 +38,15 @@ class VocabularyFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : Subscriber<Dictionary>(){
                     override fun onError(e: Throwable?) {
-                        throw UnsupportedOperationException("not implemented")
+                        e?.printStackTrace()
                     }
 
                     override fun onNext(t: Dictionary?) {
-                        throw UnsupportedOperationException("not implemented")
+                        println("Hello")
                     }
 
                     override fun onCompleted() {
-                        throw UnsupportedOperationException("not implemented")
+
                     }
 
                 })

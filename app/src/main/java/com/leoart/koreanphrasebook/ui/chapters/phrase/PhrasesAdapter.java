@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseViewHolder> {
 
-    private final List<Phrase> phraseList;
+    private List<Phrase> phraseList;
 
     public PhrasesAdapter(List<Phrase> phraseList) {
         this.phraseList = phraseList;
@@ -61,6 +61,11 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseVi
             return phraseList.size();
         }
         return 0;
+    }
+
+    public void updatePhrases(List<Phrase> phrases) {
+        this.phraseList = phrases;
+        notifyDataSetChanged();
     }
 
     static class PhraseViewHolder extends RecyclerView.ViewHolder {

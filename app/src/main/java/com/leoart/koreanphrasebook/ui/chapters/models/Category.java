@@ -4,11 +4,20 @@ package com.leoart.koreanphrasebook.ui.chapters.models;
  * Created by bogdan on 11/5/16.
  */
 public class Category {
+    private String id;
     private String name;
     private String chapter;
 
     public Category() {
 
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Category(String name) {

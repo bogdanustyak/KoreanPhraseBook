@@ -47,6 +47,7 @@ class CategoryScreenActivity : AppCompatActivity(), CategoriesView, CategoriesAd
 
     override fun onCategoryClick(category: Category) {
         val intent = Intent(this, PhraseListActivity::class.java)
+        intent.putExtra(PhraseListActivity.CATEGORY, category.id)
         startActivity(intent)
     }
 
