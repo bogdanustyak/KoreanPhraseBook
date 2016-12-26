@@ -55,7 +55,9 @@ class CategoriesRequest : FireBaseRequest() {
                     if (dataSnapshot != null) {
                         val categoryList = ArrayList<Category>()
                         for (item in dataSnapshot.children) {
-                            categoryList.add(item.getValue(Category::class.java))
+                            val category = item.getValue(Category::class.java)
+                            category.id = item.key
+                            categoryList.add(category)
                         }
                         subscriber.onNext(categoryList)
                         subscriber.onCompleted()

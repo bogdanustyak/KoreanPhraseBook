@@ -6,6 +6,8 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import com.google.firebase.database.*
+import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
+import com.leoart.koreanphrasebook.data.parsers.phrases.PhrasesParser
 
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.chapters.models.Chapter
@@ -33,6 +35,9 @@ class MainActivity : AppCompatActivity() {
 
         //DictionaryParser(baseContext).writeToFirebaseDB()
 
+       // val data = PhrasesParser(baseContext, "phrases.txt").parse()
+
+       // PhrasesRequest().writePhrases("category7", data)
 
     }
 

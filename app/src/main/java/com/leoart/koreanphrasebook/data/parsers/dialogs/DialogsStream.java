@@ -2,6 +2,7 @@ package com.leoart.koreanphrasebook.data.parsers.dialogs;
 
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Dialog;
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic;
+import com.leoart.koreanphrasebook.data.parsers.DataStream;
 import com.leoart.koreanphrasebook.data.parsers.TextFileParser;
 
 import java.io.BufferedReader;
@@ -13,12 +14,10 @@ import java.io.InputStreamReader;
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
 
-public class DialogsStream implements TextFileParser<Dialog> {
+public class DialogsStream extends DataStream implements TextFileParser<Dialog> {
 
-    private final InputStream fstream;
-
-    public DialogsStream(InputStream inputStream) {
-        this.fstream = inputStream;
+    public DialogsStream(InputStream fstream) {
+        super(fstream);
     }
 
     public Dialog parse() throws IOException {

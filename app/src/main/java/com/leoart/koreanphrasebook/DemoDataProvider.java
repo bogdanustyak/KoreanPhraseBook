@@ -55,7 +55,7 @@ public class DemoDataProvider {
     public List<Phrase> getPhrases() {
         List<Phrase> phrases = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            phrases.add(new Phrase("Hello", "Ola", "ola"));
+            phrases.add(new Phrase("Hello", "Ola", "ola", i));
         }
         return phrases;
     }

@@ -7,17 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.DictionaryRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
-import rx.Scheduler
+import org.zakariya.stickyheaders.StickyHeaderLayoutManager
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import org.zakariya.stickyheaders.StickyHeaderLayoutManager
-
-
 
 
 class VocabularyFragment : Fragment() {
@@ -41,25 +37,25 @@ class VocabularyFragment : Fragment() {
         DictionaryRequest().getDictionary()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<Dictionary>(){
+                .subscribe(object : Subscriber<Dictionary>() {
                     override fun onError(e: Throwable?) {
                         e?.printStackTrace()
-                        //throw UnsupportedOperationException("not implemented")
                     }
 
                     override fun onNext(t: Dictionary?) {
+
                         Log.d("TAG", t.toString())
-                        if (t!=null) {
+                        if (t != null) {
                             val recyclerView = view.findViewById(R.id.rv_vocabulary) as RecyclerView
                             recyclerView.layoutManager = StickyHeaderLayoutManager()
                             val adapter = DictionaryAdapter(context, t)
                             recyclerView.adapter = adapter
                         }
-                        //throw UnsupportedOperationException("not implemented")
+
                     }
 
                     override fun onCompleted() {
-                       // throw UnsupportedOperationException("not implemented")
+
                     }
 
                 })
