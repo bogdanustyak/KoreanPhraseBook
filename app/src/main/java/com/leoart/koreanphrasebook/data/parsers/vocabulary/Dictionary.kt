@@ -8,7 +8,7 @@ import java.util.*
 
 class Dictionary(private var data: HashMap<Char, List<Word>>) {
 
-    constructor(): this(HashMap())
+    constructor() : this(HashMap())
 
     fun add(letter: Char, words: List<Word>) {
         this.data.put(letter, words)
@@ -20,9 +20,18 @@ class Dictionary(private var data: HashMap<Char, List<Word>>) {
 
     fun wordsCount(): Int {
         var count = 0
-        data.forEach { letter, words ->
+        for ((letter, words) in data) {
             count += words.size
         }
+//        data.forEach { letter, words ->
+//            if (words != null) {
+//                count += words.size
+//            }
+//        }
         return count
+    }
+
+    fun totalCount(): Int {
+        return wordsCount() + data.keys.size
     }
 }

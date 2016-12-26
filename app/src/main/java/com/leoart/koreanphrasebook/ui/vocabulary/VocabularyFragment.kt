@@ -2,6 +2,7 @@ package com.leoart.koreanphrasebook.ui.vocabulary
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,9 @@ import rx.Scheduler
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import org.zakariya.stickyheaders.StickyHeaderLayoutManager
+
+
 
 
 class VocabularyFragment : Fragment() {
@@ -32,7 +36,7 @@ class VocabularyFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater!!.inflate(R.layout.fragment_chapter, container, false)
+        val view = inflater!!.inflate(R.layout.fragment_vocabulary, container, false)
 
         DictionaryRequest().getDictionary()
                 .subscribeOn(Schedulers.io())
@@ -45,6 +49,12 @@ class VocabularyFragment : Fragment() {
 
                     override fun onNext(t: Dictionary?) {
                         Log.d("TAG", t.toString())
+                        if (t!=null) {
+                            val recyclerView = view.findViewById(R.id.rv_vocabulary) as RecyclerView
+                            recyclerView.layoutManager = StickyHeaderLayoutManager()
+                            val adapter = DictionaryAdapter(context, t)
+                            recyclerView.adapter = adapter
+                        }
                         //throw UnsupportedOperationException("not implemented")
                     }
 
