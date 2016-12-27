@@ -18,47 +18,81 @@ import org.zakariya.stickyheaders.SectioningAdapter;
 
 public class DictionaryAdapter extends SectioningAdapter {
 
-    private static final int VIEW_TYPE_HEADER = 0x01;
-    private static final int VIEW_TYPE_CONTENT = 0x00;
+    private static final int HEADER = 0;
+    private static final int ITEM = 1;
 
     private Dictionary dictionary;
+    private Character[] letters;
     private Context context;
 
     public DictionaryAdapter(Context context, Dictionary dictionary) {
         this.context = context;
         this.dictionary = dictionary;
+        this.letters = dictionary.data().keySet().toArray(new Character[dictionary.data().size()]);
     }
 
     @Override
-    public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent, int headerUserType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.dict_header, parent, false);
-        return new HeaderViewHolder(itemView);
-    }
-
-    @Override
-    public DictViewHolder onCreateItemViewHolder(ViewGroup parent, int itemUserType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.dict_header, parent, false);
-        return new DictViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindHeaderViewHolder(SectioningAdapter.HeaderViewHolder viewHolder, int sectionIndex, int headerUserType) {
-        if (dictionary != null) {
-            Character s = dictionary.data().keySet().iterator().next();
-            HeaderViewHolder holder = (HeaderViewHolder) viewHolder;
-            holder.charHeader.setText(s);
+    public int getNumberOfSections() {
+        if (letters == null) {
+            return 0;
         }
+        return letters.length;
     }
 
     @Override
-    public void onBindItemViewHolder(ItemViewHolder viewHolder, int sectionIndex, int itemIndex, int itemUserType) {
+    public int getNumberOfItemsInSection(int sectionIndex) {
+        if (dictionary == null) {
+            return 0;
+        }
+        return dictionary.data().get(letters[sectionIndex]).size();
+    }
+
+    @Override
+    public boolean doesSectionHaveHeader(int sectionIndex) {
+        return true;
+    }
+
+    @Override
+    public boolean doesSectionHaveFooter(int sectionIndex) {
+        return false;
+    }
+
+    @Override
+    public DictViewHolder onCreateItemViewHolder(ViewGroup parent, int itemType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View v = inflater.inflate(R.layout.dict_item, parent, false);
+        return new DictViewHolder(v);
+    }
+
+    @Override
+    public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent, int headerType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View v = inflater.inflate(R.layout.dict_header, parent, false);
+        return new HeaderViewHolder(v);
+    }
+
+    @Override
+    public void onBindItemViewHolder(SectioningAdapter.ItemViewHolder viewHolder, int sectionIndex, int itemIndex, int itemType) {
         if (dictionary != null) {
-            Character s = dictionary.data().keySet().iterator().next();
-            DictViewHolder holder = (DictViewHolder) viewHolder;
-            Word word = dictionary.data().get(s).get(itemIndex);
-            holder.text.setText(word.getWord());
+            char s = letters[sectionIndex];
+            ((DictViewHolder) viewHolder)
+                    .text
+                    .setText(dictionary.data()
+                            .get(s)
+                            .get(itemIndex)
+                            .get("word")
+                           );
+        }
+
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(SectioningAdapter.HeaderViewHolder viewHolder, int sectionIndex, int headerType) {
+        if (dictionary != null) {
+            Character s = letters[sectionIndex];
+            ((HeaderViewHolder) viewHolder)
+                    .charHeader
+                    .setText(s.toString());
         }
     }
 

@@ -40,7 +40,7 @@ class DictionaryRequest : FireBaseRequest() {
                         val result = Dictionary()
                         for (entry in dict) {
                             val letter = (entry.key as String)[0]
-                            val words = entry.value as ArrayList<Word>
+                            val words = entry.value as ArrayList<HashMap<String, String>>
                             result.add(letter, words)
                         }
                         subscriber.onNext(result)

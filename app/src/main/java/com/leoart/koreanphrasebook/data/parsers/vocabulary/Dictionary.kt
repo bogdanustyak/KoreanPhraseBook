@@ -6,15 +6,15 @@ import java.util.*
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
 
-class Dictionary(private var data: HashMap<Char, List<Word>>) {
+class Dictionary(private var data: HashMap<Char, List<HashMap<String, String>>>) {
 
     constructor() : this(HashMap())
 
-    fun add(letter: Char, words: List<Word>) {
+    fun add(letter: Char, words: List<HashMap<String, String>>) {
         this.data.put(letter, words)
     }
 
-    fun data(): HashMap<Char, List<Word>> {
+    fun data(): HashMap<Char, List<HashMap<String, String>>> {
         return data
     }
 
@@ -23,15 +23,12 @@ class Dictionary(private var data: HashMap<Char, List<Word>>) {
         for ((letter, words) in data) {
             count += words.size
         }
-//        data.forEach { letter, words ->
-//            if (words != null) {
-//                count += words.size
-//            }
-//        }
         return count
     }
 
     fun totalCount(): Int {
-        return wordsCount() + data.keys.size
+        var count = wordsCount()
+            count+= data.keys.size
+        return count
     }
 }

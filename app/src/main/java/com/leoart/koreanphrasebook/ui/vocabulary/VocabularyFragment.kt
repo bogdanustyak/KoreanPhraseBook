@@ -46,10 +46,7 @@ class VocabularyFragment : Fragment() {
 
                         Log.d("TAG", t.toString())
                         if (t != null) {
-                            val recyclerView = view.findViewById(R.id.rv_vocabulary) as RecyclerView
-                            recyclerView.layoutManager = StickyHeaderLayoutManager()
-                            val adapter = DictionaryAdapter(context, t)
-                            recyclerView.adapter = adapter
+                            setDataInAdapter(t, view)
                         }
 
                     }
@@ -60,7 +57,15 @@ class VocabularyFragment : Fragment() {
 
                 })
 
+
         return view
+    }
+
+    private fun setDataInAdapter(t: Dictionary?, view: View) {
+        val recyclerView = view.findViewById(R.id.rv_vocabulary) as RecyclerView
+        val adapter = DictionaryAdapter(context, t)
+        recyclerView.layoutManager = StickyHeaderLayoutManager()
+        recyclerView.adapter = adapter
     }
 
     companion object {

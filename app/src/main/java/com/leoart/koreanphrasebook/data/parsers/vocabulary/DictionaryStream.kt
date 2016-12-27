@@ -28,13 +28,13 @@ class DictionaryStream(private val inputStream: InputStream) : TextFileParser<Di
                     if (readingFirstLetter) {
                         readingFirstLetter = false
                     } else {
-                        dictionary.add(letter, words)
+                       // dictionary.add(letter, words)
                         words = ArrayList<Word>()
                     }
                     letter = line[0]
                 } else {
-                    val word = parseWords(line)
-                    words.add(word)
+                   // val word = parseWords(line)
+                    //words.add(word)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -46,12 +46,12 @@ class DictionaryStream(private val inputStream: InputStream) : TextFileParser<Di
         return dictionary
     }
 
-    private fun parseWords(line: String): Word {
-        val spaceIndex = line.indexOfFirst { it == ' ' }
-        val word = line.substring(0, spaceIndex)
-        val translation = line.substring(spaceIndex, line.length)
-        return Word(word, translation)
-    }
+//    private fun parseWords(line: String): Word {
+//        val spaceIndex = line.indexOfFirst { it == ' ' }
+//        val word = line.substring(0, spaceIndex)
+//        val translation = line.substring(spaceIndex, line.length)
+//        return Word()
+//    }
 
     private fun lineIsLetter(line: String) = !line.isEmpty() && line.length == 1
 
