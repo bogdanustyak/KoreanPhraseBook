@@ -1,6 +1,5 @@
 package com.leoart.koreanphrasebook;
 
-import com.leoart.koreanphrasebook.ui.chapters.models.Category;
 import com.leoart.koreanphrasebook.ui.chapters.models.Chapter;
 import com.leoart.koreanphrasebook.ui.chapters.models.Phrase;
 import com.leoart.koreanphrasebook.ui.dialogs.models.Author;
@@ -42,14 +41,6 @@ public class DemoDataProvider {
 //        }
         //return chapters;
         return null;
-    }
-
-    public List<Category> getChapterCategories() {
-        List<Category> categories = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            categories.add(new Category("word"));
-        }
-        return categories;
     }
 
     public List<Phrase> getPhrases() {

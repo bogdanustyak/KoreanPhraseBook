@@ -16,7 +16,7 @@ class Phrase(val word: String, val translation: String, val transcription: Strin
         map.put("word", word)
         map.put("translation", translation)
         map.put("transcription", transcription)
-        map.put("index", index)
+       // map.put("index", index)
         return map
     }
 }

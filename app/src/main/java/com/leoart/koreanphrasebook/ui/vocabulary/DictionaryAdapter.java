@@ -86,7 +86,6 @@ public class DictionaryAdapter extends SectioningAdapter {
                     .text
                     .setText(text);
         }
-
     }
 
     @Override

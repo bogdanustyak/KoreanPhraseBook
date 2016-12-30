@@ -10,6 +10,7 @@ import java.util.HashMap;
  */
 public class Chapter implements Parcelable {
 
+    private String key;
     private String name;
     private HashMap<String, Boolean> categories;
 
@@ -20,6 +21,14 @@ public class Chapter implements Parcelable {
     public Chapter(String name, HashMap<String, Boolean> categories) {
         this.name = name;
         this.categories = categories;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getName() {
@@ -48,11 +57,13 @@ public class Chapter implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.name);
         dest.writeSerializable(this.categories);
+        dest.writeString(this.getKey());
     }
 
     protected Chapter(Parcel in) {
         this.name = in.readString();
         this.categories = (HashMap<String, Boolean>) in.readSerializable();
+        this.key = in.readString();
     }
 
     public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {

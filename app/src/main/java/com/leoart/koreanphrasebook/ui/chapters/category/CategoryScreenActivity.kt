@@ -7,12 +7,13 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.MenuItem
-import com.leoart.koreanphrasebook.DemoDataProvider
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.chapters.models.Category
 import com.leoart.koreanphrasebook.ui.chapters.models.Chapter
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhraseListActivity
+import java.util.*
 
 /**
  * Created by bogdan on 11/5/16.
@@ -30,11 +31,12 @@ class CategoryScreenActivity : AppCompatActivity(), CategoriesView, CategoriesAd
         val layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
         rvCategories.layoutManager = layoutManager
         rvCategories.itemAnimator = DefaultItemAnimator()
-
-        adapter = CategoriesAdapter(DemoDataProvider().chapterCategories, this)
+        adapter = CategoriesAdapter(ArrayList<Category>(), this)
         rvCategories.adapter = adapter
 
+
         val chapter = intent.getParcelableExtra<Chapter>(CHAPTER_NAME)
+        Log.d("chapter", chapter.name)
         CategoriesPresenter(this).requestCategories(chapter)
     }
 
@@ -56,7 +58,7 @@ class CategoryScreenActivity : AppCompatActivity(), CategoriesView, CategoriesAd
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId){
+        when (item?.itemId) {
             android.R.id.home -> {
                 onBackPressed()
             }

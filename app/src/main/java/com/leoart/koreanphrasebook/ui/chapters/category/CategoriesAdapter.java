@@ -2,7 +2,6 @@ package com.leoart.koreanphrasebook.ui.chapters.category;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         this.interactionListener = interactionListener;
     }
 
+
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).
@@ -33,7 +33,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         viewHolder.ll_chapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (interactionListener != null) {
+                if (interactionListener != null && chapterCategories!=null) {
                     interactionListener.onCategoryClick(chapterCategories.get(viewHolder.getAdapterPosition()));
                 }
             }
@@ -43,12 +43,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
     @Override
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
-        Category category = chapterCategories.get(position);
-        if (category != null) {
-            if (!TextUtils.isEmpty(category.getName())) {
-                holder.tvCategoryName.setText(category.getName());
-            } else {
-                holder.tvCategoryName.setText("");
+        if (chapterCategories !=null) {
+            Category category = chapterCategories.get(position);
+            if (category != null) {
+                holder.tvCategoryName.setText(category.getName().get("word"));
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.data.network.firebase
 
+import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -13,8 +14,50 @@ import java.util.*
  */
 class CategoriesRequest : FireBaseRequest() {
 
+    val CATEGORIES = "chapterCategories"
+
+    fun writeCategories(chapter: String, phrases: List<Category>) {
+        var count = 1 as Int
+        phrases.forEach {
+            val key = "category" + count//mDataBaseRef.child("$CATEGORIES/$chapter").push().key
+            val childUpdates = HashMap<String, Any>()
+            childUpdates.put("$CATEGORIES/$chapter/$key", it.toMap())
+
+            mDataBaseRef.updateChildren(childUpdates)
+            count++
+        }
+    }
+
     fun getAllCategoriesOfChapter(chapter: Chapter): Observable<List<Category>> {
-        return getAllCategories()
+        val chapterName = chapter.key
+        return Observable.create({ subscriber ->
+            mDataBase.reference?.child("$CATEGORIES/$chapterName")?.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError?) {
+                    throw UnsupportedOperationException("not implemented")
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                    if (dataSnapshot != null) {
+                        val categoryList = ArrayList<Category>()
+                        for (item in dataSnapshot.children) {
+                            Log.d("test", item.value.toString())
+                            val categoryPhrase = item
+                                    .value
+                                    as HashMap<String, String>
+                            Log.d("tes", categoryPhrase.toString())
+                            val category = Category(item.key, categoryPhrase)
+                            categoryList.add(category)
+                        }
+                        subscriber.onNext(categoryList)
+                        subscriber.onCompleted()
+                    } else {
+                        subscriber.onError(Throwable("data was not found"))
+                        subscriber.onCompleted()
+                    }
+                }
+
+            })
+        })
 //        return Observable.create({ subscriber ->
 //
 //
@@ -55,8 +98,8 @@ class CategoriesRequest : FireBaseRequest() {
                     if (dataSnapshot != null) {
                         val categoryList = ArrayList<Category>()
                         for (item in dataSnapshot.children) {
-                            val category = item.getValue(Category::class.java)
-                            category.id = item.key
+                            val category = item.value as Category
+                            //category.id = item.key
                             categoryList.add(category)
                         }
                         subscriber.onNext(categoryList)
