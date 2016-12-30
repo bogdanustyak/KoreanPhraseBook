@@ -8,9 +8,12 @@ import android.widget.TextView;
 
 import com.leoart.koreanphrasebook.R;
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary;
-import com.leoart.koreanphrasebook.data.parsers.vocabulary.Word;
 
 import org.zakariya.stickyheaders.SectioningAdapter;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.SortedMap;
 
 /**
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
@@ -18,17 +21,14 @@ import org.zakariya.stickyheaders.SectioningAdapter;
 
 public class DictionaryAdapter extends SectioningAdapter {
 
-    private static final int HEADER = 0;
-    private static final int ITEM = 1;
-
-    private Dictionary dictionary;
+    private SortedMap<Character, List<HashMap<String, String>>> list;
     private Character[] letters;
-    private Context context;
+    private int size = 0;
 
-    public DictionaryAdapter(Context context, Dictionary dictionary) {
-        this.context = context;
-        this.dictionary = dictionary;
-        this.letters = dictionary.data().keySet().toArray(new Character[dictionary.data().size()]);
+    public DictionaryAdapter(Dictionary dictionary) {
+        this.list = dictionary.sort();
+        this.letters = list.keySet().toArray(new Character[dictionary.data().size()]);
+        this.size = dictionary.totalCount();
     }
 
     @Override
@@ -41,10 +41,10 @@ public class DictionaryAdapter extends SectioningAdapter {
 
     @Override
     public int getNumberOfItemsInSection(int sectionIndex) {
-        if (dictionary == null) {
+        if (list == null) {
             return 0;
         }
-        return dictionary.data().get(letters[sectionIndex]).size();
+        return list.get(letters[sectionIndex]).size();
     }
 
     @Override
@@ -73,51 +73,49 @@ public class DictionaryAdapter extends SectioningAdapter {
 
     @Override
     public void onBindItemViewHolder(SectioningAdapter.ItemViewHolder viewHolder, int sectionIndex, int itemIndex, int itemType) {
-        if (dictionary != null) {
+        if (list != null) {
             char s = letters[sectionIndex];
+            HashMap<String, String> item = list
+                    .get(s)
+                    .get(itemIndex);
+            String text = item.get("word")
+                    .concat(" - ")
+                    .concat(item.get("translation"));
+
             ((DictViewHolder) viewHolder)
                     .text
-                    .setText(dictionary.data()
-                            .get(s)
-                            .get(itemIndex)
-                            .get("word")
-                           );
+                    .setText(text);
         }
 
     }
 
     @Override
     public void onBindHeaderViewHolder(SectioningAdapter.HeaderViewHolder viewHolder, int sectionIndex, int headerType) {
-        if (dictionary != null) {
-            Character s = letters[sectionIndex];
-            ((HeaderViewHolder) viewHolder)
-                    .charHeader
-                    .setText(s.toString());
-        }
+        Character s = letters[sectionIndex];
+        ((HeaderViewHolder) viewHolder)
+                .charHeader
+                .setText(s.toString());
     }
 
 
     @Override
     public int getItemCount() {
-        if (dictionary != null) {
-            return dictionary.totalCount();
-        }
-        return 0;
+        return size;
     }
 
-    public static class DictViewHolder extends SectioningAdapter.ItemViewHolder {
+    private static class DictViewHolder extends SectioningAdapter.ItemViewHolder {
         TextView text;
 
-        public DictViewHolder(View itemView) {
+        DictViewHolder(View itemView) {
             super(itemView);
             text = (TextView) itemView.findViewById(R.id.text);
         }
     }
 
-    public class HeaderViewHolder extends SectioningAdapter.HeaderViewHolder {
+    private class HeaderViewHolder extends SectioningAdapter.HeaderViewHolder {
         TextView charHeader;
 
-        public HeaderViewHolder(View itemView) {
+        HeaderViewHolder(View itemView) {
             super(itemView);
             charHeader = (TextView) itemView.findViewById(R.id.charHeader);
         }

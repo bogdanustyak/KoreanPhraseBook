@@ -14,6 +14,7 @@ import org.zakariya.stickyheaders.StickyHeaderLayoutManager
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import java.util.*
 
 
 class VocabularyFragment : Fragment() {
@@ -61,9 +62,9 @@ class VocabularyFragment : Fragment() {
         return view
     }
 
-    private fun setDataInAdapter(t: Dictionary?, view: View) {
+    private fun setDataInAdapter(t:Dictionary, view: View) {
         val recyclerView = view.findViewById(R.id.rv_vocabulary) as RecyclerView
-        val adapter = DictionaryAdapter(context, t)
+        val adapter = DictionaryAdapter(t)
         recyclerView.layoutManager = StickyHeaderLayoutManager()
         recyclerView.adapter = adapter
     }

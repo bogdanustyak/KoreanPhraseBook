@@ -31,4 +31,8 @@ class Dictionary(private var data: HashMap<Char, List<HashMap<String, String>>>)
             count+= data.keys.size
         return count
     }
+
+    fun sort(): SortedMap<Char, List<HashMap<String, String>>>{
+         return data.toSortedMap()
+    }
 }
