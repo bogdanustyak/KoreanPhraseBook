@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">KoreanPhraseBook</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="categoris">Categories</string>
     <string name="phrases">Phrases</string>
+    <string name="dialogs">Dialogs</string>
+    <string name="chapters">Chapters</string>
+    <string name="vocabulary">Vocabulary</string>
 </resources>

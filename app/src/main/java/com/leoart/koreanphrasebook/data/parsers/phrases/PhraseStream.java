@@ -35,8 +35,8 @@ public class PhraseStream extends DataStream implements TextFileParser<List<Phra
         int count = 0;
 
         while ((word = br.readLine()) != null
-                && (transcription = br.readLine()) != null
                 && (translation = br.readLine()) != null
+                && (transcription = br.readLine()) != null
                 ) {
             phrases.add(new Phrase(word, translation, transcription, count++));
         }

@@ -11,7 +11,6 @@ class CategoryParser(private val context: Context) {
 
     fun writeToFirebaseDB() {
         val dict = CategoryStream(context.assets.open("categories.txt")).parse()
-        CategoriesRequest().writeCategories("chapter2", dict)
+        CategoriesRequest().writeCategories("chapter6", dict)
     }
-
 }

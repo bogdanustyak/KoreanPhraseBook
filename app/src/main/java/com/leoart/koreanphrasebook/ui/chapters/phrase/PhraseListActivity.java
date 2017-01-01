@@ -19,6 +19,7 @@ import java.util.List;
 public class PhraseListActivity extends AppCompatActivity implements PhrasesView {
 
     public static final String CATEGORY = "CATEGORY";
+    public static final String NAME = "NAME";
     private PhrasesAdapter adapter;
 
     @Override
@@ -29,11 +30,16 @@ public class PhraseListActivity extends AppCompatActivity implements PhrasesView
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.phrases);
         }
 
         String category = "";
-        if (getIntent().getExtras().containsKey(CATEGORY)) {
+        if (getIntent().getExtras() != null) {
             category = getIntent().getExtras().getString(CATEGORY);
+            String name = getIntent().getExtras().getString(NAME);
+            if (name!=null && !name.equals("")) {
+                getSupportActionBar().setTitle(name);
+            }
         }
 
         RecyclerView rvPhrases = (RecyclerView) findViewById(R.id.rv_phrases);

@@ -33,12 +33,9 @@ class MainActivity : AppCompatActivity() {
         val tabLayout = findViewById(R.id.tabs) as TabLayout
         tabLayout.setupWithViewPager(viewPager)
 
-
-       // CategoryParser(baseContext).writeToFirebaseDB()
-
+        //        CategoryParser(baseContext).writeToFirebaseDB()
 //        val data = PhrasesParser(baseContext, "phrases.txt").parse()
-//
-//        PhrasesRequest().writePhrases("category7", data)
+//        PhrasesRequest().writePhrases("category33", data)
 
     }
 

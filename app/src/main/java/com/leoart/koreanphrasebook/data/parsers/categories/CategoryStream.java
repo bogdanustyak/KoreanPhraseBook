@@ -40,8 +40,8 @@ public class CategoryStream extends DataStream implements TextFileParser<List<Ca
                 && (translation = br.readLine()) != null
                 ) {
             Phrase phrase = new Phrase(word, translation, transcription, 0);
-            //Category category = new Category("category" + count++, "chapter1", phrase);
-            //categories.add(category);
+            Category category = new Category("category" + count++, phrase.toMap());
+            categories.add(category);
         }
 
         //Close the input stream

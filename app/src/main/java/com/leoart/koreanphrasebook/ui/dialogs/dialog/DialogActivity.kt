@@ -73,7 +73,7 @@ class DialogActivity : AppCompatActivity(), DialogMessagesView {
     private fun setupToolbar() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
-        title = getString(R.string.phrases)
+        title = getString(R.string.dialogs)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 }

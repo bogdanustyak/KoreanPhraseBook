@@ -17,12 +17,11 @@ class CategoriesRequest : FireBaseRequest() {
     val CATEGORIES = "chapterCategories"
 
     fun writeCategories(chapter: String, phrases: List<Category>) {
-        var count = 1 as Int
+        var count = 34
         phrases.forEach {
-            val key = "category" + count//mDataBaseRef.child("$CATEGORIES/$chapter").push().key
+            val key = "category" + count
             val childUpdates = HashMap<String, Any>()
-            childUpdates.put("$CATEGORIES/$chapter/$key", it.toMap())
-
+            childUpdates.put("$CATEGORIES/$chapter/$key", it.name)
             mDataBaseRef.updateChildren(childUpdates)
             count++
         }

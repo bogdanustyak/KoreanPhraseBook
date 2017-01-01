@@ -27,8 +27,7 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseVi
     public PhraseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.item_phrase, parent, false);
-        final PhraseViewHolder viewHolder = new PhraseViewHolder(itemView);
-        return viewHolder;
+        return new PhraseViewHolder(itemView);
     }
 
     @Override
