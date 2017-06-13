@@ -1,6 +1,6 @@
 package com.leoart.koreanphrasebook.ui.vocabulary;
 
-import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.leoart.koreanphrasebook.R;
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import org.zakariya.stickyheaders.SectioningAdapter;
 
@@ -19,7 +20,7 @@ import java.util.SortedMap;
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
 
-public class DictionaryAdapter extends SectioningAdapter {
+public class DictionaryAdapter extends SectioningAdapter implements FastScrollRecyclerView.SectionedAdapter {
 
     private SortedMap<Character, List<HashMap<String, String>>> list;
     private Character[] letters;
@@ -100,6 +101,15 @@ public class DictionaryAdapter extends SectioningAdapter {
     @Override
     public int getItemCount() {
         return size;
+    }
+
+    @NonNull
+    @Override
+    public String getSectionName(int position) {
+        if (letters == null || letters.length < position) {
+            return "";
+        }
+        return letters[position].toString();
     }
 
     private static class DictViewHolder extends SectioningAdapter.ItemViewHolder {
