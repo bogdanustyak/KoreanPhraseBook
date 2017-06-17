@@ -30,16 +30,25 @@ internal class DialogMessagesRecyclerAdapter(private var messages: List<Replic>?
     }
 
     override fun getItemViewType(position: Int): Int {
-        val number = messages?.get(position)?.number?.mod(2) ?: return super.getItemViewType(position)
-        return number
+        val pos = messages?.get(position)?.number?.rem(2)
+        if (pos == 1) {
+            return LEFT_MESSAGE
+        } else {
+            return RIGHT_MESSAGE
+        }
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-        val message = messages?.get(position)
-        if (message != null) {
-
-            var messageText = message.ukrainian + "\n" + message.korean
-
+        messages?.get(position)?.let {
+            val dotIndex = it.ukrainian.indexOfFirst { it -> it == ':' } + 1
+            val author = it.ukrainian.substring(0, dotIndex)
+            val ukr = it.ukrainian.substring(dotIndex, it.ukrainian.length)
+            val messageText = ukr + "\n" + it.korean
+            if (!TextUtils.isEmpty(author)) {
+                holder.tvAuthorName.text = author
+            } else {
+                holder.tvAuthorName.text = ""
+            }
             if (!TextUtils.isEmpty(messageText)) {
                 holder.tvMessage.text = messageText
             } else {
@@ -56,11 +65,9 @@ internal class DialogMessagesRecyclerAdapter(private var messages: List<Replic>?
     }
 
     internal class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvMessage: TextView
+        val tvAuthorName = itemView.findViewById(R.id.tv_author_name) as TextView
+        var tvMessage = itemView.findViewById(R.id.txtMessage) as TextView
 
-        init {
-            tvMessage = itemView.findViewById(R.id.txtMessage) as TextView
-        }
     }
 
     fun updateReplics(list: List<Replic>?) {

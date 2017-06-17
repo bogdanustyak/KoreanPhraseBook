@@ -37,7 +37,7 @@ class PhrasesRequest : FireBaseRequest() {
                     if (dataSnapshot != null) {
                         val phrases = ArrayList<Phrase>()
                         for (item in dataSnapshot.children) {
-                            val phrase = item.getValue(Phrase::class.java)
+                            val phrase = item.getValue(Phrase::class.java) as Phrase
                             phrases.add(phrase)
                         }
                         subscriber.onNext(phrases)

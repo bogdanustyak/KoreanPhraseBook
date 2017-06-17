@@ -1,9 +1,18 @@
 <resources>
     <string name="app_name">KoreanPhraseBook</string>
 
-    <string name="categoris">Categories</string>
-    <string name="phrases">Phrases</string>
-    <string name="dialogs">Dialogs</string>
-    <string name="chapters">Chapters</string>
-    <string name="vocabulary">Vocabulary</string>
+    <string name="categoris">Категорії</string>
+    <string name="phrases">Фрази</string>
+    <string name="dialogs">Діалоги</string>
+    <string name="chapters">Розділи</string>
+    <string name="vocabulary">Словник</string>
+
+
+    <!-- menu -->
+    <string name="menu_dict">Словник</string>
+    <string name="menu_favourite">Улюблене</string>
+    <string name="menu_chapters">Розділи</string>
+    <string name="menu_dialogs">Діалоги</string>
+    <string name="menu_info">Інфо</string>
+
 </resources>

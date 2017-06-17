@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -28,6 +29,8 @@ class ChapterFragment : Fragment(), ChaptersView, ChaptersRecyclerAdapter.Chapte
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvChapters.layoutManager = layoutManager
         rvChapters.itemAnimator = DefaultItemAnimator()
+        rvChapters.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+
 
         adapter = ChaptersRecyclerAdapter(chapters, this)
         rvChapters.adapter = adapter

@@ -38,9 +38,9 @@ class DictionaryRequest : FireBaseRequest() {
                     if (dataSnapshot != null) {
                         val dict = dataSnapshot.value as HashMap<*, *>
                         val result = Dictionary()
-                        for (entry in dict) {
-                            val letter = (entry.key as String)[0]
-                            val words = entry.value as ArrayList<HashMap<String, String>>
+                        for ((key, value) in dict) {
+                            val letter = (key as String)[0]
+                            val words = value as ArrayList<HashMap<String, String>>
                             result.add(letter, words)
                         }
                         subscriber.onNext(result)

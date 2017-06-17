@@ -4,7 +4,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "24.0.3"
+    buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "com.leoart.koreanphrasebook"
         minSdkVersion 19
@@ -19,10 +19,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 buildscript {
-    ext.kotlin_version = '1.0.6'
+    ext.kotlin_version = '1.1.2-5'
 
     repositories {
         jcenter()
@@ -39,8 +42,8 @@ repositories {
 }
 
 ext {
-    support_lib = "25.1.0"
-    firebase = "9.8.0"
+    support_lib = "25.3.1"
+    firebase = "11.0.0"
 }
 
 dependencies {
@@ -50,9 +53,10 @@ dependencies {
     })
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    compile 'io.reactivex:rxandroid:1.2.0'
-    compile 'io.reactivex:rxjava:1.1.5'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.2.9'
 
     compile "com.google.firebase:firebase-core:$firebase"
     compile "com.google.firebase:firebase-database:$firebase"

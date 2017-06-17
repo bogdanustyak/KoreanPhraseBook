@@ -9,8 +9,7 @@ import java.util.*
 
 class Replic(val uid: String = "", val korean: String = "", val ukrainian: String = "", val number: Int = 0) {
 
-    constructor(korean: String, ukrainian: String, number: Int) : this("", korean, ukrainian, number) {
-    }
+    constructor(korean: String, ukrainian: String, number: Int) : this("", korean, ukrainian, number)
 
     override fun toString(): String {
         return "Replica{" +

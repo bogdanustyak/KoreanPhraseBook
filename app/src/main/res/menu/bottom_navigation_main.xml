@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_dict"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/menu_dict"/>
+    <item
+        android:id="@+id/action_favourite"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/menu_favourite"/>
+    <item
+        android:id="@+id/action_chapters"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/menu_chapters"/>
+    <item
+        android:id="@+id/action_dialogs"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/menu_dialogs" />
+    <item
+        android:id="@+id/action_info"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:title="@string/menu_info" />
+</menu>

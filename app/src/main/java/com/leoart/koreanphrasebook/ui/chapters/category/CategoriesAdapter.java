@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leoart.koreanphrasebook.R;
@@ -65,12 +66,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     }
 
     static class CategoryViewHolder extends RecyclerView.ViewHolder {
-        CardView ll_chapter;
+        LinearLayout ll_chapter;
         TextView tvCategoryName;
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
-            ll_chapter = (CardView) itemView.findViewById(R.id.ll_chapter);
+            ll_chapter = (LinearLayout) itemView.findViewById(R.id.ll_chapter);
             tvCategoryName = (TextView) itemView.findViewById(R.id.tv_category_name);
         }
     }

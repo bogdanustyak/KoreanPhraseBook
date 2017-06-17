@@ -18,6 +18,10 @@ class Dictionary(private var data: HashMap<Char, List<HashMap<String, String>>>)
         return data
     }
 
+    fun sortedData(): SortedMap<Char, List<HashMap<String, String>>> {
+        return data.toSortedMap(compareBy<Char> { it })
+    }
+
     fun wordsCount(): Int {
         var count = 0
         for ((letter, words) in data) {
@@ -28,11 +32,7 @@ class Dictionary(private var data: HashMap<Char, List<HashMap<String, String>>>)
 
     fun totalCount(): Int {
         var count = wordsCount()
-            count+= data.keys.size
+        count += data.keys.size
         return count
-    }
-
-    fun sort(): SortedMap<Char, List<HashMap<String, String>>>{
-         return data.toSortedMap()
     }
 }

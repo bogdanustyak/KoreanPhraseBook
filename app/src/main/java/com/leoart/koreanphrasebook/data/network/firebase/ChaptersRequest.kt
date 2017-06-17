@@ -22,7 +22,7 @@ class ChaptersRequest : FireBaseRequest() {
                     if (dataSnapshot != null) {
                         val staffList = ArrayList<Chapter>()
                         for (item in dataSnapshot.children) {
-                            var chapter =  item.getValue(Chapter::class.java)
+                            val chapter = item.getValue(Chapter::class.java) as Chapter
                             chapter.key = item.key
                             staffList.add(chapter)
                         }

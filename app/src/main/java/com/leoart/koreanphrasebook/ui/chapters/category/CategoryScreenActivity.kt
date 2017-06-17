@@ -3,10 +3,7 @@ package com.leoart.koreanphrasebook.ui.chapters.category
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import android.support.v7.widget.*
 import android.util.Log
 import android.view.MenuItem
 import com.leoart.koreanphrasebook.R
@@ -31,6 +28,7 @@ class CategoryScreenActivity : AppCompatActivity(), CategoriesView, CategoriesAd
         val layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
         rvCategories.layoutManager = layoutManager
         rvCategories.itemAnimator = DefaultItemAnimator()
+        rvCategories.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         adapter = CategoriesAdapter(ArrayList<Category>(), this)
         rvCategories.adapter = adapter
 

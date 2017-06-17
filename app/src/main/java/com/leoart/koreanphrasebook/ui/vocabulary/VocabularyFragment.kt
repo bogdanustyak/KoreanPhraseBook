@@ -71,14 +71,14 @@ class VocabularyFragment : Fragment() {
 
         val fastScrollingRecycler = view.findViewById(R.id.recycler) as FastScrollRecyclerView
         fastScrollingRecycler.layoutManager = LinearLayoutManager(activity)
-        val letters = t.sort().keys.toTypedArray<Char>()
+        //val letters = t.sort().keys.toTypedArray<Char>()
       //  fastScrollingRecycler.adapter = FastScrollingAdapter(letters)
     }
 
     private fun setupFastScrolling(data: Dictionary, view: View) {
         val fastScrollingRecycler = view.findViewById(R.id.recycler) as FastScrollRecyclerView
         fastScrollingRecycler.layoutManager = LinearLayoutManager(activity)
-        val letters = data.sort().keys.toTypedArray<Char>()
+      //  val letters = data.sort().keys.toTypedArray<Char>()
        // fastScrollingRecycler.adapter = FastScrollingAdapter(letters)
 
     }

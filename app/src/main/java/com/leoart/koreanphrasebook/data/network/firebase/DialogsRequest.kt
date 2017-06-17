@@ -26,7 +26,7 @@ class DialogsRequest : FireBaseRequest() {
                         val dialogsList = ArrayList<DialogResponse>()
                         for (item in dataSnapshot.children) {
                             val uid = item.key
-                            val dialog = item.getValue(Dialog::class.java)
+                            val dialog = item.getValue(Dialog::class.java) as Dialog
                             dialogsList.add(DialogResponse(uid, dialog.name))
                         }
 
@@ -51,15 +51,11 @@ class DialogsRequest : FireBaseRequest() {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot?) {
                     if (dataSnapshot != null) {
-                        val replics = ArrayList<Replic>()
-                        for (item in dataSnapshot.children) {
-                            val replic = item.getValue(Replic::class.java)
-                            replics.add(replic)
+                        val replics = dataSnapshot.children.map {
+                            it.getValue(Replic::class.java) as Replic
                         }
-
                         subscriber.onNext(replics)
                         subscriber.onCompleted()
-
                     } else {
                         subscriber.onError(Throwable("data was not found"))
                         subscriber.onCompleted()
