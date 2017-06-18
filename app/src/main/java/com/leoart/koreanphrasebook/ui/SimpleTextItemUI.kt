@@ -25,7 +25,7 @@ open class SimpleTextItemUI : AnkoComponent<ViewGroup> {
                     text = "My light text"
                     textSize = 18f
                     typeface = light
-                    textColor = R.color.list_text_color
+                    textColor = R.color.colorPrimary
                 }.lparams(width = wrapContent, height = wrapContent) {
                     marginStart = dip(20)
                     marginEnd = dip(20)

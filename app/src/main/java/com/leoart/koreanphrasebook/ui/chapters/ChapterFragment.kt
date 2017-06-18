@@ -12,10 +12,11 @@ import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesFragment
-import com.leoart.koreanphrasebook.ui.chapters.models.Chapter
+import com.leoart.koreanphrasebook.ui.models.Chapter
 
 
-class ChapterFragment(title: String) : BaseFragment(title), ChaptersView, ChaptersRecyclerAdapter.ChaptersInteractionListener {
+class ChapterFragment(title: String) : BaseFragment(title), ChaptersView,
+        ChaptersRecyclerAdapter.ChaptersInteractionListener {
 
     private var mainView: MainView? = null
     private val chapters: List<Chapter>? = null
@@ -30,26 +31,24 @@ class ChapterFragment(title: String) : BaseFragment(title), ChaptersView, Chapte
         rvChapters.layoutManager = layoutManager
         rvChapters.itemAnimator = DefaultItemAnimator()
         rvChapters.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
-
-
         adapter = ChaptersRecyclerAdapter(chapters, this)
         rvChapters.adapter = adapter
-
         ChaptersPresenter(this).requestChapters()
-
         return view
     }
 
     override fun onChapterClick(chapter: Chapter) {
         mainView?.let {
             it.add(
-                    CategoriesFragment.newInstance(chapter.name, chapter)
+                    CategoriesFragment.newInstance(chapter.name, chapter, mainView)
             )
         }
     }
 
     override fun showChapters(chapters: List<Chapter>?) {
-        adapter?.setChapters(chapters)
+        chapters?.let {
+            adapter?.setChapters(it)
+        }
     }
 
     companion object {

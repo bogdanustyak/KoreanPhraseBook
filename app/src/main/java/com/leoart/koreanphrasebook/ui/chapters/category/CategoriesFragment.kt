@@ -1,6 +1,5 @@
 package com.leoart.koreanphrasebook.ui.chapters.category
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -12,9 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
-import com.leoart.koreanphrasebook.ui.chapters.models.Category
-import com.leoart.koreanphrasebook.ui.chapters.models.Chapter
-import com.leoart.koreanphrasebook.ui.chapters.phrase.PhraseListActivity
+import com.leoart.koreanphrasebook.ui.MainView
+import com.leoart.koreanphrasebook.ui.chapters.phrase.PhraseListFragment
+import com.leoart.koreanphrasebook.ui.models.Category
+import com.leoart.koreanphrasebook.ui.models.Chapter
 import java.util.*
 
 /**
@@ -24,6 +24,7 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
 
     private var chapter: Chapter? = null
     private var adapter: CategoriesAdapter? = null
+    private var mainView: MainView? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -42,10 +43,7 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
     }
 
     override fun onCategoryClick(category: Category) {
-        val intent = Intent(context, PhraseListActivity::class.java)
-        intent.putExtra(PhraseListActivity.CATEGORY, category.id)
-        intent.putExtra(PhraseListActivity.NAME, category.name["word"])
-        startActivity(intent)
+        mainView?.add(PhraseListFragment.newInstance(category.name["word"] ?: "", category.id))
     }
 
     override fun showCategories(categories: List<Category>) {
@@ -65,10 +63,11 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
 
     companion object {
 
-        fun newInstance(title: String, chapter: Chapter): CategoriesFragment {
+        fun newInstance(title: String, chapter: Chapter, mainView: MainView?): CategoriesFragment {
             val fragment = CategoriesFragment(title)
             val args = Bundle()
             fragment.chapter = chapter
+            fragment.mainView = mainView
             fragment.arguments = args
             return fragment
         }

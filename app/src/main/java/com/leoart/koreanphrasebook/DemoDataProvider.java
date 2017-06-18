@@ -1,7 +1,7 @@
 package com.leoart.koreanphrasebook;
 
-import com.leoart.koreanphrasebook.ui.chapters.models.Chapter;
-import com.leoart.koreanphrasebook.ui.chapters.models.Phrase;
+import com.leoart.koreanphrasebook.ui.models.Chapter;
+import com.leoart.koreanphrasebook.ui.models.Phrase;
 import com.leoart.koreanphrasebook.ui.dialogs.models.Author;
 import com.leoart.koreanphrasebook.ui.dialogs.models.Dialog;
 import com.leoart.koreanphrasebook.ui.dialogs.models.Message;

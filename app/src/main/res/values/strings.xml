@@ -15,4 +15,12 @@
     <string name="menu_dialogs">Діалоги</string>
     <string name="menu_info">Інфо</string>
 
+    <string name="search">Пошук</string>
+
+    <!-- info -->
+    <string name="settings">Налаштування</string>
+    <string name="share">Поділитись додатком</string>
+    <string name="rate">Написати відгук</string>
+    <string name="send_email">Написати нам лист</string>
+
 </resources>

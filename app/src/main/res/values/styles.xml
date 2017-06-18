@@ -11,4 +11,10 @@
         <item name="android:colorControlNormal">@android:color/white</item>
     </style>
 
+    <style name="BottomMenuTextView" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

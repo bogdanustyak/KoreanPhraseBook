@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.leoart.koreanphrasebook.R;
-import com.leoart.koreanphrasebook.ui.chapters.models.Phrase;
+import com.leoart.koreanphrasebook.ui.models.Phrase;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package com.leoart.koreanphrasebook.data.parsers.phrases;
 
 import com.leoart.koreanphrasebook.data.parsers.DataStream;
 import com.leoart.koreanphrasebook.data.parsers.TextFileParser;
-import com.leoart.koreanphrasebook.ui.chapters.models.Phrase;
+import com.leoart.koreanphrasebook.ui.models.Phrase;
 
 import java.io.BufferedReader;
 import java.io.IOException;

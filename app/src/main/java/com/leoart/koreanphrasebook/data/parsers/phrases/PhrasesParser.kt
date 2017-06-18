@@ -1,7 +1,7 @@
 package com.leoart.koreanphrasebook.data.parsers.phrases
 
 import android.content.Context
-import com.leoart.koreanphrasebook.ui.chapters.models.Phrase
+import com.leoart.koreanphrasebook.ui.models.Phrase
 import java.io.IOException
 
 /**

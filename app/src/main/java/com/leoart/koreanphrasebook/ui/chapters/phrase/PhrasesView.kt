@@ -1,6 +1,6 @@
 package com.leoart.koreanphrasebook.ui.chapters.phrase
 
-import com.leoart.koreanphrasebook.ui.chapters.models.Phrase
+import com.leoart.koreanphrasebook.ui.models.Phrase
 
 /**
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)

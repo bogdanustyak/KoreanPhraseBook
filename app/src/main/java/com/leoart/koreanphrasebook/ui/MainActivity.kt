@@ -1,17 +1,18 @@
 package com.leoart.koreanphrasebook.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
 import com.leoart.koreanphrasebook.R
-import com.leoart.koreanphrasebook.ui.BaseFragment
-import com.leoart.koreanphrasebook.ui.BottomMenu
-import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
 import com.leoart.koreanphrasebook.ui.favourite.FavouriteFragment
 import com.leoart.koreanphrasebook.ui.info.InfoFragment
+import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 
 
@@ -41,36 +42,30 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
                 findViewById(R.id.iv_info) as ImageView,
                 this
         )
-
-        //        val bottomNavigationView = findViewById(R.id.bottom_navigation) as BottomNavigationView
-        //
-        //        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
-        //            when (item.itemId) {
-        //                R.id.action_dict ->
-        //                    dictSelected()
-        //                R.id.action_favourite ->
-        //                    favouriteSelected()
-        //                R.id.action_chapters ->
-        //                    chaptersSelected()
-        //                R.id.action_dialogs ->
-        //                    dialogsSelected()
-        //                R.id.action_info ->
-        //                    infoSelected()
-        //                else -> {
-        //                    chaptersSelected()
-        //                }
-        //            }
-        //            true
-        //        }
-
         chaptersSelected()
-
         supportFragmentManager.addOnBackStackChangedListener {
             val fragment = supportFragmentManager.findFragmentById(R.id.main_content)
             if (fragment != null && fragment is BaseFragment) {
                 this.title = fragment.title
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_search -> openSearch()
+        }
+        return true
+    }
+
+    private fun openSearch() {
+        startActivity(Intent(this, SearchActivity::class.java))
     }
 
     override fun dictSelected() {

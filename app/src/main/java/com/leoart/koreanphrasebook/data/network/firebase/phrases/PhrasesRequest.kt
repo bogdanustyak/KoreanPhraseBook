@@ -4,7 +4,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.leoart.koreanphrasebook.data.network.firebase.FireBaseRequest
-import com.leoart.koreanphrasebook.ui.chapters.models.Phrase
+import com.leoart.koreanphrasebook.ui.models.Phrase
 import rx.Observable
 import java.util.*
 
