@@ -148,3 +148,17 @@ src/main/resources/
 .idea/libraries/support_v4_25_3_1.xml
 .idea/libraries/support_vector_drawable_25_3_1.xml
 .idea/libraries/transition_25_3_1.xml
+.idea/libraries/anko_0_10_1.xml
+.idea/libraries/anko_appcompat_v7_0_10_1.xml
+.idea/libraries/anko_appcompat_v7_commons_0_10_1.xml
+.idea/libraries/anko_appcompat_v7_coroutines_0_10_1.xml
+.idea/libraries/anko_commons_0_10_1.xml
+.idea/libraries/anko_coroutines_0_10_1.xml
+.idea/libraries/anko_sdk25_0_10_1.xml
+.idea/libraries/anko_sdk25_coroutines_0_10_1.xml
+.idea/libraries/anko_sqlite_0_10_1.xml
+.idea/libraries/anko_support_v4_0_10_1.xml
+.idea/libraries/anko_support_v4_commons_0_10_1.xml
+.idea/libraries/calligraphy_2_3_0.xml
+.idea/libraries/kotlinx_coroutines_android_0_15.xml
+.idea/libraries/kotlinx_coroutines_core_0_15.xml

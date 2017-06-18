@@ -1,26 +1,29 @@
 package com.leoart.koreanphrasebook.ui.dialogs
 
-import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
-import com.leoart.koreanphrasebook.ui.chapters.models.DialogsModel
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
-import com.leoart.koreanphrasebook.ui.dialogs.dialog.DialogActivity
+import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainView
+import com.leoart.koreanphrasebook.ui.dialogs.dialog.DialogFragment
 
-class DialogsFragment : Fragment(), DialogsView, DialogsRecyclerAdapter.DialogsListInteractionListener {
+class DialogsFragment(title: String) : BaseFragment(title), DialogsView, DialogsRecyclerAdapter.DialogsListInteractionListener {
 
-    private var adapter: DialogsRecyclerAdapter? = null;
+    private var mainView: MainView? = null
+    private var adapter: DialogsRecyclerAdapter? = null
     var rvDialogs: RecyclerView? = null
 
     override fun showDialogs(chapters: List<DialogResponse>?) {
-        adapter?.setDialogs(chapters)
+        chapters?.let {
+            adapter?.setDialogs(it)
+        }
     }
 
     private var dialogs: List<DialogResponse>? = null
@@ -33,6 +36,7 @@ class DialogsFragment : Fragment(), DialogsView, DialogsRecyclerAdapter.DialogsL
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvDialogs?.layoutManager = layoutManager
         rvDialogs?.itemAnimator = DefaultItemAnimator()
+        rvDialogs?.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
 
         adapter = DialogsRecyclerAdapter(dialogs, this)
         rvDialogs?.adapter = adapter
@@ -44,18 +48,19 @@ class DialogsFragment : Fragment(), DialogsView, DialogsRecyclerAdapter.DialogsL
     }
 
     override fun onDialogClick(dialog: DialogResponse) {
-        val intent = Intent(activity, DialogActivity::class.java)
-        intent.putExtra(DialogActivity.DIALOG, dialog)
-        startActivity(intent)
+        this.mainView?.let {
+            it.add(DialogFragment.newInstance(dialog.name, dialog))
+        }
     }
 
     companion object {
 
-        fun newInstance(): DialogsFragment {
-            val fragment = DialogsFragment()
+        fun newInstance(title: String, mainView: MainView): DialogsFragment {
+            val fragment = DialogsFragment(title)
             val args = Bundle()
             fragment.arguments = args
+            fragment.mainView = mainView
             return fragment
         }
     }
-}// Required empty public constructor
+}

@@ -1,7 +1,6 @@
 package com.leoart.koreanphrasebook.ui.vocabulary
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -11,6 +10,7 @@ import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.DictionaryRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
+import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager
 import rx.Subscriber
@@ -18,7 +18,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
 
-class VocabularyFragment : Fragment() {
+class VocabularyFragment(title: String) : BaseFragment(title) {
 
     private var mParam1: String? = null
     private var mParam2: String? = null
@@ -72,14 +72,14 @@ class VocabularyFragment : Fragment() {
         val fastScrollingRecycler = view.findViewById(R.id.recycler) as FastScrollRecyclerView
         fastScrollingRecycler.layoutManager = LinearLayoutManager(activity)
         //val letters = t.sort().keys.toTypedArray<Char>()
-      //  fastScrollingRecycler.adapter = FastScrollingAdapter(letters)
+        //  fastScrollingRecycler.adapter = FastScrollingAdapter(letters)
     }
 
     private fun setupFastScrolling(data: Dictionary, view: View) {
         val fastScrollingRecycler = view.findViewById(R.id.recycler) as FastScrollRecyclerView
         fastScrollingRecycler.layoutManager = LinearLayoutManager(activity)
-      //  val letters = data.sort().keys.toTypedArray<Char>()
-       // fastScrollingRecycler.adapter = FastScrollingAdapter(letters)
+        //  val letters = data.sort().keys.toTypedArray<Char>()
+        // fastScrollingRecycler.adapter = FastScrollingAdapter(letters)
 
     }
 
@@ -89,8 +89,8 @@ class VocabularyFragment : Fragment() {
         private val ARG_PARAM1 = "param1"
         private val ARG_PARAM2 = "param2"
 
-        fun newInstance(): VocabularyFragment {
-            val fragment = VocabularyFragment()
+        fun newInstance(title: String): VocabularyFragment {
+            val fragment = VocabularyFragment(title)
             return fragment
         }
     }

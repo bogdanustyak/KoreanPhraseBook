@@ -1,8 +1,6 @@
 package com.leoart.koreanphrasebook.ui.chapters
 
-import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -10,14 +8,16 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.leoart.koreanphrasebook.R
-import com.leoart.koreanphrasebook.ui.chapters.category.CategoryScreenActivity
+import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainView
+import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesFragment
 import com.leoart.koreanphrasebook.ui.chapters.models.Chapter
 
 
-class ChapterFragment : Fragment(), ChaptersView, ChaptersRecyclerAdapter.ChaptersInteractionListener {
+class ChapterFragment(title: String) : BaseFragment(title), ChaptersView, ChaptersRecyclerAdapter.ChaptersInteractionListener {
 
+    private var mainView: MainView? = null
     private val chapters: List<Chapter>? = null
     private var adapter: ChaptersRecyclerAdapter? = null
 
@@ -41,10 +41,11 @@ class ChapterFragment : Fragment(), ChaptersView, ChaptersRecyclerAdapter.Chapte
     }
 
     override fun onChapterClick(chapter: Chapter) {
-        val intent = Intent(activity, CategoryScreenActivity::class.java)
-        //intent.putExtra(CategoryScreenActivity.CHAPTER_NAME, chapter.name)
-        intent.putExtra(CategoryScreenActivity.CHAPTER_NAME, chapter)
-        startActivity(intent)
+        mainView?.let {
+            it.add(
+                    CategoriesFragment.newInstance(chapter.name, chapter)
+            )
+        }
     }
 
     override fun showChapters(chapters: List<Chapter>?) {
@@ -53,10 +54,11 @@ class ChapterFragment : Fragment(), ChaptersView, ChaptersRecyclerAdapter.Chapte
 
     companion object {
 
-        fun newInstance(): ChapterFragment {
-            val fragment = ChapterFragment()
+        fun newInstance(title: String, mainView: MainView?): ChapterFragment {
+            val fragment = ChapterFragment(title)
             val args = Bundle()
             fragment.arguments = args
+            fragment.mainView = mainView
             return fragment
         }
     }

@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">@color/colorPrimary</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="list_text_color">#ff285172</color>
+
     <color name="chat_left_bubble">#ffededf0</color>
     <color name="chat_right_bubble">#ffdcecff</color>
 </resources>
