@@ -8,8 +8,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.Auth
+import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
+import com.leoart.koreanphrasebook.ui.favourite.AuthFragment
 import com.leoart.koreanphrasebook.ui.favourite.FavouriteFragment
 import com.leoart.koreanphrasebook.ui.info.InfoFragment
 import com.leoart.koreanphrasebook.ui.search.SearchActivity
@@ -19,11 +22,13 @@ import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView {
 
     var bottomMenu: BottomMenu? = null
+    var auth: Auth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initUI()
+        auth = FRAuth()
     }
 
     private fun initUI() {
@@ -73,7 +78,12 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
     }
 
     override fun favouriteSelected() {
-        this.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), this))
+        val userSignedIn = auth?.isUserSignedIn() ?: false
+        if (userSignedIn) {
+            this.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), this))
+        } else {
+            this.replace(AuthFragment.newInstance(getString(R.string.auth), this))
+        }
     }
 
     override fun chaptersSelected() {

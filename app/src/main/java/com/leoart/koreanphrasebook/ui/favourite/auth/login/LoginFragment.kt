@@ -11,21 +11,24 @@ import com.leoart.koreanphrasebook.ui.MainView
 /**
  * Created by bogdan on 6/18/17.
  */
-class FavouriteFragment(title: String) : BaseFragment(title) {
+class LoginFragment(title: String) : BaseFragment(title) {
 
     private var mainView: MainView? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_favourite, container, false)
-
+        val view = inflater!!.inflate(R.layout.fragment_auth, container, false)
         return view
+    }
+
+    private fun onLoginClick() {
+
     }
 
     companion object {
 
-        fun newInstance(title: String, mainView: MainView?): FavouriteFragment {
-            val fragment = FavouriteFragment(title)
+        fun newInstance(title: String, mainView: MainView?): LoginFragment {
+            val fragment = LoginFragment(title)
             val args = Bundle()
             fragment.arguments = args
             fragment.mainView = mainView

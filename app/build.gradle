@@ -61,6 +61,7 @@ dependencies {
 
     compile "com.google.firebase:firebase-core:$firebase"
     compile "com.google.firebase:firebase-database:$firebase"
+    compile "com.google.firebase:firebase-auth:$firebase"
 
     compile 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
 

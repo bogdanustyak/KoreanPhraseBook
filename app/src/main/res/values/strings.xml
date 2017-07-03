@@ -22,5 +22,11 @@
     <string name="share">Поділитись додатком</string>
     <string name="rate">Написати відгук</string>
     <string name="send_email">Написати нам лист</string>
+    <string name="bt_login">Логін</string>
+    <string name="bt_register">Реєстрація</string>
+    <string name="email">Email</string>
+    <string name="password">Пароль</string>
+    <string name="confirm_password">Повторіть пароль</string>
+    <string name="auth">Авторизація</string>
 
 </resources>
