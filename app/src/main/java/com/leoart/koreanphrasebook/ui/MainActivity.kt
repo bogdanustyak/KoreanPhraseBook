@@ -17,9 +17,13 @@ import com.leoart.koreanphrasebook.ui.favourite.FavouriteFragment
 import com.leoart.koreanphrasebook.ui.info.InfoFragment
 import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
+import android.app.SearchManager
+import android.content.Context
+import android.support.v7.widget.SearchView
 
 
-class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView {
+class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView,
+        SearchView.OnQueryTextListener {
 
     var bottomMenu: BottomMenu? = null
     var auth: Auth? = null
@@ -59,18 +63,41 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.main, menu)
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = menu.findItem(R.id.action_search).actionView as? SearchView
+        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView?.setIconifiedByDefault(true)
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
+
         return true
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        openSearch(query)
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+       return false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_search -> openSearch()
+            R.id.action_search -> {
+                print("cliiiiick search")
+                onSearchRequested()
+            }
         }
         return true
     }
 
-    private fun openSearch() {
-        startActivity(Intent(this, SearchActivity::class.java))
+
+    private fun openSearch(query: String?) {
+        val intent = Intent(this, SearchActivity::class.java)
+        intent.action = Intent.ACTION_SEARCH
+        intent.putExtra(SearchManager.QUERY, query)
+        startActivity(intent)
     }
 
     override fun dictSelected() {

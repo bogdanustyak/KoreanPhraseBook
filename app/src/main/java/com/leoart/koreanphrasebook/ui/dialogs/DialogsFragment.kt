@@ -14,7 +14,8 @@ import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.dialogs.dialog.DialogFragment
 
-class DialogsFragment(title: String) : BaseFragment(title), DialogsView, DialogsRecyclerAdapter.DialogsListInteractionListener {
+class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
+        DialogsRecyclerAdapter.DialogsListInteractionListener {
 
     private var mainView: MainView? = null
     private var adapter: DialogsRecyclerAdapter? = null

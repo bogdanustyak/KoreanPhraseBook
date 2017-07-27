@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#06003e</color>
+    <color name="colorPrimary">#0c0259</color>
     <color name="colorPrimaryDark">@color/colorPrimary</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="list_text_color">#ff285172</color>
+    <color name="bright_blue_text_color">#a2ccff</color>
 
     <color name="chat_left_bubble">#ffededf0</color>
     <color name="chat_right_bubble">#ffdcecff</color>

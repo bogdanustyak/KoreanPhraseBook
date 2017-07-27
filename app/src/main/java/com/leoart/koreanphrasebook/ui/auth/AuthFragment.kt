@@ -28,7 +28,9 @@ class AuthFragment(title: String) : BaseFragment(title) {
     }
 
     private fun onLoginClick() {
-
+        this.mainView?.add(
+                LoginFragment.newInstance(getString(R.string.bt_login), mainView)
+        )
     }
 
     private fun onSignUpClick() {
