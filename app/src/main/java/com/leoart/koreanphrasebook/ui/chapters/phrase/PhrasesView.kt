@@ -7,4 +7,5 @@ import com.leoart.koreanphrasebook.ui.models.Phrase
  */
 interface PhrasesView {
     fun showPhrases(phrases: List<Phrase>)
+    fun updatePhrase(position: Int, phrase: Phrase?)
 }

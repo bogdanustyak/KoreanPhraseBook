@@ -9,15 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.chapters.phrase.PhrasesAdapter.OnPhrasesAdapterInteractionListener
 import com.leoart.koreanphrasebook.ui.models.Phrase
 
 /**
  * Created by bogdan on 6/18/17.
  */
-class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView {
+class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView, OnPhrasesAdapterInteractionListener {
 
     var category = ""
     private var adapter: PhrasesAdapter? = null
+    var phrasePresenter: PhrasesPresenter? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -28,19 +30,28 @@ class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView {
         rvPhrases.layoutManager = layoutManager
         rvPhrases.itemAnimator = DefaultItemAnimator()
 
-        adapter = PhrasesAdapter(emptyList<Phrase>())
+        adapter = PhrasesAdapter(emptyList<Phrase>(), this)
         rvPhrases.adapter = adapter
 
-        PhrasesPresenter(
+        phrasePresenter = PhrasesPresenter(
                 this,
                 category
-        ).requestPhrases()
+        )
+        phrasePresenter?.requestPhrases()
 
         return view
     }
 
     override fun showPhrases(phrases: List<Phrase>) {
         adapter?.updatePhrases(phrases)
+    }
+
+    override fun onFavouriteClicked(position: Int) {
+        phrasePresenter?.onFavouriteClicked(position)
+    }
+
+    override fun updatePhrase(position: Int, phrase: Phrase?) {
+        adapter?.notifyItemChanged(position, phrase)
     }
 
     companion object {

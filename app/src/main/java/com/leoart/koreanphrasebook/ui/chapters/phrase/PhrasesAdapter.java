@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leoart.koreanphrasebook.R;
@@ -18,16 +19,18 @@ import java.util.List;
 public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseViewHolder> {
 
     private List<Phrase> phraseList;
+    private OnPhrasesAdapterInteractionListener listener;
 
-    public PhrasesAdapter(List<Phrase> phraseList) {
+    public PhrasesAdapter(List<Phrase> phraseList, OnPhrasesAdapterInteractionListener listener) {
         this.phraseList = phraseList;
+        this.listener = listener;
     }
 
     @Override
     public PhraseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.item_phrase, parent, false);
-        return new PhraseViewHolder(itemView);
+        return new PhraseViewHolder(itemView, listener);
     }
 
     @Override
@@ -51,6 +54,7 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseVi
             } else {
                 holder.tv_transcription.setText("");
             }
+            holder.ivFavourite.setSelected(phrase.isFavourite());
         }
     }
 
@@ -71,12 +75,24 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseVi
         TextView tv_word;
         TextView tv_translation;
         TextView tv_transcription;
+        ImageView ivFavourite;
 
-        public PhraseViewHolder(View itemView) {
+        public PhraseViewHolder(View itemView, final OnPhrasesAdapterInteractionListener listener) {
             super(itemView);
             tv_word = itemView.findViewById(R.id.tv_word);
             tv_translation = itemView.findViewById(R.id.tv_translation);
             tv_transcription = itemView.findViewById(R.id.tv_transcription);
+            ivFavourite = itemView.findViewById(R.id.ivFavourite);
+            ivFavourite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onFavouriteClicked(getAdapterPosition());
+                }
+            });
         }
+    }
+
+    interface OnPhrasesAdapterInteractionListener {
+        public void onFavouriteClicked(int position);
     }
 }

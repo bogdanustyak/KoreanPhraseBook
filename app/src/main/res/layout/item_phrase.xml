@@ -59,7 +59,7 @@
             android:layout_weight=".10"
             android:layout_gravity="center_vertical"
             android:padding="2dp"
-            android:src="@drawable/ic_favorite_unselected"
+            android:src="@drawable/favourite"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:scaleType="centerInside"

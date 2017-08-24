@@ -1,6 +1,8 @@
 package com.leoart.koreanphrasebook.ui.chapters.phrase
 
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
+import com.leoart.koreanphrasebook.data.realm.FavouriteData
+import com.leoart.koreanphrasebook.ui.models.Phrase
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
@@ -9,13 +11,46 @@ import rx.schedulers.Schedulers
  */
 class PhrasesPresenter(var view: PhrasesView?, var category: String) {
 
+    var phrases: ArrayList<Phrase>? = null
+
     fun requestPhrases() {
         PhrasesRequest().getPhrases(category)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    phrases ->
-                    view?.showPhrases(phrases)
+                .subscribe({ list ->
+                    this.phrases = mergeWithFavourite(list)
+                    view?.showPhrases(phrases ?: ArrayList())
                 })
+    }
+
+    private fun mergeWithFavourite(list: List<Phrase>): ArrayList<Phrase> {
+        val favouriteKeys = FavouriteData().getFavouritePhrases()
+        val mergedPhrases = ArrayList<Phrase>()
+        for (phrase in list) {
+            favouriteKeys
+                    .filter { it == phrase.key }
+                    .forEach { phrase.isFavourite = true }
+            mergedPhrases.add(phrase)
+        }
+        return mergedPhrases
+    }
+
+    fun onFavouriteClicked(position: Int) {
+        val isSelectedFavourite = phrases?.get(position)?.isFavourite ?: false
+        if (isSelectedFavourite) {
+            removeFromFavourite(phrases?.get(position)?.key)
+        } else {
+            addToFavourite(phrases?.get(position)?.key)
+        }
+        phrases?.get(position)?.isFavourite = !isSelectedFavourite
+        view?.updatePhrase(position, phrases?.get(position))
+    }
+
+    private fun addToFavourite(key: String?) {
+        FavouriteData().addPhraseToFavourite(key ?: "")
+    }
+
+    private fun removeFromFavourite(key: String?) {
+        FavouriteData().removePhraseFromFavourite(key ?: "")
     }
 }

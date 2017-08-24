@@ -15,7 +15,7 @@ import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesFragment
 import com.leoart.koreanphrasebook.ui.models.Chapter
 
 
-class ChapterFragment(title: String) : BaseFragment(title), ChaptersView,
+class ChapterFragment : BaseFragment(), ChaptersView,
         ChaptersRecyclerAdapter.ChaptersInteractionListener {
 
     private var mainView: MainView? = null
@@ -54,7 +54,7 @@ class ChapterFragment(title: String) : BaseFragment(title), ChaptersView,
     companion object {
 
         fun newInstance(title: String, mainView: MainView?): ChapterFragment {
-            val fragment = ChapterFragment(title)
+            val fragment = ChapterFragment()
             val args = Bundle()
             fragment.arguments = args
             fragment.mainView = mainView

@@ -36,7 +36,8 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
         // Inflate the layout for this fragment
         val view = inflater!!.inflate(R.layout.fragment_vocabulary, container, false)
 
-        DictionaryRequest().getDictionary()
+        DictionaryRequest()
+                .getDictionary()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : Subscriber<Dictionary>() {

@@ -6,7 +6,10 @@ import java.util.*
 /**
  * Created by bogdan on 11/5/16.
  */
-class Phrase(val word: String, val translation: String, val transcription: String, val index: Int) {
+class Phrase(val word: String, val translation: String, val transcription: String, val index: Int,
+             var isFavourite: Boolean = false) {
+
+    var key = ""
 
     constructor() : this("", "", "", 0)
 

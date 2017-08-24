@@ -5,7 +5,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.leoart.koreanphrasebook.data.network.firebase.FireBaseRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
-import com.leoart.koreanphrasebook.data.parsers.vocabulary.Word
 import rx.Observable
 import java.util.*
 
@@ -28,8 +27,10 @@ class DictionaryRequest : FireBaseRequest() {
     }
 
     fun getDictionary(): Observable<Dictionary> {
-        return rx.Observable.create({ subscriber ->
-            mDataBase.reference?.child(DICTIONARY)?.addListenerForSingleValueEvent(object : ValueEventListener {
+        return Observable.create({ subscriber ->
+            mDataBase.reference
+            ?.child(DICTIONARY)
+            ?.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError?) {
                     throw UnsupportedOperationException("not implemented")
                 }
