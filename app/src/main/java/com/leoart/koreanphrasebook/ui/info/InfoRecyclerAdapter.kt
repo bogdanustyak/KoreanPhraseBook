@@ -44,8 +44,8 @@ class InfoRecyclerAdapter(private var items: List<InfoItem>?, private val intera
     }
 
     class InfoItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var llItemHolder = itemView.findViewById(R.id.ll_holder) as LinearLayout
-        var tvItemName = itemView.findViewById(R.id.tv_name) as TextView
+        var llItemHolder = itemView.findViewById<LinearLayout>(R.id.ll_holder)
+        var tvItemName = itemView.findViewById<TextView>(R.id.tv_name)
 
     }
 

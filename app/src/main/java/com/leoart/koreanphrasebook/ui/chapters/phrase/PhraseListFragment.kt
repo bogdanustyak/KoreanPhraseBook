@@ -23,7 +23,7 @@ class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView {
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.activity_phrase, container, false)
 
-        val rvPhrases = view.findViewById(R.id.rv_phrases) as RecyclerView
+        val rvPhrases = view.findViewById<RecyclerView>(R.id.rv_phrases)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvPhrases.layoutManager = layoutManager
         rvPhrases.itemAnimator = DefaultItemAnimator()

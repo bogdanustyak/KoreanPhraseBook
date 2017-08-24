@@ -74,9 +74,9 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseVi
 
         public PhraseViewHolder(View itemView) {
             super(itemView);
-            tv_word = (TextView) itemView.findViewById(R.id.tv_word);
-            tv_translation = (TextView) itemView.findViewById(R.id.tv_translation);
-            tv_transcription = (TextView) itemView.findViewById(R.id.tv_transcription);
+            tv_word = itemView.findViewById(R.id.tv_word);
+            tv_translation = itemView.findViewById(R.id.tv_translation);
+            tv_transcription = itemView.findViewById(R.id.tv_transcription);
         }
     }
 }

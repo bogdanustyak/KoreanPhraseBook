@@ -43,8 +43,8 @@ class CategoriesAdapter(private var chapterCategories: List<Category>?, private 
     }
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var ll_chapter = itemView.findViewById(R.id.ll_holder) as LinearLayout
-        var tvCategoryName = itemView.findViewById(R.id.tv_name) as TextView
+        var ll_chapter = itemView.findViewById<LinearLayout>(R.id.ll_holder)
+        var tvCategoryName = itemView.findViewById<TextView>(R.id.tv_name)
     }
 
     interface CategoryInteractionListener {

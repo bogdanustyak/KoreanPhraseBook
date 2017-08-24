@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
     }
 
     private fun initUI() {
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         //        CategoryParser(baseContext).writeToFirebaseDB()
@@ -43,11 +43,11 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
         //        PhrasesRequest().writePhrases("category33", data)
 
         this.bottomMenu = BottomMenu(
-                findViewById(R.id.iv_dict) as ImageView,
-                findViewById(R.id.iv_favorite) as ImageView,
-                findViewById(R.id.iv_chapters) as ImageView,
-                findViewById(R.id.iv_dialogs) as ImageView,
-                findViewById(R.id.iv_info) as ImageView,
+                findViewById<ImageView>(R.id.iv_dict),
+                findViewById<ImageView>(R.id.iv_favorite),
+                findViewById<ImageView>(R.id.iv_chapters),
+                findViewById<ImageView>(R.id.iv_dialogs),
+                findViewById<ImageView>(R.id.iv_info),
                 this
         )
         chaptersSelected()

@@ -26,7 +26,7 @@ class ChapterFragment(title: String) : BaseFragment(title), ChaptersView,
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_chapter, container, false)
 
-        val rvChapters = view.findViewById(R.id.rv_chapters) as RecyclerView
+        val rvChapters = view.findViewById<RecyclerView>(R.id.rv_chapters)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvChapters.layoutManager = layoutManager
         rvChapters.itemAnimator = DefaultItemAnimator()

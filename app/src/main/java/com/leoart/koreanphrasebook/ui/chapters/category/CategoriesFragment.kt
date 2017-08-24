@@ -29,7 +29,7 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.activity_categories, container, false)
-        val rvCategories = view.findViewById(R.id.rv_categories) as RecyclerView
+        val rvCategories = view.findViewById<RecyclerView>(R.id.rv_categories)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvCategories.layoutManager = layoutManager
         rvCategories.itemAnimator = DefaultItemAnimator()

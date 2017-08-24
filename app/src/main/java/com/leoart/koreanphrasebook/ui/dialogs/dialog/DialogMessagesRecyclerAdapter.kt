@@ -65,8 +65,8 @@ internal class DialogMessagesRecyclerAdapter(private var messages: List<Replic>?
     }
 
     internal class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvAuthorName = itemView.findViewById(R.id.tv_author_name) as TextView
-        var tvMessage = itemView.findViewById(R.id.txtMessage) as TextView
+        val tvAuthorName = itemView.findViewById<TextView>(R.id.tv_author_name)
+        var tvMessage = itemView.findViewById<TextView>(R.id.txtMessage)
 
     }
 

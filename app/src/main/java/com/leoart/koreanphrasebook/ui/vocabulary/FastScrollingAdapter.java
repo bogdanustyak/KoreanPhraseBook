@@ -49,7 +49,7 @@ public class FastScrollingAdapter extends RecyclerView.Adapter
 
         public FastScrollViewHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.tvLetter);
+            textView = itemView.findViewById(R.id.tvLetter);
         }
     }
 }

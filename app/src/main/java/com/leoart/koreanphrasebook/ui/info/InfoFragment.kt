@@ -29,7 +29,7 @@ class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.Inf
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_info, container, false)
 
-        val rvInfo = view.findViewById(R.id.rv_info) as RecyclerView
+        val rvInfo = view.findViewById<RecyclerView>(R.id.rv_info)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvInfo.layoutManager = layoutManager
         rvInfo.itemAnimator = DefaultItemAnimator()

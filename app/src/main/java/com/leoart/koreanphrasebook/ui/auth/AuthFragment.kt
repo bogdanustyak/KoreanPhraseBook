@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
@@ -18,10 +19,10 @@ class AuthFragment(title: String) : BaseFragment(title) {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_auth, container, false)
-        view.findViewById(R.id.bt_login).setOnClickListener {
+        view.findViewById<Button>(R.id.bt_login).setOnClickListener {
             onLoginClick()
         }
-        view.findViewById(R.id.bt_sign_up).setOnClickListener {
+        view.findViewById<Button>(R.id.bt_sign_up).setOnClickListener {
             onSignUpClick()
         }
         return view

@@ -92,10 +92,10 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
     }
 
     class DictViewHolder internal constructor(itemView: View) : SectioningAdapter.ItemViewHolder(itemView) {
-        var text = itemView.findViewById(R.id.text) as TextView
+        var text = itemView.findViewById<TextView>(R.id.text)
     }
 
     inner class HeaderViewHolder internal constructor(itemView: View) : SectioningAdapter.HeaderViewHolder(itemView) {
-        var charHeader = itemView.findViewById(R.id.charHeader) as TextView
+        var charHeader = itemView.findViewById<TextView>(R.id.charHeader)
     }
 }

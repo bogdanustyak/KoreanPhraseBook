@@ -49,8 +49,8 @@ class DialogsRecyclerAdapter(private var dialogs: List<DialogResponse>?, private
     }
 
     class DialogViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val llHolder = itemView.findViewById(R.id.ll_holder) as LinearLayout
-        val tvDialogName: TextView = itemView.findViewById(R.id.tv_name) as TextView
+        val llHolder = itemView.findViewById<LinearLayout>(R.id.ll_holder)
+        val tvDialogName = itemView.findViewById<TextView>(R.id.tv_name)
     }
 
     interface DialogsListInteractionListener {

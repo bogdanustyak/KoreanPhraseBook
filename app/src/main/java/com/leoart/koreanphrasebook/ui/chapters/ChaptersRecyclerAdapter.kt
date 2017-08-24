@@ -51,8 +51,8 @@ class ChaptersRecyclerAdapter(private var chapters: List<Chapter>?, private val 
     }
 
     class ChapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var ll_chapter = itemView.findViewById(R.id.ll_holder) as LinearLayout
-        var tvChapterName = itemView.findViewById(R.id.tv_name) as TextView
+        var ll_chapter = itemView.findViewById<LinearLayout>(R.id.ll_holder)
+        var tvChapterName = itemView.findViewById<TextView>(R.id.tv_name)
 
     }
 

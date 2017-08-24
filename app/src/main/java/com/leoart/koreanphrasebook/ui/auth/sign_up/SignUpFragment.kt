@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.leoart.koreanphrasebook.R
@@ -36,10 +37,10 @@ class SignUpFragment(title: String) : BaseFragment(title) {
     }
 
     private fun initUI(view: View) {
-        etEmail = view.findViewById(R.id.et_email) as EditText
-        etPassword = view.findViewById(R.id.et_password) as EditText
-        etConfirmPassword = view.findViewById(R.id.et_confirm_password) as EditText
-        view.findViewById(R.id.bt_sign_up).setOnClickListener {
+        etEmail = view.findViewById<EditText>(R.id.et_email)
+        etPassword = view.findViewById<EditText>(R.id.et_password)
+        etConfirmPassword = view.findViewById<EditText>(R.id.et_confirm_password)
+        view.findViewById<Button>(R.id.bt_sign_up).setOnClickListener {
             onSignUpClick()
         }
     }

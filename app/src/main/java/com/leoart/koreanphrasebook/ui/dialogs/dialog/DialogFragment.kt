@@ -29,7 +29,7 @@ class DialogFragment(title: String) : BaseFragment(title) {
         val view = inflater!!.inflate(R.layout.activity_dialog, container, false)
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val rvDialog = view.findViewById(R.id.rv_dialog) as RecyclerView
+        val rvDialog = view.findViewById<RecyclerView>(R.id.rv_dialog)
         rvDialog.layoutManager = layoutManager
         rvDialog.itemAnimator = DefaultItemAnimator()
         rvDialog.adapter = adapter

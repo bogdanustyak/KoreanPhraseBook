@@ -64,19 +64,19 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
     }
 
     private fun setDataInAdapter(t: Dictionary, view: View) {
-        val recyclerView = view.findViewById(R.id.rv_vocabulary) as RecyclerView
+        val recyclerView = view.findViewById<RecyclerView>(R.id.rv_vocabulary)
         val adapter = DictionaryAdapter(t)
         recyclerView.layoutManager = StickyHeaderLayoutManager()
         recyclerView.adapter = adapter
 
-        val fastScrollingRecycler = view.findViewById(R.id.recycler) as FastScrollRecyclerView
+        val fastScrollingRecycler = view.findViewById<FastScrollRecyclerView>(R.id.recycler)
         fastScrollingRecycler.layoutManager = LinearLayoutManager(activity)
         //val letters = t.sort().keys.toTypedArray<Char>()
         //  fastScrollingRecycler.adapter = FastScrollingAdapter(letters)
     }
 
     private fun setupFastScrolling(data: Dictionary, view: View) {
-        val fastScrollingRecycler = view.findViewById(R.id.recycler) as FastScrollRecyclerView
+        val fastScrollingRecycler = view.findViewById<FastScrollRecyclerView>(R.id.recycler)
         fastScrollingRecycler.layoutManager = LinearLayoutManager(activity)
         //  val letters = data.sort().keys.toTypedArray<Char>()
         // fastScrollingRecycler.adapter = FastScrollingAdapter(letters)
