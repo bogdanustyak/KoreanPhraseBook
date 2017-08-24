@@ -162,3 +162,4 @@ src/main/resources/
 .idea/libraries/calligraphy_2_3_0.xml
 .idea/libraries/kotlinx_coroutines_android_0_15.xml
 .idea/libraries/kotlinx_coroutines_core_0_15.xml
+src/main/java/com/leoart/koreanphrasebook/data/realm/

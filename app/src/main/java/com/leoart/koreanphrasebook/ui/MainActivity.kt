@@ -1,8 +1,11 @@
 package com.leoart.koreanphrasebook.ui
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -12,14 +15,10 @@ import com.leoart.koreanphrasebook.data.Auth
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
-import com.leoart.koreanphrasebook.ui.favourite.AuthFragment
 import com.leoart.koreanphrasebook.ui.favourite.FavouriteFragment
 import com.leoart.koreanphrasebook.ui.info.InfoFragment
 import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
-import android.app.SearchManager
-import android.content.Context
-import android.support.v7.widget.SearchView
 
 
 class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView,
@@ -79,7 +78,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-       return false
+        return false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -105,12 +104,12 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
     }
 
     override fun favouriteSelected() {
-        val userSignedIn = auth?.isUserSignedIn() ?: false
-        if (userSignedIn) {
-            this.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), this))
-        } else {
-            this.replace(AuthFragment.newInstance(getString(R.string.auth), this))
-        }
+        this.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), this))
+//        if (userSignedIn) {
+//
+//        } else {
+//            this.replace(AuthFragment.newInstance(getString(R.string.auth), this))
+//        }
     }
 
     override fun chaptersSelected() {

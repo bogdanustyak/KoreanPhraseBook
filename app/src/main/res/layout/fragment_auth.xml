@@ -9,12 +9,15 @@
         android:id="@+id/bt_login"
         android:layout_width="@dimen/bt_auth_width"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_marginBottom="20dp"
         android:text="@string/bt_login" />
 
     <Button
         android:id="@+id/bt_sign_up"
         android:layout_width="@dimen/bt_auth_width"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:text="@string/bt_register" />
 
 </LinearLayout>
