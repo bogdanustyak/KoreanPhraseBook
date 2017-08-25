@@ -3,9 +3,13 @@ package com.leoart.koreanphrasebook.data.network.firebase.dictionary
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.leoart.koreanphrasebook.data.network.firebase.CategoriesRequest
+import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
 import com.leoart.koreanphrasebook.data.network.firebase.FireBaseRequest
 import com.leoart.koreanphrasebook.ui.models.Phrase
 import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import java.util.*
 
 
@@ -25,6 +29,7 @@ class PhrasesRequest : FireBaseRequest() {
             mDataBaseRef.updateChildren(childUpdates)
         }
     }
+
 
     fun getPhrases(categoryName: String): Observable<List<Phrase>> {
         return Observable.create({ subscriber ->

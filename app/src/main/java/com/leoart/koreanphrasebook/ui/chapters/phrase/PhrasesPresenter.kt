@@ -11,7 +11,7 @@ import rx.schedulers.Schedulers
  */
 class PhrasesPresenter(var view: PhrasesView?, var category: String) {
 
-    var phrases: ArrayList<Phrase>? = null
+    var phrases = ArrayList<Phrase>()
 
     fun requestPhrases() {
         PhrasesRequest().getPhrases(category)
@@ -19,7 +19,7 @@ class PhrasesPresenter(var view: PhrasesView?, var category: String) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list ->
                     this.phrases = mergeWithFavourite(list)
-                    view?.showPhrases(phrases ?: ArrayList())
+                    view?.showPhrases(phrases)
                 })
     }
 
@@ -28,7 +28,7 @@ class PhrasesPresenter(var view: PhrasesView?, var category: String) {
         val mergedPhrases = ArrayList<Phrase>()
         for (phrase in list) {
             favouriteKeys
-                    .filter { it == phrase.key }
+                    .filter { it.key == phrase.key }
                     .forEach { phrase.isFavourite = true }
             mergedPhrases.add(phrase)
         }
@@ -36,21 +36,21 @@ class PhrasesPresenter(var view: PhrasesView?, var category: String) {
     }
 
     fun onFavouriteClicked(position: Int) {
-        val isSelectedFavourite = phrases?.get(position)?.isFavourite ?: false
+        val isSelectedFavourite = phrases[position].isFavourite
         if (isSelectedFavourite) {
-            removeFromFavourite(phrases?.get(position)?.key)
+            removeFromFavourite(phrases[position])
         } else {
-            addToFavourite(phrases?.get(position)?.key)
+            addToFavourite(phrases[position])
         }
-        phrases?.get(position)?.isFavourite = !isSelectedFavourite
-        view?.updatePhrase(position, phrases?.get(position))
+        phrases[position].isFavourite = !isSelectedFavourite
+        view?.updatePhrase(position, phrases[position])
     }
 
-    private fun addToFavourite(key: String?) {
-        FavouriteData().addPhraseToFavourite(key ?: "")
+    private fun addToFavourite(key: Phrase) {
+        FavouriteData().addPhraseToFavourite(key)
     }
 
-    private fun removeFromFavourite(key: String?) {
-        FavouriteData().removePhraseFromFavourite(key ?: "")
+    private fun removeFromFavourite(key: Phrase) {
+        FavouriteData().removePhraseFromFavourite(key )
     }
 }

@@ -92,7 +92,7 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseVi
         }
     }
 
-    interface OnPhrasesAdapterInteractionListener {
+    public interface OnPhrasesAdapterInteractionListener {
         public void onFavouriteClicked(int position);
     }
 }

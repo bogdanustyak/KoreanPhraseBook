@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.data.realm
 
+import com.leoart.koreanphrasebook.ui.models.Phrase
 import io.realm.Realm
 
 /**
@@ -9,33 +10,35 @@ class FavouriteData {
 
     private val realm = Realm.getDefaultInstance()
 
-    fun addPhraseToFavourite(phraseKey: String) {
-        val favouriteRealmModel = FavouriteModel(phraseKey)
+    fun addPhraseToFavourite(phrase: Phrase) {
+        val favouriteRealmModel = FavouriteModel(phrase)
         realm.beginTransaction()
         realm.copyToRealmOrUpdate(favouriteRealmModel)
         realm.commitTransaction()
         realm.close()
     }
 
-    fun removePhraseFromFavourite(phraseKey: String) {
-        val favouriteRealmModel = FavouriteModel(phraseKey)
+    fun removePhraseFromFavourite(phrase: Phrase) {
         realm.beginTransaction()
+        val favouriteRealmModel = realm.where(FavouriteModel::class.java)
+                .equalTo("phraseKey", phrase.key)
+                .findFirst()
         favouriteRealmModel.deleteFromRealm()
         realm.commitTransaction()
         realm.close()
     }
 
-    fun getFavouritePhrases(): ArrayList<String> {
-        val phraseKeys = ArrayList<String>()
+    fun getFavouritePhrases(): ArrayList<Phrase> {
+        val phrases = ArrayList<Phrase>()
         realm.beginTransaction()
         realm.where(FavouriteModel::class.java)
                 .findAll()
-                .mapTo(phraseKeys) { it ->
-                    it.phraseKey
+                .mapTo(phrases) { it ->
+                    it.toPhase()
                 }
         realm.commitTransaction()
         realm.close()
-        return phraseKeys
+        return phrases
     }
 
 
