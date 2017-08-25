@@ -7,5 +7,5 @@ import com.leoart.koreanphrasebook.ui.models.Phrase
  */
 interface FavouriteView {
     fun showPhrases(phrases: List<Phrase>)
-    fun removePgrase(position: Int, phrase: Phrase)
+    fun removePhrase(position: Int)
 }

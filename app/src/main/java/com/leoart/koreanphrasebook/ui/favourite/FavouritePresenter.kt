@@ -13,22 +13,12 @@ class FavouritePresenter(val view: FavouriteView) {
     fun requestPhrases() {
         favourites = FavouriteData().getFavouritePhrases()
         view.showPhrases(favourites)
-//        PhrasesRequest().getPhrases()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({ list ->
-//                    for (item in list) {
-//                        favouriteKeys
-//                                .filter { it == item.key }
-//                                .forEach { favourites.add(item) }
-//                        view.showPhrases(list)
-//                    }
-//                })
     }
 
     fun onFavouriteClicked(position: Int) {
         FavouriteData().removePhraseFromFavourite(favourites[position])
-        view.removePgrase(position, favourites[position])
+        favourites.removeAt(position)
+        view.removePhrase(position)
     }
 
 }

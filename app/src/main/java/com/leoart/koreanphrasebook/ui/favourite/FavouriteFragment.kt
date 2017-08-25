@@ -46,7 +46,7 @@ class FavouriteFragment : BaseFragment(), FavouriteView, OnPhrasesAdapterInterac
         adapter?.updatePhrases(phrases)
     }
 
-    override fun removePgrase(position: Int, phrase: Phrase) {
+    override fun removePhrase(position: Int) {
         adapter?.notifyItemRemoved(position)
     }
 
