@@ -12,7 +12,7 @@ class FBSearch(val searchPhrase: String) : FireBaseRequest() {
 
     fun search(): Observable<List<String>> {
         return Observable.create({ subscriber ->
-            mDataBaseRef.orderByKey().startAt(searchPhrase).endAt(searchPhrase + "\uf8ff")
+            mDataBaseRef.orderByChild("categoryPhrases").startAt(searchPhrase).endAt( "\uf8ff")
                     .addValueEventListener(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError?) {
                             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

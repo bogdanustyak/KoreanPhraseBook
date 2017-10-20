@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.widget.ImageView
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
+import com.leoart.koreanphrasebook.data.network.firebase.FBSearch
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
@@ -19,6 +20,8 @@ import com.leoart.koreanphrasebook.ui.favourite.FavouriteFragment
 import com.leoart.koreanphrasebook.ui.info.InfoFragment
 import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 
 
 class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView,
@@ -72,7 +75,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
         return true
     }
 
-    override fun onQueryTextSubmit(query: String?): Boolean {
+    override fun onQueryTextSubmit(query: String): Boolean {
         openSearch(query)
         return true
     }
@@ -92,11 +95,19 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
     }
 
 
-    private fun openSearch(query: String?) {
-        val intent = Intent(this, SearchActivity::class.java)
-        intent.action = Intent.ACTION_SEARCH
-        intent.putExtra(SearchManager.QUERY, query)
-        startActivity(intent)
+    private fun openSearch(query: String) {
+//        val intent = Intent(this, SearchActivity::class.java)
+//        intent.action = Intent.ACTION_SEARCH
+//        intent.putExtra(SearchManager.QUERY, query)
+//        startActivity(intent)
+        FBSearch(query).search()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ items ->
+                    for (item in items) {
+                        print(item)
+                    }
+                })
     }
 
     override fun dictSelected() {
