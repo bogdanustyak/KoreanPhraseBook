@@ -4,7 +4,7 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.leoart.koreanphrasebook"
         minSdkVersion 19
@@ -26,7 +26,7 @@ android {
 }
 
 buildscript {
-    ext.kotlin_version = '1.1.4-2'
+    ext.kotlin_version = '1.1.51'
 
     repositories {
         jcenter()
@@ -45,8 +45,8 @@ repositories {
 }
 
 ext {
-    support_lib = "26.0.1"
-    firebase = "11.0.2"
+    support_lib = "26.1.0"
+    firebase = "11.4.2"
     anko_version = "0.10.1"
 }
 

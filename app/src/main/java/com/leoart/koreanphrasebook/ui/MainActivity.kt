@@ -12,7 +12,7 @@ import android.view.MenuItem
 import android.widget.ImageView
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
-import com.leoart.koreanphrasebook.data.network.firebase.FBSearch
+import com.leoart.koreanphrasebook.data.network.firebase.search.FBSearch
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
@@ -96,18 +96,10 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
 
 
     private fun openSearch(query: String) {
-//        val intent = Intent(this, SearchActivity::class.java)
-//        intent.action = Intent.ACTION_SEARCH
-//        intent.putExtra(SearchManager.QUERY, query)
-//        startActivity(intent)
-        FBSearch(query).search()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ items ->
-                    for (item in items) {
-                        print(item)
-                    }
-                })
+        val intent = Intent(this, SearchActivity::class.java)
+        intent.action = Intent.ACTION_SEARCH
+        intent.putExtra(SearchManager.QUERY, query)
+        startActivity(intent)
     }
 
     override fun dictSelected() {
