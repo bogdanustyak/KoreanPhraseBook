@@ -58,6 +58,7 @@ class ChapterFragment : BaseFragment(), ChaptersView,
             val args = Bundle()
             fragment.arguments = args
             fragment.mainView = mainView
+            fragment.title = title
             return fragment
         }
     }

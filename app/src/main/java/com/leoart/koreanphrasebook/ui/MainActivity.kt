@@ -12,7 +12,6 @@ import android.view.MenuItem
 import android.widget.ImageView
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
-import com.leoart.koreanphrasebook.data.network.firebase.search.FBSearch
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
@@ -20,8 +19,7 @@ import com.leoart.koreanphrasebook.ui.favourite.FavouriteFragment
 import com.leoart.koreanphrasebook.ui.info.InfoFragment
 import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import com.leoart.koreanphrasebook.utils.NetworkChecker
 
 
 class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView,
@@ -53,13 +51,21 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
                 findViewById<ImageView>(R.id.iv_info),
                 this
         )
-        chaptersSelected()
+        if (NetworkChecker(this).isNetworkAvailable) {
+            chaptersSelected()
+        } else {
+            showNoNetworkFragment()
+        }
         supportFragmentManager.addOnBackStackChangedListener {
             val fragment = supportFragmentManager.findFragmentById(R.id.main_content)
             if (fragment != null && fragment is BaseFragment) {
                 this.title = fragment.title
             }
         }
+    }
+
+    private fun showNoNetworkFragment() {
+        this.replace(NoNetworkFragment.newInstance())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -103,11 +109,19 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
     }
 
     override fun dictSelected() {
-        this.replace(VocabularyFragment.newInstance(getString(R.string.menu_dict)))
+        if (NetworkChecker(this).isNetworkAvailable) {
+            this.replace(VocabularyFragment.newInstance(getString(R.string.menu_dict)))
+        } else {
+            showNoNetworkFragment()
+        }
     }
 
     override fun favouriteSelected() {
-        this.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), this))
+        if (NetworkChecker(this).isNetworkAvailable) {
+            this.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), this))
+        } else {
+            showNoNetworkFragment()
+        }
 //        if (userSignedIn) {
 //
 //        } else {
@@ -116,11 +130,19 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
     }
 
     override fun chaptersSelected() {
-        this.replace(ChapterFragment.newInstance(getString(R.string.menu_chapters), this))
+        if (NetworkChecker(this).isNetworkAvailable) {
+            this.replace(ChapterFragment.newInstance(getString(R.string.menu_chapters), this))
+        } else {
+            showNoNetworkFragment()
+        }
     }
 
     override fun dialogsSelected() {
-        this.replace(DialogsFragment.newInstance(getString(R.string.menu_dialogs), this))
+        if (NetworkChecker(this).isNetworkAvailable) {
+            this.replace(DialogsFragment.newInstance(getString(R.string.menu_dialogs), this))
+        } else {
+            showNoNetworkFragment()
+        }
     }
 
     override fun infoSelected() {

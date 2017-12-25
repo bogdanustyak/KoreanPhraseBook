@@ -61,6 +61,7 @@ class FavouriteFragment : BaseFragment(), FavouriteView, OnPhrasesAdapterInterac
             val args = Bundle()
             fragment.arguments = args
             fragment.mainView = mainView
+            fragment.title = title
             return fragment
         }
     }
