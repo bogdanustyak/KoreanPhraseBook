@@ -21,9 +21,9 @@ class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView, OnPh
     private var adapter: PhrasesAdapter? = null
     var phrasePresenter: PhrasesPresenter? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.activity_phrase, container, false)
+        val view = inflater.inflate(R.layout.activity_phrase, container, false)
 
         val rvPhrases = view.findViewById<RecyclerView>(R.id.rv_phrases)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

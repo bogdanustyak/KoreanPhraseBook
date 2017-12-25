@@ -22,9 +22,9 @@ class ChapterFragment : BaseFragment(), ChaptersView,
     private val chapters: List<Chapter>? = null
     private var adapter: ChaptersRecyclerAdapter? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_chapter, container, false)
+        val view = inflater.inflate(R.layout.fragment_chapter, container, false)
 
         val rvChapters = view.findViewById<RecyclerView>(R.id.rv_chapters)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

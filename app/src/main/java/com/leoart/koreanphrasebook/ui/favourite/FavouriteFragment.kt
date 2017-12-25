@@ -23,9 +23,9 @@ class FavouriteFragment : BaseFragment(), FavouriteView, OnPhrasesAdapterInterac
     private var adapter: PhrasesAdapter? = null
     private var presenter: FavouritePresenter? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.activity_phrase, container, false)
+        val view = inflater.inflate(R.layout.activity_phrase, container, false)
 
 
         val rvPhrases = view.findViewById<RecyclerView>(R.id.rv_phrases)
