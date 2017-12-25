@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 
-class NoNetworkFragment : BaseFragment("Error") {
+class NoNetworkFragment : BaseFragment("Помилка") {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
