@@ -16,9 +16,9 @@ class AuthFragment(title: String) : BaseFragment(title) {
 
     private var mainView: MainView? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_auth, container, false)
+        val view = inflater.inflate(R.layout.fragment_auth, container, false)
         view.findViewById<Button>(R.id.bt_login).setOnClickListener {
             onLoginClick()
         }

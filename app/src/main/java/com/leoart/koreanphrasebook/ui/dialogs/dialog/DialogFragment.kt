@@ -24,9 +24,9 @@ class DialogFragment(title: String) : BaseFragment(title) {
     var dialog: DialogResponse? = null
     private val adapter = DialogMessagesRecyclerAdapter(ArrayList<Replic>())
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.activity_dialog, container, false)
+        val view = inflater.inflate(R.layout.activity_dialog, container, false)
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val rvDialog = view.findViewById<RecyclerView>(R.id.rv_dialog)

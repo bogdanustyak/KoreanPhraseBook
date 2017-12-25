@@ -28,9 +28,9 @@ class SignUpFragment(title: String) : BaseFragment(title) {
     private var auth: Auth? = null
     private var mainView: MainView? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_sign_up, container, false)
+        val view = inflater.inflate(R.layout.fragment_sign_up, container, false)
         initUI(view)
         auth = FRAuth()
         return view

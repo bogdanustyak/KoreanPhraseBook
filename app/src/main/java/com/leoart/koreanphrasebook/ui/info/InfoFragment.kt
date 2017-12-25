@@ -25,9 +25,9 @@ class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.Inf
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_info, container, false)
+        val view = inflater.inflate(R.layout.fragment_info, container, false)
 
         val rvInfo = view.findViewById<RecyclerView>(R.id.rv_info)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
