@@ -3,8 +3,8 @@ package com.leoart.koreanphrasebook.ui.chapters.phrase
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
 import com.leoart.koreanphrasebook.data.realm.FavouriteData
 import com.leoart.koreanphrasebook.ui.models.Phrase
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
@@ -51,6 +51,6 @@ class PhrasesPresenter(var view: PhrasesView?, var category: String) {
     }
 
     private fun removeFromFavourite(key: Phrase) {
-        FavouriteData().removePhraseFromFavourite(key )
+        FavouriteData().removePhraseFromFavourite(key)
     }
 }

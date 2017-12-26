@@ -2,8 +2,8 @@ package com.leoart.koreanphrasebook.data.network.firebase.auth
 
 import com.google.firebase.auth.FirebaseAuth
 import com.leoart.koreanphrasebook.data.Auth
-import com.leoart.koreanphrasebook.data.models.User
-import rx.Observable
+import com.leoart.koreanphrasebook.data.repository.models.User
+import io.reactivex.Observable
 
 /**
  * Created by bogdan on 6/22/17.
@@ -26,7 +26,7 @@ class FRAuth : Auth {
                             val mail = firAuth?.currentUser?.email
                             if (mail != null) {
                                 emitter.onNext(User(mail))
-                                emitter.onCompleted()
+                                emitter.onComplete()
                             } else {
                                 emitter.onError(Throwable(REG_ERROR))
                             }
@@ -45,7 +45,7 @@ class FRAuth : Auth {
                             val user = firAuth?.currentUser
                             if (user != null) {
                                 emitter.onNext(User(email))
-                                emitter.onCompleted()
+                                emitter.onComplete()
                             } else {
                                 emitter.onError(Throwable(LOGIN_ERROR))
                             }

@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.network.firebase.search.FBSearch
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class SearchActivity : AppCompatActivity() {
 

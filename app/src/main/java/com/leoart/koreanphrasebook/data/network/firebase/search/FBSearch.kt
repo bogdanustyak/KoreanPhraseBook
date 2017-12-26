@@ -6,9 +6,7 @@ import com.google.firebase.database.ValueEventListener
 import com.leoart.koreanphrasebook.data.network.firebase.FireBaseRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.ui.models.Phrase
-import rx.Observable
-import java.util.HashMap
-import kotlin.collections.ArrayList
+import io.reactivex.Observable
 import kotlin.collections.component1
 import kotlin.collections.component2
 
@@ -51,7 +49,7 @@ class FBSearch(val searchPhrase: String) : FireBaseRequest() {
                                     }
                                 }
                                 subscriber.onNext(list)
-                                subscriber.onCompleted()
+                                subscriber.onComplete()
                             } else {
                                 subscriber.onError(Throwable("Data is empty"))
                             }
@@ -90,7 +88,7 @@ class FBSearch(val searchPhrase: String) : FireBaseRequest() {
                                     }
                                 }
                                 subscriber.onNext(list)
-                                subscriber.onCompleted()
+                                subscriber.onComplete()
                             } else {
                                 subscriber.onError(Throwable("Data is empty"))
                             }

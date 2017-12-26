@@ -1,9 +1,9 @@
 package com.leoart.koreanphrasebook.ui.chapters.category
 
-import com.leoart.koreanphrasebook.ui.models.Chapter
 import com.leoart.koreanphrasebook.data.network.firebase.CategoriesRequest
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import com.leoart.koreanphrasebook.ui.models.Chapter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by bogdan on 11/6/16.
@@ -14,8 +14,7 @@ class CategoriesPresenter(val view: CategoriesView?) {
         CategoriesRequest().getAllCategoriesOfChapter(chapter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    categories ->
+                .subscribe({ categories ->
                     view?.showCategories(categories)
                 })
     }

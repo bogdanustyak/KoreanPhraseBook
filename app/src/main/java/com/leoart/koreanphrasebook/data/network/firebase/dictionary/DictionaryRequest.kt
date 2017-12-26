@@ -5,9 +5,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.leoart.koreanphrasebook.data.network.firebase.FireBaseRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
-import rx.Observable
-import java.util.*
-
+import io.reactivex.Observable
 
 /**
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
@@ -29,31 +27,30 @@ class DictionaryRequest : FireBaseRequest() {
     fun getDictionary(): Observable<Dictionary> {
         return Observable.create({ subscriber ->
             mDataBase.reference
-            ?.child(DICTIONARY)
-            ?.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    throw UnsupportedOperationException("not implemented")
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                    if (dataSnapshot != null) {
-                        val dict = dataSnapshot.value as HashMap<*, *>
-                        val result = Dictionary()
-                        for ((key, value) in dict) {
-                            val letter = (key as String)[0]
-                            val words = value as ArrayList<HashMap<String, String>>
-                            result.add(letter, words)
+                    ?.child(DICTIONARY)
+                    ?.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError?) {
+                            throw UnsupportedOperationException("not implemented")
                         }
-                        subscriber.onNext(result)
-                        subscriber.onCompleted()
 
-                    } else {
-                        subscriber.onError(Throwable("data was not found"))
-                        subscriber.onCompleted()
-                    }
-                }
+                        override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                            if (dataSnapshot != null) {
+                                val dict = dataSnapshot.value as HashMap<*, *>
+                                val result = Dictionary()
+                                for ((key, value) in dict) {
+                                    val letter = (key as String)[0]
+                                    val words = value as ArrayList<HashMap<String, String>>
+                                    result.add(letter, words)
+                                }
+                                subscriber.onNext(result)
+                                subscriber.onComplete()
 
-            })
+                            } else {
+                                subscriber.onError(Throwable("data was not found"))
+                                subscriber.onComplete()
+                            }
+                        }
+                    })
         })
     }
 }

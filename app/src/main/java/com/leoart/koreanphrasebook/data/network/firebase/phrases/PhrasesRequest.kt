@@ -3,15 +3,9 @@ package com.leoart.koreanphrasebook.data.network.firebase.dictionary
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.leoart.koreanphrasebook.data.network.firebase.CategoriesRequest
-import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
 import com.leoart.koreanphrasebook.data.network.firebase.FireBaseRequest
 import com.leoart.koreanphrasebook.ui.models.Phrase
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import java.util.*
-
+import io.reactivex.Observable
 
 /**
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
@@ -47,11 +41,11 @@ class PhrasesRequest : FireBaseRequest() {
                             phrases.add(phrase)
                         }
                         subscriber.onNext(phrases)
-                        subscriber.onCompleted()
+                        subscriber.onComplete()
 
                     } else {
                         subscriber.onError(Throwable("data was not found"))
-                        subscriber.onCompleted()
+                        subscriber.onComplete()
                     }
                 }
 

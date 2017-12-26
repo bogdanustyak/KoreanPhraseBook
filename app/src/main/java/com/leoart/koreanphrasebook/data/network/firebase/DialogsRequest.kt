@@ -6,8 +6,7 @@ import com.google.firebase.database.ValueEventListener
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.ui.dialogs.models.Dialog
-import rx.Observable
-import java.util.*
+import io.reactivex.Observable
 
 /**
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
@@ -15,7 +14,7 @@ import java.util.*
 class DialogsRequest : FireBaseRequest() {
 
     fun getAllDialogNames(): Observable<List<DialogResponse>> {
-        return Observable.create({ subscriber ->
+        return Observable.create({ emmitter ->
             mDataBase.reference?.child("dialogs")?.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError?) {
                     throw UnsupportedOperationException("not implemented")
@@ -29,15 +28,13 @@ class DialogsRequest : FireBaseRequest() {
                             val dialog = item.getValue(Dialog::class.java) as Dialog
                             dialogsList.add(DialogResponse(uid, dialog.name))
                         }
-
-                        subscriber.onNext(dialogsList)
-                        subscriber.onCompleted()
+                        emmitter.onNext(dialogsList)
+                        emmitter.onComplete()
                     } else {
-                        subscriber.onError(Throwable("data was not found"))
-                        subscriber.onCompleted()
+                        emmitter.onError(Throwable("data was not found"))
+                        emmitter.onComplete()
                     }
                 }
-
             })
         })
     }
@@ -55,16 +52,13 @@ class DialogsRequest : FireBaseRequest() {
                             it.getValue(Replic::class.java) as Replic
                         }
                         subscriber.onNext(replics)
-                        subscriber.onCompleted()
+                        subscriber.onComplete()
                     } else {
                         subscriber.onError(Throwable("data was not found"))
-                        subscriber.onCompleted()
+                        subscriber.onComplete()
                     }
                 }
-
             })
         })
     }
-
-
 }

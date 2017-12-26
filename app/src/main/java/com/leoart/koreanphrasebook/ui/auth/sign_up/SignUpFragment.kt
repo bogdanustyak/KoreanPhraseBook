@@ -11,11 +11,9 @@ import android.widget.EditText
 import android.widget.Toast
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
-import com.leoart.koreanphrasebook.data.models.User
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
-import rx.Observer
 
 /**
  * Created by bogdan on 6/18/17.
@@ -52,24 +50,18 @@ class SignUpFragment(title: String) : BaseFragment(title) {
             progress.show()
 
             auth?.register(email(), password())
-                    ?.subscribe(object : Observer<User> {
-                        override fun onCompleted() {
-
-                        }
-
-                        override fun onNext(t: User?) {
-                            progress.dismiss()
-                            mainView?.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), mainView))
-                            Toast.makeText(context, "SIGNED up!!!", Toast.LENGTH_SHORT).show()
-                        }
-
-                        override fun onError(e: Throwable?) {
-                            progress.dismiss()
-                            e?.printStackTrace()
-                            Toast.makeText(context, e?.message ?: "Some error occurred", Toast.LENGTH_SHORT).show()
-                        }
-
-                    })
+                    ?.subscribe(
+                            { user ->
+                                progress.dismiss()
+                                mainView?.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), mainView))
+                                Toast.makeText(context, "SIGNED up!!!", Toast.LENGTH_SHORT).show()
+                            },
+                            { throwable ->
+                                progress.dismiss()
+                                throwable.printStackTrace()
+                                Toast.makeText(context, throwable.message ?: "Some error occurred", Toast.LENGTH_SHORT).show()
+                            }
+                    )
         } else {
             Toast.makeText(context, "Data is not valid", Toast.LENGTH_SHORT).show()
         }

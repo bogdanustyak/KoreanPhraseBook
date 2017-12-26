@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'realm-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 27
@@ -48,6 +49,7 @@ ext {
     support_lib = "27.0.2"
     firebase = "11.8.0"
     anko_version = "0.10.3"
+    archRoomVersion = "1.0.0"
 }
 
 dependencies {
@@ -57,32 +59,44 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.2.10'
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
-    compile "com.google.firebase:firebase-core:$firebase"
-    compile "com.google.firebase:firebase-database:$firebase"
-    compile "com.google.firebase:firebase-auth:$firebase"
+    implementation "com.google.firebase:firebase-core:$firebase"
+    implementation "com.google.firebase:firebase-database:$firebase"
+    implementation "com.google.firebase:firebase-auth:$firebase"
 
-    compile 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
+    implementation 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
 
     implementation "com.android.support:appcompat-v7:$support_lib"
     implementation "com.android.support:support-v4:$support_lib"
     implementation "com.android.support:design:$support_lib"
     implementation "com.android.support:cardview-v7:$support_lib"
 
-    compile 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
 
-    compile "org.jetbrains.anko:anko:$anko_version"
-    compile 'com.badoo.mobile:android-weak-handler:1.1'
-    compile 'com.android.support:multidex:1.0.2'
+    implementation "org.jetbrains.anko:anko:$anko_version"
+    implementation 'com.badoo.mobile:android-weak-handler:1.1'
+    implementation 'com.android.support:multidex:1.0.2'
 
-    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.11'
+    implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.11'
     testCompile 'junit:junit:4.12'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // Room
+    implementation "android.arch.persistence.room:runtime:$archRoomVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$archRoomVersion"
+    kapt "android.arch.persistence.room:compiler:$archRoomVersion"
+
+    // RxJava support for Room
+    implementation "android.arch.persistence.room:rxjava2:1.0.0"
+
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:1.0.0"
+    annotationProcessor "android.arch.lifecycle:compiler:1.0.0"
 }
 
 apply plugin: 'com.google.gms.google-services'

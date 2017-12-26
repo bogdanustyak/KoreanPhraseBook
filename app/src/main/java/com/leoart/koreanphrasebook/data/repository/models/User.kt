@@ -1,4 +1,4 @@
-package com.leoart.koreanphrasebook.data.models
+package com.leoart.koreanphrasebook.data.repository.models
 
 /**
  * Created by bogdan on 6/22/17.

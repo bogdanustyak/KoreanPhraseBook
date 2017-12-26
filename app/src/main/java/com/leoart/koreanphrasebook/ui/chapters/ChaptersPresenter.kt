@@ -1,8 +1,8 @@
 package com.leoart.koreanphrasebook.ui.chapters
 
 import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by bogdan on 11/6/16.
@@ -13,8 +13,7 @@ class ChaptersPresenter(val view: ChaptersView?) {
         ChaptersRequest().getAllChapters()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe ({
-                    chapters ->
+                .subscribe({ chapters ->
                     view?.showChapters(chapters)
                 })
 //        .subscribe(object : Subscriber<List<Chapter>>(){

@@ -1,5 +1,8 @@
 package com.leoart.koreanphrasebook.ui.vocabulary
 
+import android.annotation.SuppressLint
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -8,16 +11,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
-import com.leoart.koreanphrasebook.data.network.firebase.dictionary.DictionaryRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 
+@SuppressLint("ValidFragment")
 class VocabularyFragment(title: String) : BaseFragment(title) {
 
     private var mParam1: String? = null
@@ -33,32 +34,16 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_vocabulary, container, false)
-
-        DictionaryRequest()
-                .getDictionary()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<Dictionary>() {
-                    override fun onError(e: Throwable?) {
-                        e?.printStackTrace()
-                    }
-
-                    override fun onNext(t: Dictionary?) {
-
-                        Log.d("TAG", t.toString())
-                        if (t != null) {
-                            setDataInAdapter(t, view)
-                        }
-
-                    }
-
-                    override fun onCompleted() {
-
-                    }
-
-                })
-
-
+        val model: DictionaryViewModel = ViewModelProviders.of(
+                this,
+                ViewModelFactory(view.context)
+        ).get(DictionaryViewModel::class.java)
+        model.geDictionary().observe(this, Observer<Dictionary> {
+            it?.let {
+                Log.d("TAG", it.toString())
+                setDataInAdapter(it, view)
+            }
+        })
         return view
     }
 
@@ -79,9 +64,7 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
         fastScrollingRecycler.layoutManager = LinearLayoutManager(activity)
         //  val letters = data.sort().keys.toTypedArray<Char>()
         // fastScrollingRecycler.adapter = FastScrollingAdapter(letters)
-
     }
-
 
     companion object {
 

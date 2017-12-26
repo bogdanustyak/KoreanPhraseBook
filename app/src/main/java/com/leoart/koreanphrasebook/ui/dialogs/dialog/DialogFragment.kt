@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.dialogs.dialog
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -9,50 +10,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
-import com.leoart.koreanphrasebook.data.network.firebase.DialogsRequest
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.ui.BaseFragment
-import rx.Subscriber
 import java.util.*
 
+@SuppressLint("ValidFragment")
 /**
  * Created by bogdan on 6/18/17.
  */
-class DialogFragment(title: String) : BaseFragment(title) {
+class DialogFragment(title: String) : BaseFragment(title), DialogMessagesView {
 
     var dialog: DialogResponse? = null
-    private val adapter = DialogMessagesRecyclerAdapter(ArrayList<Replic>())
+    private val adapter = DialogMessagesRecyclerAdapter(ArrayList())
+    private var presenter: DialogPresenter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.activity_dialog, container, false)
+        presenter = DialogPresenter(this, view.context)
+        initUI(view)
+        return view
+    }
 
+    private fun initUI(view: View) {
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val rvDialog = view.findViewById<RecyclerView>(R.id.rv_dialog)
         rvDialog.layoutManager = layoutManager
         rvDialog.itemAnimator = DefaultItemAnimator()
         rvDialog.adapter = adapter
         dialog?.let {
-            if (!TextUtils.isEmpty(it.uid))
-                DialogsRequest().getAllDialogReplics(it.uid)
-                        .subscribe(object : Subscriber<List<Replic>>() {
-                            override fun onError(e: Throwable?) {
-                                e?.printStackTrace()
-                                throw UnsupportedOperationException("not implemented")
-                            }
-
-                            override fun onCompleted() {
-
-                            }
-
-                            override fun onNext(t: List<Replic>?) {
-                                adapter.updateReplics(t)
-                            }
-
-                        })
+            if (!TextUtils.isEmpty(it.uid)) {
+                presenter?.getReplics(it.uid)
+            }
         }
-        return view
+    }
+
+    override fun showReplics(replics: List<Replic>) {
+        adapter.updateReplics(replics)
     }
 
     companion object {

@@ -41,10 +41,10 @@ class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
 
         adapter = DialogsRecyclerAdapter(dialogs, this)
         rvDialogs?.adapter = adapter
-
-        DialogsPresenter(this)
-                .requestDialogs()
-
+        DialogsPresenter(
+                this,
+                view.context
+        ).requestDialogs()
         return view
     }
 

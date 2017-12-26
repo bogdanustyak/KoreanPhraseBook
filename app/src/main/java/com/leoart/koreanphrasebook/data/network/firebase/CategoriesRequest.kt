@@ -6,8 +6,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.leoart.koreanphrasebook.ui.models.Category
 import com.leoart.koreanphrasebook.ui.models.Chapter
-import rx.Observable
-import java.util.*
+import io.reactivex.Observable
 
 /**
  * Created by bogdan on 11/5/16.
@@ -48,10 +47,10 @@ class CategoriesRequest : FireBaseRequest() {
                             categoryList.add(category)
                         }
                         subscriber.onNext(categoryList)
-                        subscriber.onCompleted()
+                        subscriber.onComplete()
                     } else {
                         subscriber.onError(Throwable("data was not found"))
-                        subscriber.onCompleted()
+                        subscriber.onComplete()
                     }
                 }
 
@@ -102,10 +101,10 @@ class CategoriesRequest : FireBaseRequest() {
                             categoryList.add(category)
                         }
                         subscriber.onNext(categoryList)
-                        subscriber.onCompleted()
+                        subscriber.onComplete()
                     } else {
                         subscriber.onError(Throwable("data was not found"))
-                        subscriber.onCompleted()
+                        subscriber.onComplete()
                     }
                 }
 
