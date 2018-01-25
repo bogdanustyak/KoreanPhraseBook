@@ -24,6 +24,6 @@ interface DialogDataSource {
      *
      * @param dialog the user to be inserted or updated.
      */
-    fun insertOrUpdateUser(dialog: Dialogs)
+    fun insertOrUpdate(dialog: Dialogs)
 
 }

@@ -1,16 +1,19 @@
 package com.leoart.koreanphrasebook.ui.chapters
 
-import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
+import android.content.Context
+import com.leoart.koreanphrasebook.data.repository.ChaptersRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by bogdan on 11/6/16.
  */
-class ChaptersPresenter(val view: ChaptersView?) {
+class ChaptersPresenter(val view: ChaptersView?, context: Context) {
+
+    private val repository = ChaptersRepository(context)
 
     fun requestChapters() {
-        ChaptersRequest().getAllChapters()
+        repository.getItems()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ chapters ->

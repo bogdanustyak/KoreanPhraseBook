@@ -18,6 +18,11 @@ public class Chapter implements Parcelable {
 
     }
 
+    public Chapter(String key, String name) {
+        this.key = key;
+        this.name = name;
+    }
+
     public Chapter(String name, HashMap<String, Boolean> categories) {
         this.name = name;
         this.categories = categories;
