@@ -16,7 +16,7 @@ import java.util.*
 
 class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrollRecyclerView.SectionedAdapter {
 
-    private val list: SortedMap<Char, List<HashMap<String, String>>>?
+    private val list: Map<Char, List<HashMap<String, String>>>?
     private val letters: Array<Char>?
     private var size = 0
 
