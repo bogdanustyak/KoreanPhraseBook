@@ -31,7 +31,7 @@ class ChapterFragment : BaseFragment(), ChaptersView,
         rvChapters.layoutManager = layoutManager
         rvChapters.itemAnimator = DefaultItemAnimator()
         rvChapters.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
-        adapter = ChaptersRecyclerAdapter(chapters, this)
+        adapter = ChaptersRecyclerAdapter(chapters, this, context)
         rvChapters.adapter = adapter
         context?.let {
             ChaptersPresenter(this, it).requestChapters()

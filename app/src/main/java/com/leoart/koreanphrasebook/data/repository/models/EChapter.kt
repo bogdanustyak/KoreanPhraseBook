@@ -10,9 +10,11 @@ import android.arch.persistence.room.PrimaryKey
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
 @Entity(tableName = "chapter")
-data class EChapter (
+data class EChapter(
         @PrimaryKey
         val uid: String,
         @ColumnInfo(name = "name")
-        val name: String
+        val name: String,
+        @ColumnInfo(name = "icon")
+        val icon: String
 )

@@ -2,4 +2,5 @@
 <resources>
     <item name="ll_holder" type="id"/>
     <item name="tv_name" type="id"/>
+    <item name="iv_icon" type="id"/>
 </resources>

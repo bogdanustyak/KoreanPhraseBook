@@ -41,7 +41,8 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
         return Flowable.fromArray(chapters.map {
             Chapter(
                     it.uid,
-                    it.name
+                    it.name,
+                    it.icon
             )
         })
     }
@@ -56,7 +57,7 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
     override fun saveIntoDB(chapters: List<Chapter>): Observable<List<Chapter>> {
         return Observable.create { emitter ->
             val eChapters = chapters.map {
-                EChapter(it.key, it.name)
+                EChapter(it.key, it.name, it.icon)
             }.toTypedArray()
             localDB().subscribe {
                 it.chaptersDao().insertAll(*eChapters)

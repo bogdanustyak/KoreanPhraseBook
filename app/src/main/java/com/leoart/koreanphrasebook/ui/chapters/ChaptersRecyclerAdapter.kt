@@ -1,12 +1,15 @@
 package com.leoart.koreanphrasebook.ui.chapters
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.SimpleTextItemUI
 import com.leoart.koreanphrasebook.ui.models.Chapter
@@ -16,7 +19,10 @@ import org.jetbrains.anko.*
 /**
  * Created by bogdan on 11/5/16.
  */
-class ChaptersRecyclerAdapter(private var chapters: List<Chapter>?, private val interactionListener: ChaptersRecyclerAdapter.ChaptersInteractionListener?) : RecyclerView.Adapter<ChaptersRecyclerAdapter.ChapterViewHolder>() {
+class ChaptersRecyclerAdapter(private var chapters: List<Chapter>?,
+                              private val interactionListener: ChaptersRecyclerAdapter.ChaptersInteractionListener?,
+                              private val context: Context?)
+    : RecyclerView.Adapter<ChaptersRecyclerAdapter.ChapterViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChapterViewHolder {
         val viewHolder = ChapterViewHolder(ChapterItemUI().createView(AnkoContext.create(parent.context, parent)))
@@ -33,6 +39,9 @@ class ChaptersRecyclerAdapter(private var chapters: List<Chapter>?, private val 
                     holder.tvChapterName.text = it.name
                 } else {
                     holder.tvChapterName.text = ""
+                }
+                if (context != null) {
+                    Glide.with(context).load(it.icon).into(holder.ivIcon)
                 }
             }
         }
@@ -53,7 +62,7 @@ class ChaptersRecyclerAdapter(private var chapters: List<Chapter>?, private val 
     class ChapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var ll_chapter = itemView.findViewById<LinearLayout>(R.id.ll_holder)
         var tvChapterName = itemView.findViewById<TextView>(R.id.tv_name)
-
+        var ivIcon = itemView.findViewById<ImageView>(R.id.iv_icon)
     }
 
     interface ChaptersInteractionListener {
@@ -69,8 +78,11 @@ class ChaptersRecyclerAdapter(private var chapters: List<Chapter>?, private val 
                     orientation = LinearLayout.HORIZONTAL
                     padding = dip(10)
                     gravity = Gravity.CENTER_VERTICAL
-                    imageView(R.mipmap.ic_launcher)
-                            .lparams(width = wrapContent, height = wrapContent)
+                    imageView {
+                        id = R.id.iv_icon
+                        scaleType = ImageView.ScaleType.CENTER_INSIDE
+                    }
+                            .lparams(width = dip(50), height = dip(50))
                     textView {
                         id = R.id.tv_name
                         text = "My light text"

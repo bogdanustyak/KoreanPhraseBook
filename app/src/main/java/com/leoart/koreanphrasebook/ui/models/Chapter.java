@@ -12,6 +12,7 @@ public class Chapter implements Parcelable {
 
     private String key;
     private String name;
+    private String icon;
     private HashMap<String, Boolean> categories;
 
     public Chapter() {
@@ -26,6 +27,27 @@ public class Chapter implements Parcelable {
     public Chapter(String name, HashMap<String, Boolean> categories) {
         this.name = name;
         this.categories = categories;
+    }
+
+    public Chapter(String key, String name, String icon) {
+        this.key = key;
+        this.name = name;
+        this.icon = icon;
+    }
+
+    public Chapter(String key, String name, String icon, HashMap<String, Boolean> categories) {
+        this.key = key;
+        this.name = name;
+        this.icon = icon;
+        this.categories = categories;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getKey() {
@@ -60,15 +82,17 @@ public class Chapter implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.key);
         dest.writeString(this.name);
+        dest.writeString(this.icon);
         dest.writeSerializable(this.categories);
-        dest.writeString(this.getKey());
     }
 
     protected Chapter(Parcel in) {
-        this.name = in.readString();
-        this.categories = (HashMap<String, Boolean>) in.readSerializable();
         this.key = in.readString();
+        this.name = in.readString();
+        this.icon = in.readString();
+        this.categories = (HashMap<String, Boolean>) in.readSerializable();
     }
 
     public static final Creator<Chapter> CREATOR = new Creator<Chapter>() {
