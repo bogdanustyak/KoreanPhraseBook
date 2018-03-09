@@ -5,8 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
+import android.widget.Toast
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.network.firebase.search.FBSearch
+import com.leoart.koreanphrasebook.data.repository.SearchRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -36,11 +38,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchQuery(query: String) {
-        FBSearch(query).search()
+        SearchRepository(query, this).getChapters()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ items ->
-                    adapter.insert(items)
+                .subscribe({ chapter ->
+                    Toast.makeText(this, "somwt", Toast.LENGTH_LONG).show()
+                }, { throwable ->
+                    throw UnsupportedOperationException("not implemented")
                 })
+//        FBSearch(query).search()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ items ->
+//                    adapter.insert(items)
+//                })
     }
 }

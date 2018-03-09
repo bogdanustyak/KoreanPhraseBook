@@ -21,7 +21,7 @@ interface ChapterDao {
     @Query("SELECT * FROM chapter")
     fun getAll(): Flowable<List<EChapter>>
 
-    @Query("SELECT * FROM chapter WHERE name LIKE :chapterName LIMIT 1")
+    @Query("SELECT * FROM chapter WHERE name LIKE :chapterName")
     fun findByName(chapterName: String): Maybe<EChapter>
 
     @Insert
