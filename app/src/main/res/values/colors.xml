@@ -9,4 +9,5 @@
 
     <color name="chat_left_bubble">#ffededf0</color>
     <color name="chat_right_bubble">#ffdcecff</color>
+    <color name="blue_transparent">#800c0259</color>
 </resources>

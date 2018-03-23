@@ -5,6 +5,7 @@ import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
 import com.leoart.koreanphrasebook.data.repository.models.EReplic
+import io.reactivex.Maybe
 
 
 /**
@@ -19,8 +20,8 @@ interface ReplicDao {
     @Query("SELECT * FROM replic")
     fun getAll(): List<EReplic>
 
-    @Query("SELECT * FROM replic WHERE ukrainian LIKE :replicTitle LIMIT 1")
-    fun findByReplic(replicTitle: String): EReplic
+    @Query("SELECT * FROM replic WHERE ukrainian LIKE :replicTitle")
+    fun findByReplic(replicTitle: String): Maybe<EReplic>
 
     @Insert
     fun insertAll(vararg replic: EReplic)

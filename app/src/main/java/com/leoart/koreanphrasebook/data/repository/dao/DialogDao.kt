@@ -21,7 +21,7 @@ interface DialogDao {
     @Query("SELECT * FROM dialog")
     fun getAll(): Flowable<List<EDialog>>
 
-    @Query("SELECT * FROM dialog WHERE dialogTitle LIKE :dialogName LIMIT 1")
+    @Query("SELECT * FROM dialog WHERE dialogTitle LIKE :dialogName")
     fun findByName(dialogName: String): Maybe<EDialog>
 
     @Insert

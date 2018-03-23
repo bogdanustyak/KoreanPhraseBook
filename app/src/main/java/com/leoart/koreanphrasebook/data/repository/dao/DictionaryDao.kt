@@ -21,7 +21,7 @@ interface DictionaryDao {
     @Query("SELECT * FROM dictionary")
     fun getAll(): Flowable<List<EDictionary>>
 
-    @Query("SELECT * FROM dictionary WHERE word LIKE :query OR definition LIKE :query LIMIT 1")
+    @Query("SELECT * FROM dictionary WHERE word LIKE :query OR definition LIKE :query")
     fun findBy(query: String): Maybe<EDictionary>
 
     @Insert
