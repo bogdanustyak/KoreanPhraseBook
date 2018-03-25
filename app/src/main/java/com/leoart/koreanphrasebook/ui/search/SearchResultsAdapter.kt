@@ -15,19 +15,6 @@ import com.leoart.koreanphrasebook.R
 class SearchResultsAdapter(private var items: MutableList<SectionOrRow>)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        val item = items[position]
-        if (item.isRow) {
-            if (holder is SearchResultViewHolder) {
-                holder.tvTitle.text = item.row
-            }
-        } else {
-            if (holder is SectionViewHolder) {
-                holder.tvSectionTitle.text = item.section
-            }
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             R.layout.item_search_section -> {
@@ -43,6 +30,19 @@ class SearchResultsAdapter(private var items: MutableList<SectionOrRow>)
             }
             else -> {
                 throw IllegalArgumentException("No such view type!")
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+        val item = items[position]
+        if (item.isRow) {
+            if (holder is SearchResultViewHolder) {
+                holder.tvTitle.text = item.row
+            }
+        } else {
+            if (holder is SectionViewHolder) {
+                holder.tvSectionTitle.text = item.section
             }
         }
     }
@@ -77,5 +77,10 @@ class SearchResultsAdapter(private var items: MutableList<SectionOrRow>)
 
     class SectionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvSectionTitle: TextView = itemView.findViewById(R.id.tv_title)
+    }
+
+    fun clear() {
+        this.items.clear()
+        notifyDataSetChanged()
     }
 }

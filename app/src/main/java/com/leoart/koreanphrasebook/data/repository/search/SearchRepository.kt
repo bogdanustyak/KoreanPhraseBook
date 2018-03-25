@@ -1,6 +1,7 @@
 package com.leoart.koreanphrasebook.data.repository.search
 
 import android.content.Context
+import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.network.firebase.search.DictType
 import com.leoart.koreanphrasebook.data.network.firebase.search.SearchResult
 import com.leoart.koreanphrasebook.data.repository.AppDataBase

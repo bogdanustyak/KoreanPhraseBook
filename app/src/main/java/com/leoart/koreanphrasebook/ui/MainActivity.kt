@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
@@ -21,14 +20,12 @@ import com.leoart.koreanphrasebook.ui.info.InfoFragment
 import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 import com.leoart.koreanphrasebook.utils.NetworkChecker
-import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.backgroundColor
+import com.leoart.koreanphrasebook.utils.SoftKeyboard
 
 
-class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView,
-        SearchView.OnQueryTextListener {
+class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView {
 
-    var bottomMenu: BottomMenu? = null
+    private var bottomMenu: BottomMenu? = null
     var auth: Auth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,18 +76,24 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
         searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         searchView?.setIconifiedByDefault(true)
         searchView?.isSubmitButtonEnabled = true
-        searchView?.setOnQueryTextListener(this)
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    searchView.isIconified = true
+                    searchView.clearFocus()
+                    (menu.findItem(R.id.action_search)).collapseActionView()
+                    SoftKeyboard(this@MainActivity).hide()
+                    openSearch(it)
+                }
+                return true
+            }
 
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
         return true
-    }
-
-    override fun onQueryTextSubmit(query: String): Boolean {
-        openSearch(query)
-        return true
-    }
-
-    override fun onQueryTextChange(newText: String?): Boolean {
-        return false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -101,7 +104,6 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
         }
         return true
     }
-
 
     private fun openSearch(query: String) {
         val intent = Intent(this, SearchActivity::class.java)
