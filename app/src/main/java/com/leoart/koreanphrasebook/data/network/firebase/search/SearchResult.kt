@@ -7,5 +7,8 @@ class SearchResult(val pathInDB: String, val title: String, val type: DictType)
 
 enum class DictType(val title: String) {
     DICTIONARY("dictionary"),
-    CATEGORY_PHRASES("categoryPhrases")
+    CATEGORY_PHRASES("categoryPhrases"),
+    DIALOGS("dialogs"),
+    REPLICS("replics"),
+    CHAPTERS("chapters")
 }

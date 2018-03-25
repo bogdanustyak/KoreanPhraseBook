@@ -22,7 +22,7 @@ interface ChapterDao {
     fun getAll(): Flowable<List<EChapter>>
 
     @Query("SELECT * FROM chapter WHERE name LIKE :chapterName")
-    fun findByName(chapterName: String): Maybe<EChapter>
+    fun findByName(chapterName: String): Maybe<List<EChapter>>
 
     @Insert
     fun insertAll(vararg chapter: EChapter)

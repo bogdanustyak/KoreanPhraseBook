@@ -22,7 +22,7 @@ interface DialogDao {
     fun getAll(): Flowable<List<EDialog>>
 
     @Query("SELECT * FROM dialog WHERE dialogTitle LIKE :dialogName")
-    fun findByName(dialogName: String): Maybe<EDialog>
+    fun findByName(dialogName: String): Maybe<List<EDialog>>
 
     @Insert
     fun insertAll(vararg dialogs: EDialog)

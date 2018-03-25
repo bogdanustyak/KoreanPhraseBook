@@ -96,7 +96,6 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_search -> {
-                print("cliiiiick search")
                 onSearchRequested()
             }
         }

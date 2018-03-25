@@ -6,34 +6,76 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.leoart.koreanphrasebook.R
-import com.leoart.koreanphrasebook.data.network.firebase.search.SearchResult
 
 /**
+ * SearchResultsAdapter
+ *
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
-class SearchResultsAdapter(private var items: List<SearchResult>)
-    : RecyclerView.Adapter<SearchResultsAdapter.SearchResultViewHolder>() {
+class SearchResultsAdapter(private var items: MutableList<SectionOrRow>)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onBindViewHolder(holder: SearchResultViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val item = items[position]
-        holder?.tvTitle?.text = item.title
+        if (item.isRow) {
+            if (holder is SearchResultViewHolder) {
+                holder.tvTitle.text = item.row
+            }
+        } else {
+            if (holder is SectionViewHolder) {
+                holder.tvSectionTitle.text = item.section
+            }
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
-        return SearchResultViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_search_result, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            R.layout.item_search_section -> {
+                SectionViewHolder(
+                        LayoutInflater.from(parent.context).inflate(
+                                R.layout.item_search_section, parent, false
+                        )
+                )
+            }
+            R.layout.item_search_result -> {
+                SearchResultViewHolder(LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_search_result, parent, false))
+            }
+            else -> {
+                throw IllegalArgumentException("No such view type!")
+            }
+        }
     }
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    fun insert(items: List<SearchResult>) {
+    override fun getItemViewType(position: Int): Int {
+        super.getItemViewType(position)
+        val item = items[position]
+        return if (!item.isRow) {
+            R.layout.item_search_section
+        } else {
+            R.layout.item_search_result
+        }
+    }
+
+    fun insert(items: ArrayList<SectionOrRow>) {
         this.items = items
         notifyDataSetChanged()
     }
 
+    fun append(items: List<SectionOrRow>) {
+        this.items.addAll(items)
+        notifyItemRangeChanged(itemCount, items.size)
+    }
+
     class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvTitle: TextView = itemView.findViewById(R.id.tv_title)
+    }
+
+    class SectionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tvSectionTitle: TextView = itemView.findViewById(R.id.tv_title)
     }
 }

@@ -22,7 +22,7 @@ interface DictionaryDao {
     fun getAll(): Flowable<List<EDictionary>>
 
     @Query("SELECT * FROM dictionary WHERE word LIKE :query OR definition LIKE :query")
-    fun findBy(query: String): Maybe<EDictionary>
+    fun findBy(query: String): Maybe<List<EDictionary>>
 
     @Insert
     fun insertAll(vararg dict: EDictionary)

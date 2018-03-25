@@ -20,8 +20,8 @@ interface ReplicDao {
     @Query("SELECT * FROM replic")
     fun getAll(): List<EReplic>
 
-    @Query("SELECT * FROM replic WHERE ukrainian LIKE :replicTitle")
-    fun findByReplic(replicTitle: String): Maybe<EReplic>
+    @Query("SELECT * FROM replic WHERE ukrainian LIKE :replicTitle OR korean LIKE :replicTitle")
+    fun findByReplic(replicTitle: String): Maybe<List<EReplic>>
 
     @Insert
     fun insertAll(vararg replic: EReplic)
