@@ -16,15 +16,24 @@ public class FastScrollingAdapter extends RecyclerView.Adapter
         <FastScrollingAdapter.FastScrollViewHolder> {
 
     private Character[] letters;
+    private FastScrollingAdapterInteractionListener listener;
 
-    public FastScrollingAdapter(Character[] letters) {
+    public FastScrollingAdapter(Character[] letters, FastScrollingAdapterInteractionListener listener) {
         this.letters = letters;
+        this.listener = listener;
     }
 
     @Override
     public FastScrollViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new FastScrollViewHolder(LayoutInflater.from(parent.getContext())
+        final FastScrollViewHolder holder = new FastScrollViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_fastscrolling, parent, false));
+        holder.textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onLetterClick(letters[holder.getAdapterPosition()]);
+            }
+        });
+        return holder;
     }
 
     @Override
@@ -51,5 +60,9 @@ public class FastScrollingAdapter extends RecyclerView.Adapter
             super(itemView);
             textView = itemView.findViewById(R.id.tvLetter);
         }
+    }
+
+    interface FastScrollingAdapterInteractionListener {
+        void onLetterClick(char letter);
     }
 }

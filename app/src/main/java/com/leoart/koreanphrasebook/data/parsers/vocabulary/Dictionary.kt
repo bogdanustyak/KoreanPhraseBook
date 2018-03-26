@@ -38,4 +38,17 @@ class Dictionary(private var data: HashMap<Char, List<HashMap<String, String>>>)
         count += data.keys.size
         return count
     }
+
+    fun positionOf(letter: Char): Int {
+        var position = 0
+        val sorted = sortedData()
+        for ((key, value) in sorted) {
+            if (letter == key) {
+                break
+            } else {
+                position += value.size
+            }
+        }
+        return position
+    }
 }

@@ -24,6 +24,9 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
     private var mParam1: String? = null
     private var mParam2: String? = null
 
+    private var recyclerViewVocabulary: RecyclerView? = null
+    private val stickyHeaderLayoutManager = StickyHeaderLayoutManager()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mParam1 = arguments?.getString(ARG_PARAM1)
@@ -48,22 +51,25 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
     }
 
     private fun setDataInAdapter(t: Dictionary, view: View) {
-        val recyclerView = view.findViewById<RecyclerView>(R.id.rv_vocabulary)
+        recyclerViewVocabulary = view.findViewById<RecyclerView>(R.id.rv_vocabulary)
         val adapter = DictionaryAdapter(t)
-        recyclerView.layoutManager = StickyHeaderLayoutManager()
-        recyclerView.adapter = adapter
-
-        val fastScrollingRecycler = view.findViewById<FastScrollRecyclerView>(R.id.recycler)
-        fastScrollingRecycler.layoutManager = LinearLayoutManager(activity)
-        //val letters = t.sort().keys.toTypedArray<Char>()
-        //  fastScrollingRecycler.adapter = FastScrollingAdapter(letters)
+        recyclerViewVocabulary?.layoutManager = stickyHeaderLayoutManager
+        recyclerViewVocabulary?.adapter = adapter
+        setupFastScrolling(t, view)
     }
 
     private fun setupFastScrolling(data: Dictionary, view: View) {
         val fastScrollingRecycler = view.findViewById<FastScrollRecyclerView>(R.id.recycler)
-        fastScrollingRecycler.layoutManager = LinearLayoutManager(activity)
-        //  val letters = data.sort().keys.toTypedArray<Char>()
-        // fastScrollingRecycler.adapter = FastScrollingAdapter(letters)
+        val linearLayoutManager = LinearLayoutManager(activity)
+        fastScrollingRecycler.layoutManager = linearLayoutManager
+        val letters = data.sortedData().keys.toTypedArray()
+        fastScrollingRecycler.adapter = FastScrollingAdapter(
+                letters,
+                FastScrollingAdapter.FastScrollingAdapterInteractionListener {
+                    val position = data.positionOf(it)
+                    stickyHeaderLayoutManager.scrollToPosition(position)
+                }
+        )
     }
 
     companion object {
