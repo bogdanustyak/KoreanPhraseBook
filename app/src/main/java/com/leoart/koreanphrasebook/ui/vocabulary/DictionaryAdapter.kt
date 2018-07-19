@@ -8,6 +8,7 @@ import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import org.zakariya.stickyheaders.SectioningAdapter
+import org.zakariya.stickyheaders.StickyHeaderLayoutManager
 import java.util.*
 
 /**
@@ -16,27 +17,29 @@ import java.util.*
 
 class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrollRecyclerView.SectionedAdapter {
 
-    private val list: Map<Char, List<HashMap<String, String>>>?
-    private val letters: Array<Char>?
+    private var list: Map<Char, List<HashMap<String, String>>>?
+    private var letters: Array<Char>?
     private var size = 0
 
     init {
         this.list = dictionary.sortedData()
-        this.letters = list.keys.toTypedArray()
+        this.letters = list?.keys?.toTypedArray()
         this.size = dictionary.totalCount()
     }
 
     override fun getNumberOfSections(): Int {
-        if (letters == null) {
-            return 0
+        letters?.let {
+            return it.size
         }
-        return letters.size
+        return 0
     }
 
     override fun getNumberOfItemsInSection(sectionIndex: Int): Int {
         var count = 0
-        if (list != null && letters != null) {
-            count = list[letters[sectionIndex]]?.size ?: 0
+        list?.let { lt ->
+            letters?.let { ltr ->
+                count = lt[ltr[sectionIndex]]?.size ?: 0
+            }
         }
         return count
     }
@@ -63,12 +66,17 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
 
     override fun onBindItemViewHolder(viewHolder: SectioningAdapter.ItemViewHolder?, sectionIndex: Int, itemIndex: Int, itemType: Int) {
         if (list != null && letters != null) {
-            val s = letters[sectionIndex]
-            val item = list[s]?.get(itemIndex)
-            if (item != null) {
-                val text = item["word"] + " - " + item["translation"]
-                (viewHolder as DictViewHolder)
-                        .text.text = text
+            letters?.let { ltr ->
+                val s = ltr[sectionIndex]
+                list?.let {
+                    val item = it[s]?.get(itemIndex)
+                    if (item != null) {
+                        val text = item["word"] + " - " + item["translation"]
+                        (viewHolder as DictViewHolder)
+                                .text.text = text
+                    }
+
+                }
             }
         }
     }
@@ -91,14 +99,22 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
     }
 
     override fun getSectionName(position: Int): String {
-        if (letters == null || letters.size < position) {
-            return ""
+        letters?.let {
+            if (it.size >= position)
+                return it[position].toString()
         }
-        return letters[position].toString()
+        return ""
     }
 
     class DictViewHolder internal constructor(itemView: View) : SectioningAdapter.ItemViewHolder(itemView) {
         var text = itemView.findViewById<TextView>(R.id.text)
+    }
+
+    fun setData(dictionary: Dictionary) {
+        this.list = dictionary.sortedData()
+        this.letters = list?.keys?.toTypedArray()
+        this.size = dictionary.totalCount()
+        notifyDataSetChanged()
     }
 
     inner class HeaderViewHolder internal constructor(itemView: View) : SectioningAdapter.HeaderViewHolder(itemView) {

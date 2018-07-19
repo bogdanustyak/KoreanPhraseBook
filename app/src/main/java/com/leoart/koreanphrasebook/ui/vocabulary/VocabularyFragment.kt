@@ -27,6 +27,8 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
     private var recyclerViewVocabulary: RecyclerView? = null
     private val stickyHeaderLayoutManager = StickyHeaderLayoutManager()
 
+    private lateinit var adapter: DictionaryAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mParam1 = arguments?.getString(ARG_PARAM1)
@@ -41,6 +43,7 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
                 this,
                 ViewModelFactory(view.context)
         ).get(DictionaryViewModel::class.java)
+        initAdapter(view)
         model.geDictionary().observe(this, Observer<Dictionary> {
             it?.let {
                 Log.d("TAG", it.toString())
@@ -50,11 +53,15 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
         return view
     }
 
-    private fun setDataInAdapter(t: Dictionary, view: View) {
+    private fun initAdapter(view: View) {
         recyclerViewVocabulary = view.findViewById<RecyclerView>(R.id.rv_vocabulary)
-        val adapter = DictionaryAdapter(t)
         recyclerViewVocabulary?.layoutManager = stickyHeaderLayoutManager
+        adapter = DictionaryAdapter(Dictionary())
         recyclerViewVocabulary?.adapter = adapter
+    }
+
+    private fun setDataInAdapter(t: Dictionary, view: View) {
+        adapter.setData(t)
         setupFastScrolling(t, view)
     }
 
