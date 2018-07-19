@@ -23,7 +23,7 @@ class FavouriteData {
         val favouriteRealmModel = realm.where(FavouriteModel::class.java)
                 .equalTo("phraseKey", phrase.key)
                 .findFirst()
-        favouriteRealmModel.deleteFromRealm()
+        favouriteRealmModel?.deleteFromRealm()
         realm.commitTransaction()
         realm.close()
     }

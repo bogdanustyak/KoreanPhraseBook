@@ -34,7 +34,7 @@ class SearchResultsAdapter(private var items: MutableList<SectionOrRow>)
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
         if (item.isRow) {
             if (holder is SearchResultViewHolder) {

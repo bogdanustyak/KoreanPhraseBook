@@ -30,30 +30,28 @@ class CategoriesRequest : FireBaseRequest() {
         val chapterName = chapter.key
         return Observable.create({ subscriber ->
             mDataBase.reference?.child("$CATEGORIES/$chapterName")?.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    throw UnsupportedOperationException("not implemented")
+                override fun onCancelled(p0: DatabaseError) {
+                    subscriber.onError(Throwable("data was not found"))
+                    subscriber.onComplete()
                 }
 
-                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                    if (dataSnapshot != null) {
-                        val categoryList = ArrayList<Category>()
-                        for (item in dataSnapshot.children) {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                    val categoryList = ArrayList<Category>()
+                    for (item in dataSnapshot.children) {
+                        item.key?.let {
                             Log.d("test", item.value.toString())
                             val categoryPhrase = item
                                     .value
                                     as HashMap<String, String>
                             Log.d("tes", categoryPhrase.toString())
-                            val category = Category(item.key, categoryPhrase)
+                            val category = Category(it, categoryPhrase)
                             categoryList.add(category)
                         }
-                        subscriber.onNext(categoryList)
-                        subscriber.onComplete()
-                    } else {
-                        subscriber.onError(Throwable("data was not found"))
-                        subscriber.onComplete()
                     }
+                    subscriber.onNext(categoryList)
+                    subscriber.onComplete()
                 }
-
             })
         })
 //        return Observable.create({ subscriber ->
@@ -87,27 +85,22 @@ class CategoriesRequest : FireBaseRequest() {
 
     fun getAllCategories(): Observable<List<Category>> {
         return Observable.create({ subscriber ->
-            mDataBase.reference?.child("categories")?.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    throw UnsupportedOperationException("not implemented")
+            mDataBase.reference.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    subscriber.onError(Throwable("data was not found"))
+                    subscriber.onComplete()
                 }
 
-                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                    if (dataSnapshot != null) {
-                        val categoryList = ArrayList<Category>()
-                        for (item in dataSnapshot.children) {
-                            val category = item.value as Category
-                            //category.id = item.key
-                            categoryList.add(category)
-                        }
-                        subscriber.onNext(categoryList)
-                        subscriber.onComplete()
-                    } else {
-                        subscriber.onError(Throwable("data was not found"))
-                        subscriber.onComplete()
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val categoryList = ArrayList<Category>()
+                    for (item in dataSnapshot.children) {
+                        val category = item.value as Category
+                        //category.id = item.key
+                        categoryList.add(category)
                     }
+                    subscriber.onNext(categoryList)
+                    subscriber.onComplete()
                 }
-
             })
         })
     }

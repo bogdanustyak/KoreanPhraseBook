@@ -25,17 +25,18 @@ class FBSearch(val searchPhrase: String) : FireBaseRequest() {
                     .child(DictType.CATEGORY_PHRASES.title)
                     //.orderByChild("word").startAt(searchPhrase).endAt("\uf8ff")
                     .addValueEventListener(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError?) {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        override fun onCancelled(p0: DatabaseError) {
+                            subscriber.onError(Throwable("Data is empty"))
                         }
 
-                        override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                            if (dataSnapshot != null) {
-                                val list = ArrayList<SearchResult>()
-                                dataSnapshot.children.forEach {
-                                    it.children.forEach {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                            val list = ArrayList<SearchResult>()
+                            dataSnapshot.children.forEach {
+                                it.children.forEach {
+                                    it.key?.let { key ->
                                         val phrase = it.getValue(Phrase::class.java) as Phrase
-                                        phrase.key = it.key
+                                        phrase.key = key
                                         val title = when {
                                             phrase.word.contains(searchPhrase, true) -> phrase.word
                                             phrase.translation.contains(searchPhrase, true) -> phrase.translation
@@ -50,13 +51,13 @@ class FBSearch(val searchPhrase: String) : FireBaseRequest() {
                                 }
                                 subscriber.onNext(list)
                                 subscriber.onComplete()
-                            } else {
-                                subscriber.onError(Throwable("Data is empty"))
-                            }
-                        }
 
+                            }
+
+                        }
                     })
         })
+
     }
 
     private fun searchDictionary(): Observable<List<SearchResult>> {
@@ -64,34 +65,30 @@ class FBSearch(val searchPhrase: String) : FireBaseRequest() {
             mDataBaseRef
                     .child(DictType.DICTIONARY.title)
                     .addValueEventListener(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError?) {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        override fun onCancelled(p0: DatabaseError) {
+                            subscriber.onError(Throwable("Data is empty"))
                         }
 
-                        override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                            if (dataSnapshot != null) {
-                                val list = ArrayList<SearchResult>()
-                                val dict = dataSnapshot.value as HashMap<*, *>
-                                val result = Dictionary()
-                                for ((key, value) in dict) {
-                                    val words = value as java.util.ArrayList<HashMap<String, String>>
-                                    words.forEach {
-                                        for (entry in it) {
-                                            if (entry.value.contains(searchPhrase, true)) {
-                                                list.add(SearchResult(
-                                                        "",
-                                                        entry.value,
-                                                        DictType.DICTIONARY)
-                                                )
-                                            }
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            val list = ArrayList<SearchResult>()
+                            val dict = dataSnapshot.value as HashMap<*, *>
+                            val result = Dictionary()
+                            for ((key, value) in dict) {
+                                val words = value as java.util.ArrayList<HashMap<String, String>>
+                                words.forEach {
+                                    for (entry in it) {
+                                        if (entry.value.contains(searchPhrase, true)) {
+                                            list.add(SearchResult(
+                                                    "",
+                                                    entry.value,
+                                                    DictType.DICTIONARY)
+                                            )
                                         }
                                     }
                                 }
-                                subscriber.onNext(list)
-                                subscriber.onComplete()
-                            } else {
-                                subscriber.onError(Throwable("Data is empty"))
                             }
+                            subscriber.onNext(list)
+                            subscriber.onComplete()
                         }
 
                     })

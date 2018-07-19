@@ -73,12 +73,18 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
         }
     }
 
+    override fun onCreateGhostHeaderViewHolder(parent: ViewGroup): SectioningAdapter.GhostHeaderViewHolder {
+        val ghostView = View(parent.context)
+        ghostView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+        return SectioningAdapter.GhostHeaderViewHolder(ghostView)
+    }
+
     override fun onBindHeaderViewHolder(viewHolder: SectioningAdapter.HeaderViewHolder?, sectionIndex: Int, headerType: Int) {
         val s = letters!![sectionIndex]
         (viewHolder as HeaderViewHolder)
                 .charHeader.text = s.toString()
     }
-
 
     override fun getItemCount(): Int {
         return size

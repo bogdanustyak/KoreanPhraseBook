@@ -28,27 +28,24 @@ class PhrasesRequest : FireBaseRequest() {
     fun getPhrases(categoryName: String): Observable<List<Phrase>> {
         return Observable.create({ subscriber ->
             mDataBase.reference?.child("$CATEGORY_PHRASES/$categoryName")?.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    throw UnsupportedOperationException("not implemented")
+                override fun onCancelled(p0: DatabaseError) {
+                    subscriber.onError(Throwable("data was not found"))
+                    subscriber.onComplete()
                 }
 
-                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                    if (dataSnapshot != null) {
-                        val phrases = ArrayList<Phrase>()
-                        for (item in dataSnapshot.children) {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val phrases = ArrayList<Phrase>()
+                    for (item in dataSnapshot.children) {
+                        item.key?.let {
                             val phrase = item.getValue(Phrase::class.java) as Phrase
-                            phrase.key = item.key
+                            phrase.key = it
                             phrases.add(phrase)
                         }
-                        subscriber.onNext(phrases)
-                        subscriber.onComplete()
-
-                    } else {
-                        subscriber.onError(Throwable("data was not found"))
-                        subscriber.onComplete()
                     }
-                }
+                    subscriber.onNext(phrases)
+                    subscriber.onComplete()
 
+                }
             })
         })
     }
