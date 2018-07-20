@@ -27,28 +27,23 @@ class DictionaryRequest : FireBaseRequest() {
     fun getDictionary(): Observable<Dictionary> {
         return Observable.create({ subscriber ->
             mDataBase.reference
-                    ?.child(DICTIONARY)
-                    ?.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError?) {
-                            throw UnsupportedOperationException("not implemented")
+                    .child(DICTIONARY)
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+                            subscriber.onError(Throwable("data was not found"))
+                            subscriber.onComplete()
                         }
 
-                        override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                            if (dataSnapshot != null) {
-                                val dict = dataSnapshot.value as HashMap<*, *>
-                                val result = Dictionary()
-                                for ((key, value) in dict) {
-                                    val letter = (key as String)[0]
-                                    val words = value as ArrayList<HashMap<String, String>>
-                                    result.add(letter, words)
-                                }
-                                subscriber.onNext(result)
-                                subscriber.onComplete()
-
-                            } else {
-                                subscriber.onError(Throwable("data was not found"))
-                                subscriber.onComplete()
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            val dict = dataSnapshot.value as HashMap<*, *>
+                            val result = Dictionary()
+                            for ((key, value) in dict) {
+                                val letter = (key as String)[0]
+                                val words = value as ArrayList<HashMap<String, String>>
+                                result.add(letter, words)
                             }
+                            subscriber.onNext(result)
+                            subscriber.onComplete()
                         }
                     })
         })

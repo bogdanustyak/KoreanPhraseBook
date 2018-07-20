@@ -15,25 +15,22 @@ class DialogsRequest : FireBaseRequest() {
 
     fun getAllDialogNames(): Observable<List<DialogResponse>> {
         return Observable.create({ emmitter ->
-            mDataBase.reference?.child("dialogs")?.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    throw UnsupportedOperationException("not implemented")
+            mDataBase.reference.child("dialogs").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    emmitter.onError(Throwable("data was not found"))
+                    emmitter.onComplete()
                 }
 
-                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                    if (dataSnapshot != null) {
-                        val dialogsList = ArrayList<DialogResponse>()
-                        for (item in dataSnapshot.children) {
-                            val uid = item.key
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val dialogsList = ArrayList<DialogResponse>()
+                    for (item in dataSnapshot.children) {
+                        item.key?.let {
                             val dialog = item.getValue(Dialog::class.java) as Dialog
-                            dialogsList.add(DialogResponse(uid, dialog.name))
+                            dialogsList.add(DialogResponse(it, dialog.name))
                         }
-                        emmitter.onNext(dialogsList)
-                        emmitter.onComplete()
-                    } else {
-                        emmitter.onError(Throwable("data was not found"))
-                        emmitter.onComplete()
                     }
+                    emmitter.onNext(dialogsList)
+                    emmitter.onComplete()
                 }
             })
         })
@@ -42,21 +39,17 @@ class DialogsRequest : FireBaseRequest() {
     fun getAllDialogReplics(dialogUID: String): Observable<List<Replic>> {
         return Observable.create({ subscriber ->
             mDataBase.reference?.child("dialogReplics/" + dialogUID)?.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    throw UnsupportedOperationException("not implemented")
+                override fun onCancelled(p0: DatabaseError) {
+                    subscriber.onError(Throwable("data was not found"))
+                    subscriber.onComplete()
                 }
 
-                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                    if (dataSnapshot != null) {
-                        val replics = dataSnapshot.children.map {
-                            it.getValue(Replic::class.java) as Replic
-                        }
-                        subscriber.onNext(replics)
-                        subscriber.onComplete()
-                    } else {
-                        subscriber.onError(Throwable("data was not found"))
-                        subscriber.onComplete()
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val replics = dataSnapshot.children.map {
+                        it.getValue(Replic::class.java) as Replic
                     }
+                    subscriber.onNext(replics)
+                    subscriber.onComplete()
                 }
             })
         })

@@ -13,25 +13,23 @@ import io.reactivex.Observable
 class ChaptersRequest : FireBaseRequest() {
     fun getAllChapters(): Observable<List<Chapter>> {
         return Observable.create({ subscriber ->
-            mDataBase.reference?.child("chapters")?.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    throw UnsupportedOperationException("not implemented")
+            mDataBase.reference.child("chapters").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    subscriber.onError(Throwable("data was not found"))
+                    subscriber.onComplete()
                 }
 
-                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                    if (dataSnapshot != null) {
-                        val staffList = ArrayList<Chapter>()
-                        for (item in dataSnapshot.children) {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val staffList = ArrayList<Chapter>()
+                    for (item in dataSnapshot.children) {
+                        item.key?.let {
                             val chapter = item.getValue(Chapter::class.java) as Chapter
-                            chapter.key = item.key
+                            chapter.key = it
                             staffList.add(chapter)
                         }
-                        subscriber.onNext(staffList)
-                        subscriber.onComplete()
-                    } else {
-                        subscriber.onError(Throwable("data was not found"))
-                        subscriber.onComplete()
                     }
+                    subscriber.onNext(staffList)
+                    subscriber.onComplete()
                 }
             })
         })

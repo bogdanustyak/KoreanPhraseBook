@@ -53,12 +53,7 @@ class SearchRepository(val context: Context) : Search {
                 .flatMap { dict ->
                     val searchResults = ArrayList<SearchResult>()
                     dict.forEach {
-                        var title = ""
-                        if (it.definition.contains(searchQuery)) {
-                            title = it.definition
-                        } else if (it.word.contains(searchQuery)) {
-                            title = it.word
-                        }
+                        val title = it.word + " " + it.definition
                         searchResults.add(SearchResult("Path", title, DictType.DICTIONARY))
                     }
                     Flowable.fromArray(searchResults)
