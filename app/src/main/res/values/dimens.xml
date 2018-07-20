@@ -6,6 +6,8 @@
     <dimen name="icon_bottom_menu_width">40dp</dimen>
     <dimen name="icon_bottom_menu_height">40dp</dimen>
 
+    <dimen name="vocabulary_favorite">34dp</dimen>
+
     <!-- Auth -->
     <dimen name="bt_auth_width">200dp</dimen>
 </resources>
