@@ -36,9 +36,9 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
 
     override fun getNumberOfItemsInSection(sectionIndex: Int): Int {
         var count = 0
-        list?.let { lt ->
-            letters?.let { ltr ->
-                count = lt[ltr[sectionIndex]]?.size ?: 0
+        list?.let { itList ->
+            letters?.let { itLetters ->
+                count = itList[itLetters[sectionIndex]]?.size ?: 0
             }
         }
         return count
@@ -66,10 +66,10 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
 
     override fun onBindItemViewHolder(viewHolder: SectioningAdapter.ItemViewHolder?, sectionIndex: Int, itemIndex: Int, itemType: Int) {
         if (list != null && letters != null) {
-            letters?.let { ltr ->
-                val s = ltr[sectionIndex]
-                list?.let {
-                    val item = it[s]?.get(itemIndex)
+            letters?.let { itLetters ->
+                val s = itLetters[sectionIndex]
+                list?.let { itList ->
+                    val item = itList[s]?.get(itemIndex)
                     if (item != null) {
                         val text = item["word"] + " - " + item["translation"]
                         (viewHolder as DictViewHolder)
