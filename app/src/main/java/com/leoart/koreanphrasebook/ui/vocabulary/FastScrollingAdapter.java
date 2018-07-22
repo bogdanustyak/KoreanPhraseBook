@@ -30,7 +30,7 @@ public class FastScrollingAdapter extends RecyclerView.Adapter
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onLetterClick(letters[holder.getAdapterPosition()]);
+                listener.onLetterClick(holder.getAdapterPosition());
             }
         });
         return holder;
@@ -63,6 +63,6 @@ public class FastScrollingAdapter extends RecyclerView.Adapter
     }
 
     interface FastScrollingAdapterInteractionListener {
-        void onLetterClick(char letter);
+        void onLetterClick(int position);
     }
 }

@@ -73,7 +73,7 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
         fastScrollingRecycler.adapter = FastScrollingAdapter(
                 letters,
                 FastScrollingAdapter.FastScrollingAdapterInteractionListener {
-                    val position = data.positionOf(it)
+                    val position = adapter.getAdapterPositionForSectionHeader(it)
                     stickyHeaderLayoutManager.scrollToPosition(position)
                 }
         )
@@ -87,6 +87,10 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
         fun newInstance(title: String): VocabularyFragment {
             val fragment = VocabularyFragment(title)
             return fragment
+        }
+
+        interface onFavoriteClickListener {
+            fun onFavoriteCLick()
         }
     }
 

@@ -95,7 +95,8 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
     }
 
     override fun getItemCount(): Int {
-        return size
+        val ghostHeadersCount = letters?.size ?: 0
+        return size + ghostHeadersCount
     }
 
     override fun getSectionName(position: Int): String {
