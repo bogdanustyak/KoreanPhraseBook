@@ -30,7 +30,7 @@ class NotesViewModel(val repository : NotesRepository) : ViewModel() {
     }
 
     fun addNote(note : Note){
-        repository.addNote(note)
+//        repository.addNote(note)
     }
 
 }

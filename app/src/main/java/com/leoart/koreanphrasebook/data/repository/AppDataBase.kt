@@ -5,10 +5,7 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import com.leoart.koreanphrasebook.data.repository.dao.*
-import com.leoart.koreanphrasebook.data.repository.models.EChapter
-import com.leoart.koreanphrasebook.data.repository.models.EDialog
-import com.leoart.koreanphrasebook.data.repository.models.EDictionary
-import com.leoart.koreanphrasebook.data.repository.models.EReplic
+import com.leoart.koreanphrasebook.data.repository.models.*
 
 /**
  * AppDataBase
@@ -19,7 +16,8 @@ import com.leoart.koreanphrasebook.data.repository.models.EReplic
     EDialog::class,
     EReplic::class,
     EChapter::class,
-    EDictionary::class], version = 3)
+    EDictionary::class,
+    ENote::class], version = 4)
 
 abstract class AppDataBase : RoomDatabase() {
     abstract fun dialogDao(): DialogDao

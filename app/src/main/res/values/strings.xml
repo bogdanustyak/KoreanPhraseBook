@@ -29,6 +29,7 @@
     <string name="confirm_password">Повторіть пароль</string>
     <string name="auth">Авторизація</string>
     <string name="notes_title">Мої нотатки</string>
+    <string name="new_note">Нова нотатка</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
