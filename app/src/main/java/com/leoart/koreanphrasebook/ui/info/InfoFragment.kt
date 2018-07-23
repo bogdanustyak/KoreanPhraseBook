@@ -88,7 +88,7 @@ class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.Inf
     }
 
     private fun about(){
-        val alertDialog = AlertDialog.Builder(this@InfoFragment.context, R.style.CustomDialogTheme).create()
+        val alertDialog = AlertDialog.Builder(this@InfoFragment.context, R.style.AboutDialogTheme).create()
         alertDialog.setTitle(getString(R.string.about))
         alertDialog.setMessage(getString(R.string.about_info))
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", { dialog, which -> dialog.dismiss() })
