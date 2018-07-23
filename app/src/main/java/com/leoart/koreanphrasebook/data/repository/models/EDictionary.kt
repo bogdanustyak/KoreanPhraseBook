@@ -15,5 +15,7 @@ class EDictionary(
         @ColumnInfo(name = "word")
         val word: String,
         @ColumnInfo(name = "definition")
-        val definition: String
+        val definition: String,
+        @ColumnInfo(name = "favourite")
+        val isFavourite: String
 )

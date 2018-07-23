@@ -18,8 +18,8 @@ import io.reactivex.schedulers.Schedulers
  */
 class DictionaryRepository(val context: Context) {
 
-    fun getDictionary(): Single<Dictionary> {
-        Log.d(DialogsRepository.TAG, "getDialogs")
+    fun getDictionary(): Flowable<Dictionary> {
+        Log.d(DialogsRepository.TAG, "getDictionary")
         return getDataFromDB()
                 .flatMap { dictionary ->
                     if (dictionary.data().isNotEmpty()) {
@@ -28,7 +28,13 @@ class DictionaryRepository(val context: Context) {
                         return@flatMap requestFromNetwork()
                                 .toFlowable(BackpressureStrategy.LATEST)
                     }
-                }.firstOrError()
+                }
+    }
+
+    fun markFavourite(dict: EDictionary) {
+        localDB().subscribe {
+            it.dictionaryDao().updateFavorite(dict)
+        }
     }
 
     fun getDataFromDB(): Flowable<Dictionary> {
@@ -43,23 +49,29 @@ class DictionaryRepository(val context: Context) {
         val dictionary = Dictionary()
         var previouseLetter: Char = dict.first().letter
         var list: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-        var map = HashMap<String, String>()
 
         dict.forEach { d ->
             if (previouseLetter == d.letter) {
-                map.put("translation", d.definition)
-                map.put("word", d.word)
-                list.add(map)
-                map = HashMap<String, String>()
+                list.add(generateDataMap(d.definition, d.word, d.isFavourite))
             } else {
                 dictionary.add(previouseLetter, list)
                 previouseLetter = d.letter
                 list = ArrayList<HashMap<String, String>>()
-                map = HashMap<String, String>()
+                list.add(generateDataMap(d.definition, d.word, d.isFavourite))
             }
         }
-
+        if (list.size > 0) {
+            dictionary.add(previouseLetter, list)
+        }
         return Flowable.just(dictionary)
+    }
+
+    private fun generateDataMap(translation: String, word: String, favourite: String): HashMap<String, String> {
+        var map = HashMap<String, String>()
+        map.put("translation", translation)
+        map.put("word", word)
+        map.put("favourite", favourite)
+        return map
     }
 
     fun requestFromNetwork(): Observable<Dictionary> {
@@ -76,7 +88,8 @@ class DictionaryRepository(val context: Context) {
                 val key = it.key
                 val value = it.value
                 value.forEach {
-                    dictionary.add(EDictionary(key, it["word"] ?: "", it["translation"] ?: ""))
+                    dictionary.add(EDictionary(key, it["word"] ?: "", it["translation"]
+                            ?: "", it["favourite"] ?: "false"))
                 }
             }
 

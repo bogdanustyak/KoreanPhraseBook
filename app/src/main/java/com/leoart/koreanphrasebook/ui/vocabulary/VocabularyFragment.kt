@@ -27,7 +27,9 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
     private var recyclerViewVocabulary: RecyclerView? = null
     private val stickyHeaderLayoutManager = StickyHeaderLayoutManager()
 
+
     private lateinit var adapter: DictionaryAdapter
+    private lateinit var model: DictionaryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +41,7 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_vocabulary, container, false)
-        val model: DictionaryViewModel = ViewModelProviders.of(
+        model = ViewModelProviders.of(
                 this,
                 ViewModelFactory(view.context)
         ).get(DictionaryViewModel::class.java)
@@ -57,6 +59,14 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
         recyclerViewVocabulary = view.findViewById<RecyclerView>(R.id.rv_vocabulary)
         recyclerViewVocabulary?.layoutManager = stickyHeaderLayoutManager
         adapter = DictionaryAdapter(Dictionary())
+        adapter.setFavoriteClickListener(object : OnFavoriteClickListener {
+            override fun onFavoriteCLick(position: Int) {
+                val word = adapter.getWordByAdapterPosition(position)
+                word?.let {
+                    model.onFavouriteClicked(it)
+                }
+            }
+        })
         recyclerViewVocabulary?.adapter = adapter
     }
 
@@ -89,8 +99,8 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
             return fragment
         }
 
-        interface onFavoriteClickListener {
-            fun onFavoriteCLick()
+        interface OnFavoriteClickListener {
+            fun onFavoriteCLick(position: Int)
         }
     }
 
