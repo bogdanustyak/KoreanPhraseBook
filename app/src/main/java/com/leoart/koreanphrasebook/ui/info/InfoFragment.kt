@@ -11,16 +11,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.InfoRecyclerAdapter
+import com.leoart.koreanphrasebook.ui.notes.NotesFragment
 
 /**
  * Created by bogdan on 6/14/17.
  */
 class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.InfoInteractionListener {
 
+    private lateinit var mainView : MainView
+
     companion object {
-        fun newInstance(title: String): InfoFragment {
+        fun newInstance(title: String, mainView: MainView): InfoFragment {
             val fragment = InfoFragment(title)
+            fragment.mainView = mainView
             return fragment
         }
     }
@@ -45,6 +50,7 @@ class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.Inf
         items.add(InfoItem(getString(R.string.rate)))
         items.add(InfoItem(getString(R.string.send_email)))
         items.add(InfoItem(getString(R.string.settings)))
+        items.add(InfoItem(getString(R.string.notes_title)))
         return items
     }
 
@@ -59,6 +65,11 @@ class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.Inf
                 Toast.makeText(context, "Send email", Toast.LENGTH_SHORT).show()
             getString(R.string.settings) ->
                 Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
+            getString(R.string.notes_title) -> openNotesScreen()
         }
+    }
+
+    private fun openNotesScreen() {
+        mainView.replace(NotesFragment.newInstance(getString(R.string.notes_title)))
     }
 }

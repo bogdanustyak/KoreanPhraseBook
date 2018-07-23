@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
     }
 
     override fun infoSelected() {
-        this.replace(InfoFragment.newInstance(getString(R.string.menu_info)))
+        this.replace(InfoFragment.newInstance(getString(R.string.menu_info), this))
     }
 
     override fun replace(fragment: BaseFragment) {
