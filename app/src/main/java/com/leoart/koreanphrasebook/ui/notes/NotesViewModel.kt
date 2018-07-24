@@ -3,6 +3,7 @@ package com.leoart.koreanphrasebook.ui.notes
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.util.Log
 import com.leoart.koreanphrasebook.data.repository.NotesRepository
 import com.leoart.koreanphrasebook.ui.models.Note
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -28,7 +29,7 @@ class NotesViewModel(val repository: NotesRepository) : ViewModel() {
                 .subscribe({ notes ->
                     this.notes.value = notes
                 }, {
-                    throw UnsupportedOperationException("not implemented")
+                    Log.e(FETCH_ERROR, it.message)
                 })
     }
 
@@ -37,6 +38,10 @@ class NotesViewModel(val repository: NotesRepository) : ViewModel() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()
+    }
+
+    companion object {
+        const val FETCH_ERROR = "note fetch error"
     }
 
 }
