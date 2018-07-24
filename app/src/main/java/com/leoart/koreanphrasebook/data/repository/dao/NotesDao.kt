@@ -1,9 +1,6 @@
 package com.leoart.koreanphrasebook.data.repository.dao
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
-import android.arch.persistence.room.Update
+import android.arch.persistence.room.*
 import com.leoart.koreanphrasebook.data.repository.models.ENote
 import io.reactivex.Flowable
 
@@ -16,5 +13,10 @@ interface NotesDao {
     @Insert
     fun insertAll(vararg notes : ENote)
 
+    @Update
+    fun updateNote(note : ENote)
+
+    @Delete
+    fun deleteNote(note : ENote)
 
 }

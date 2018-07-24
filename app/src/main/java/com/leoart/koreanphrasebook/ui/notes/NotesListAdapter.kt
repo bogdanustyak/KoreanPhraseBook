@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.models.Note
 
-class NotesListAdapter : RecyclerView.Adapter<NotesListAdapter.ViewHolder>(){
+class NotesListAdapter(private val listener: OnNoteClickListener) : RecyclerView.Adapter<NotesListAdapter.ViewHolder>() {
 
     private val notesList = mutableListOf<Note>()
 
@@ -18,7 +17,10 @@ class NotesListAdapter : RecyclerView.Adapter<NotesListAdapter.ViewHolder>(){
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_note, parent, false)
         val holder = ViewHolder(view)
         holder.delButton.setOnClickListener {
-            Toast.makeText(parent.context, "DELETE", Toast.LENGTH_SHORT).show()
+            listener.onDelete(holder.note)
+        }
+        holder.itemView.setOnClickListener {
+            listener.onEdit(holder.note)
         }
         return holder
     }
@@ -31,16 +33,19 @@ class NotesListAdapter : RecyclerView.Adapter<NotesListAdapter.ViewHolder>(){
         holder.bind(notesList[position])
     }
 
-    fun refreshList(notes : MutableList<Note>){
+    fun refreshList(notes: List<Note>) {
+        notesList.clear()
         notesList.addAll(notes)
         notifyDataSetChanged()
     }
 
-    class ViewHolder(view : View) : RecyclerView.ViewHolder(view){
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title = view.findViewById<TextView>(R.id.note_title)
         val delButton = view.findViewById<ImageView>(R.id.ic_delete)
+        lateinit var note: Note
 
-        fun bind(note : Note){
+        fun bind(note: Note) {
+            this.note = note
             title.text = note.title
         }
     }

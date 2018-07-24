@@ -18,13 +18,14 @@ import com.leoart.koreanphrasebook.ui.notes.NotesFragment
 /**
  * Created by bogdan on 6/14/17.
  */
-class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.InfoInteractionListener {
+class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener {
 
     private lateinit var mainView : MainView
 
     companion object {
         fun newInstance(title: String, mainView: MainView): InfoFragment {
-            val fragment = InfoFragment(title)
+            val fragment = InfoFragment()
+            fragment.title = title
             fragment.mainView = mainView
             return fragment
         }
@@ -70,6 +71,6 @@ class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.Inf
     }
 
     private fun openNotesScreen() {
-        mainView.replace(NotesFragment.newInstance(getString(R.string.notes_title)))
+        mainView.add(NotesFragment.newInstance(getString(R.string.notes_title)))
     }
 }

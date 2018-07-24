@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
 import com.leoart.koreanphrasebook.data.repository.DictionaryRepository
 import com.leoart.koreanphrasebook.data.repository.NotesRepository
+import com.leoart.koreanphrasebook.ui.notes.EditNoteViewModel
 import com.leoart.koreanphrasebook.ui.notes.NotesViewModel
 import com.leoart.koreanphrasebook.ui.vocabulary.DictionaryViewModel
 
@@ -19,6 +20,8 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
             return DictionaryViewModel(DictionaryRepository(context)) as T
         }else if(modelClass.isAssignableFrom(NotesViewModel::class.java)){
             return NotesViewModel(NotesRepository(context)) as T
+        }else if(modelClass.isAssignableFrom(EditNoteViewModel::class.java)){
+            return EditNoteViewModel(NotesRepository(context)) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
