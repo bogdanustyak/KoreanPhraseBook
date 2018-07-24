@@ -22,7 +22,7 @@ interface DictionaryDao {
     fun findBy(query: String): Maybe<List<EDictionary>>
 
     @Query("SELECT * FROM dictionary WHERE favourite LIKE :query")
-    fun getFavourite(query: String): Maybe<List<EDictionary>>
+    fun getFavourite(query: String): Flowable<List<EDictionary>>
 
     @Update
     fun updateFavorite(dict: EDictionary)

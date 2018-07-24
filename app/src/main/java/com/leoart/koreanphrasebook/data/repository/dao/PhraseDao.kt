@@ -24,7 +24,7 @@ interface PhraseDao {
     fun findBy(query: String): Maybe<List<EPhrase>>
 
     @Query("SELECT * FROM phrase WHERE favourite LIKE :query")
-    fun getFavourite(query: Boolean): Maybe<List<EPhrase>>
+    fun getFavourite(query: Boolean): Flowable<List<EPhrase>>
 
     @Update
     fun updateFavorite(dict: EPhrase)

@@ -1,62 +1,61 @@
 package com.leoart.koreanphrasebook.ui.favourite
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
-import com.leoart.koreanphrasebook.data.repository.AppDataBase
-import com.leoart.koreanphrasebook.data.repository.models.EDictionary
+import com.leoart.koreanphrasebook.data.parsers.favourite.Favourite
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
-import com.leoart.koreanphrasebook.ui.chapters.phrase.PhrasesAdapter
-import com.leoart.koreanphrasebook.ui.chapters.phrase.PhrasesAdapter.OnPhrasesAdapterInteractionListener
-import com.leoart.koreanphrasebook.ui.models.Phrase
+import com.leoart.koreanphrasebook.ui.ViewModelFactory
 
 /**
  * Created by bogdan on 6/18/17.
  */
-class FavouriteFragment : BaseFragment(), FavouriteView, OnPhrasesAdapterInteractionListener {
+class FavouriteFragment : BaseFragment() {
 
     private var mainView: MainView? = null
-    private var adapter: PhrasesAdapter? = null
-    private var presenter: FavouritePresenter? = null
+    private var adapter: FavouriteAdapter? = null
+
+    private lateinit var model: FavouriteViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.activity_phrase, container, false)
-
-
         val rvPhrases = view.findViewById<RecyclerView>(R.id.rv_phrases)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
         rvPhrases.layoutManager = layoutManager
         rvPhrases.itemAnimator = DefaultItemAnimator()
 
-        //adapter = PhrasesAdapter(emptyList<EDictionary>(), this)
+        adapter = FavouriteAdapter(emptyList<Favourite>(), object : OnFavouriteClickListener {
+            override fun onFavouriteClick(position: Int) {
+                adapter?.getItemByPosition(position)?.let {
+                    model.onFavouriteClicked(it)
+                }
+            }
+        })
         rvPhrases.adapter = adapter
-        context?.let {
-            presenter = FavouritePresenter(this, AppDataBase.getInstance(it))
-        }
-        presenter?.requestPhrases()
+
+        model = ViewModelProviders.of(
+                this,
+                ViewModelFactory(view.context)
+        ).get(FavouriteViewModel::class.java)
+        model.getData().observe(this, Observer<List<Favourite>> {
+            it?.let {
+                Log.d("TAG", it.toString())
+                adapter?.updatePhrases(it)
+            }
+        })
 
         return view
-    }
-
-    override fun showPhrases(phrases: List<EDictionary>) {
-     //   adapter?.updatePhrases(phrases)
-    }
-
-    override fun removePhrase(position: Int) {
-        adapter?.notifyItemRemoved(position)
-    }
-
-    override fun onFavouriteClicked(position: Int) {
-//        val item = adapter?.getItemByPosition(position)
-//        item?.let { presenter?.onFavouriteClicked(position, it) }
-
     }
 
     companion object {
@@ -68,6 +67,10 @@ class FavouriteFragment : BaseFragment(), FavouriteView, OnPhrasesAdapterInterac
             fragment.mainView = mainView
             fragment.title = title
             return fragment
+        }
+
+        interface OnFavouriteClickListener {
+            fun onFavouriteClick(position: Int)
         }
     }
 }
