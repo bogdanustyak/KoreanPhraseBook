@@ -58,13 +58,13 @@ class SearchActivity : AppCompatActivity() {
                 EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN
 
         val inputSubscription = RxSearchView.queryTextChanges(searchView)
-                .debounce(300, TimeUnit.MILLISECONDS)
+                .debounce(TIMEOUT, TimeUnit.MILLISECONDS)
 
         compositeDisposable.add(inputSubscription
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     clearResults()
-                    if (it.length >= 3)
+                    if (it.length >= MIN_QUERY_LENTH)
                         searchQuery(it.toString())
                 })
     }
@@ -118,6 +118,11 @@ class SearchActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.dispose()
+    }
+
+    companion object {
+        const val TIMEOUT = 300L
+        const val MIN_QUERY_LENTH = 3
     }
 
 }
