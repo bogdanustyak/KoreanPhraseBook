@@ -61,7 +61,7 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
         adapter = DictionaryAdapter(Dictionary())
         adapter.setFavoriteClickListener(object : OnFavoriteClickListener {
             override fun onFavoriteCLick(position: Int) {
-                val word = adapter.getWordByAdapterPosition(position)
+                val word = adapter.getDictionaryByPosition(position)
                 word?.let {
                     model.onFavouriteClicked(it)
                 }

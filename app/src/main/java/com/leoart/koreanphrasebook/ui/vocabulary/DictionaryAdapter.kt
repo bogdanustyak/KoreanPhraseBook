@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
-import com.leoart.koreanphrasebook.ui.models.Word
+import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import org.zakariya.stickyheaders.SectioningAdapter
 import java.util.*
@@ -131,9 +131,8 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
         this.favoriteClickLisener = favoriteClickLisener
     }
 
-    //TODO refactor (replace word with another model, Word - deprecated)
-    fun getWordByAdapterPosition(position: Int): Word? {
-        var word: Word? = null
+    fun getDictionaryByPosition(position: Int): EDictionary? {
+        var dictionary: EDictionary? = null
         val letterPosition = getSectionForAdapterPosition(position)
         val itemPositionInSection = getPositionOfItemInSection(letterPosition, position)
         var letter: Char? = null
@@ -147,14 +146,14 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
                     }
                 }
         val item = section?.get(itemPositionInSection)
-        var isFavourite = false
+        var isFavourite = "false"
         item?.let {
             it["favourite"]?.let { favourite ->
-                isFavourite = favourite.toBoolean()
+                isFavourite = favourite
             }
-            word = Word(letter!!.toString(), it["word"]!!, it["translation"]!!, 0, isFavourite)
+            dictionary = EDictionary(letter!!, it["word"]!!, it["translation"]!!, isFavourite)
         }
-        return word
+        return dictionary
     }
 
     fun setData(dictionary: Dictionary) {
