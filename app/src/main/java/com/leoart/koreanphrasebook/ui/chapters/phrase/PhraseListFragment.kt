@@ -1,26 +1,31 @@
 package com.leoart.koreanphrasebook.ui.chapters.phrase
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhrasesAdapter.OnPhrasesAdapterInteractionListener
-import com.leoart.koreanphrasebook.ui.models.Phrase
 
 /**
  * Created by bogdan on 6/18/17.
  */
-class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView, OnPhrasesAdapterInteractionListener {
+class PhraseListFragment(title: String) : BaseFragment(title), OnPhrasesAdapterInteractionListener {
 
     var category = ""
-    private var adapter: PhrasesAdapter? = null
-    var phrasePresenter: PhrasesPresenter? = null
+    private lateinit var model: PhraseViewModel
 
+    private var adapter: PhrasesAdapter? = null
+    //    var phrasePresenter: PhrasesPresenter? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.activity_phrase, container, false)
@@ -30,28 +35,26 @@ class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView, OnPh
         rvPhrases.layoutManager = layoutManager
         rvPhrases.itemAnimator = DefaultItemAnimator()
 
-        adapter = PhrasesAdapter(emptyList<Phrase>(), this)
+        adapter = PhrasesAdapter(emptyList<EPhrase>(), this)
         rvPhrases.adapter = adapter
 
-        phrasePresenter = PhrasesPresenter(
+        model = ViewModelProviders.of(
                 this,
-                category
-        )
-        phrasePresenter?.requestPhrases()
-
+                ViewModelFactory(view.context)
+        ).get(PhraseViewModel::class.java)
+        model.getPhrases(category).observe(this, Observer<List<EPhrase>> {
+            it?.let {
+                Log.d("TAG", it.toString())
+                adapter?.updatePhrases(it)
+            }
+        })
         return view
     }
 
-    override fun showPhrases(phrases: List<Phrase>) {
-        adapter?.updatePhrases(phrases)
-    }
-
     override fun onFavouriteClicked(position: Int) {
-        phrasePresenter?.onFavouriteClicked(position)
-    }
-
-    override fun updatePhrase(position: Int, phrase: Phrase?) {
-        adapter?.notifyItemChanged(position, phrase)
+        adapter?.getPhraseByPosition(position)?.let {
+            model.onFavouriteClicked(it)
+        }
     }
 
     companion object {

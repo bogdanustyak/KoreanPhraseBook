@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.repository.AppDataBase
+import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhrasesAdapter
@@ -33,17 +35,18 @@ class FavouriteFragment : BaseFragment(), FavouriteView, OnPhrasesAdapterInterac
         rvPhrases.layoutManager = layoutManager
         rvPhrases.itemAnimator = DefaultItemAnimator()
 
-        adapter = PhrasesAdapter(emptyList<Phrase>(), this)
+        //adapter = PhrasesAdapter(emptyList<EDictionary>(), this)
         rvPhrases.adapter = adapter
-
-        presenter = FavouritePresenter(this)
+        context?.let {
+            presenter = FavouritePresenter(this, AppDataBase.getInstance(it))
+        }
         presenter?.requestPhrases()
 
         return view
     }
 
-    override fun showPhrases(phrases: List<Phrase>) {
-        adapter?.updatePhrases(phrases)
+    override fun showPhrases(phrases: List<EDictionary>) {
+     //   adapter?.updatePhrases(phrases)
     }
 
     override fun removePhrase(position: Int) {
@@ -51,7 +54,9 @@ class FavouriteFragment : BaseFragment(), FavouriteView, OnPhrasesAdapterInterac
     }
 
     override fun onFavouriteClicked(position: Int) {
-        presenter?.onFavouriteClicked(position)
+//        val item = adapter?.getItemByPosition(position)
+//        item?.let { presenter?.onFavouriteClicked(position, it) }
+
     }
 
     companion object {

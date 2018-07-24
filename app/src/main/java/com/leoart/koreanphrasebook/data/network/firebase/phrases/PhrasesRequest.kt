@@ -4,6 +4,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.leoart.koreanphrasebook.data.network.firebase.FireBaseRequest
+import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
 import io.reactivex.Observable
 

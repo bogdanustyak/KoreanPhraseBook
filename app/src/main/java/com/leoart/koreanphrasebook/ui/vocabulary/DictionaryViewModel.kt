@@ -27,10 +27,11 @@ class DictionaryViewModel(private val dictionaryRepository: DictionaryRepository
 
     fun onFavouriteClicked(dictionary: EDictionary) {
         if (dictionary.isFavourite.toBoolean()) {
-            dictionaryRepository.markFavourite(EDictionary(dictionary.letter, dictionary.word, dictionary.definition, "false"))
+            dictionary.isFavourite = "false"
         } else {
-            dictionaryRepository.markFavourite(EDictionary(dictionary.letter, dictionary.word, dictionary.definition, "true"))
+            dictionary.isFavourite = "true"
         }
+        dictionaryRepository.markFavourite(dictionary)
     }
 
     private fun loadDictionary() {
