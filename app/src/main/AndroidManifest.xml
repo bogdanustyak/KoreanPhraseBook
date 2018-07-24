@@ -38,6 +38,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".ui.notes.EditNoteActivity"/>
+        <activity android:name=".ui.notes.NotesActivity"/>
     </application>
 
 </manifest>

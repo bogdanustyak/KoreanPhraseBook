@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.info
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -13,7 +14,7 @@ import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.InfoRecyclerAdapter
-import com.leoart.koreanphrasebook.ui.notes.NotesFragment
+import com.leoart.koreanphrasebook.ui.notes.NotesActivity
 
 /**
  * Created by bogdan on 6/14/17.
@@ -71,6 +72,6 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
     }
 
     private fun openNotesScreen() {
-        mainView.add(NotesFragment.newInstance(getString(R.string.notes_title)))
+        startActivity(Intent(context, NotesActivity::class.java))
     }
 }

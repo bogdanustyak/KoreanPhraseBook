@@ -5,28 +5,32 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.support.v7.widget.Toolbar
+import android.view.*
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.leoart.koreanphrasebook.ui.models.Note
+import android.support.v7.widget.DividerItemDecoration
 
-class NotesFragment : BaseFragment(), OnNoteClickListener {
+
+
+class NotesActivity : AppCompatActivity(), OnNoteClickListener {
 
     private lateinit var viewModel: NotesViewModel
     private val adapter = NotesListAdapter(this)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_notes, container, false)
-        initView(view)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.fragment_notes)
+        initView()
+        initToolbar()
         initViewModel()
         subscribeOnViewModel()
         this.viewModel.fetchNotes()
-        return view
     }
 
     override fun onEdit(note: Note) {
@@ -37,21 +41,31 @@ class NotesFragment : BaseFragment(), OnNoteClickListener {
         viewModel.deleteNote(note)
     }
 
-    private fun initView(view: View) {
-        val listView = view.findViewById<RecyclerView>(R.id.notes_list)
-        listView.layoutManager = LinearLayoutManager(context)
+    private fun initView() {
+        val listView = findViewById<RecyclerView>(R.id.notes_list)
+        val layoutManager = LinearLayoutManager(this)
+        listView.layoutManager = layoutManager
         listView.adapter = adapter
-        val addButton = view.findViewById<ConstraintLayout>(R.id.add_note)
+        val dividerItemDecoration = DividerItemDecoration(this,
+                layoutManager.orientation)
+        listView.addItemDecoration(dividerItemDecoration)
+        val addButton = findViewById<ConstraintLayout>(R.id.add_note)
         addButton.setOnClickListener({ openCreateNote() })
     }
 
+    private fun initToolbar() {
+        val toolbar = findViewById<Toolbar>(R.id.notes_toolbar)
+        toolbar.title = getString(R.string.notes_title)
+        setSupportActionBar(toolbar)
+    }
+
     private fun openCreateNote() {
-        val intent = Intent(context, EditNoteActivity::class.java)
+        val intent = Intent(this, EditNoteActivity::class.java)
         startActivity(intent)
     }
 
     private fun openEditNote(note: Note) {
-        val intent = Intent(context, EditNoteActivity::class.java).apply {
+        val intent = Intent(this, EditNoteActivity::class.java).apply {
             putExtra(EditNoteActivity.NOTE_KEY, note)
         }
         startActivity(intent)
@@ -59,7 +73,7 @@ class NotesFragment : BaseFragment(), OnNoteClickListener {
 
     private fun initViewModel() {
         this.viewModel = ViewModelProviders
-                .of(this, ViewModelFactory(this.requireContext()))
+                .of(this, ViewModelFactory(this))
                 .get(NotesViewModel::class.java)
     }
 
@@ -69,13 +83,5 @@ class NotesFragment : BaseFragment(), OnNoteClickListener {
                 adapter.refreshList(it)
             }
         })
-    }
-
-    companion object {
-        fun newInstance(title: String): NotesFragment {
-            val fragment = NotesFragment()
-            fragment.title = title
-            return fragment
-        }
     }
 }
