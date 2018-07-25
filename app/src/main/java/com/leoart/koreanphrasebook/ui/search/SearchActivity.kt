@@ -8,19 +8,23 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.text.InputType
 import android.view.inputmethod.EditorInfo
+import com.jakewharton.rxbinding2.widget.RxSearchView
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.network.firebase.search.DictType
 import com.leoart.koreanphrasebook.data.repository.search.SearchRepository
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_search.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var adapter: SearchResultsAdapter
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,21 +56,17 @@ class SearchActivity : AppCompatActivity() {
         searchView.inputType = InputType.TYPE_TEXT_FLAG_CAP_WORDS
         searchView.imeOptions = searchView.imeOptions or EditorInfo.IME_ACTION_SEARCH or
                 EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN
-        searchView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let {
-                    clearResults()
-                    searchView.clearFocus()
-                    searchQuery(it)
-                }
-                return false
-            }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                clearResults()
-                return false
-            }
-        })
+        val inputSubscription = RxSearchView.queryTextChanges(searchView)
+                .debounce(TIMEOUT, TimeUnit.MILLISECONDS)
+
+        compositeDisposable.add(inputSubscription
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    clearResults()
+                    if (it.length >= MIN_QUERY_LENTH)
+                        searchQuery(it.toString())
+                })
     }
 
     fun clearResults() {
@@ -113,6 +113,16 @@ class SearchActivity : AppCompatActivity() {
             DictType.REPLICS -> getString(R.string.menu_chapters)
             else -> ""
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
+    }
+
+    companion object {
+        const val TIMEOUT = 300L
+        const val MIN_QUERY_LENTH = 3
     }
 
 }

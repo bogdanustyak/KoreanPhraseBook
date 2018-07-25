@@ -17,7 +17,9 @@ import com.leoart.koreanphrasebook.data.repository.models.*
     EReplic::class,
     EChapter::class,
     EDictionary::class,
-    EPhrase::class], version = 3)
+    EPhrase::class,
+    ENote::class], version = 4)
+
 
 abstract class AppDataBase : RoomDatabase() {
     abstract fun dialogDao(): DialogDao
@@ -25,6 +27,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun chaptersDao(): ChapterDao
     abstract fun dictionaryDao(): DictionaryDao
     abstract fun phraseDao(): PhraseDao
+    abstract fun notesDao(): NotesDao
 
     companion object {
         private val DATA_BASE_NAME = "KoreanPhraseBook.db"

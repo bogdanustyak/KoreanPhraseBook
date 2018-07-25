@@ -12,17 +12,23 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.InfoRecyclerAdapter
+import com.leoart.koreanphrasebook.ui.notes.NotesActivity
 import android.content.Intent
 
 /**
  * Created by bogdan on 6/14/17.
  */
-class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.InfoInteractionListener {
+class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener {
+
+    private lateinit var mainView : MainView
 
     companion object {
-        fun newInstance(title: String): InfoFragment {
-            val fragment = InfoFragment(title)
+        fun newInstance(title: String, mainView: MainView): InfoFragment {
+            val fragment = InfoFragment()
+            fragment.title = title
+            fragment.mainView = mainView
             return fragment
         }
     }
@@ -46,6 +52,7 @@ class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.Inf
         items.add(InfoItem(getString(R.string.share)))
         items.add(InfoItem(getString(R.string.rate)))
         items.add(InfoItem(getString(R.string.send_email)))
+        items.add(InfoItem(getString(R.string.notes_title)))
         items.add(InfoItem(getString(R.string.about)))
         return items
     }
@@ -56,9 +63,14 @@ class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.Inf
             getString(R.string.share) -> share()
             getString(R.string.rate) ->
                 Toast.makeText(context, "Rate", Toast.LENGTH_SHORT).show()
+            getString(R.string.notes_title) -> openNotesScreen()
             getString(R.string.send_email) -> sendEmail()
             getString(R.string.about) -> about()
         }
+    }
+
+    private fun openNotesScreen() {
+        startActivity(Intent(context, NotesActivity::class.java))
     }
 
     private fun share(){
