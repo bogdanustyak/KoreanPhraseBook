@@ -10,6 +10,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhraseListFragment
@@ -25,6 +27,7 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
     private var chapter: Chapter? = null
     private var adapter: CategoriesAdapter? = null
     private var mainView: MainView? = null
+    private var analyticsManager: AnalyticsManager? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -36,6 +39,9 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
         rvCategories.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         adapter = CategoriesAdapter(ArrayList<Category>(), this)
         rvCategories.adapter = adapter
+        activity?.let {
+            analyticsManager = AnalyticsManagerImpl(it.applicationContext)
+        }
         this.chapter?.let {
             CategoriesPresenter(this).requestCategories(it)
         }
@@ -43,7 +49,12 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
     }
 
     override fun onCategoryClick(category: Category) {
-        mainView?.add(PhraseListFragment.newInstance(category.name["word"] ?: "", category.id))
+        mainView?.let {
+            it.add(PhraseListFragment.newInstance(category.name["word"] ?: "", category.id))
+            category.name["word"]?.let {
+                analyticsManager?.openChapterCategory(it)
+            }
+        }
     }
 
     override fun showCategories(categories: List<Category>) {
@@ -59,7 +70,6 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
         }
         return super.onOptionsItemSelected(item)
     }
-
 
     companion object {
 

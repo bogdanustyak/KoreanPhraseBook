@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
+import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
@@ -20,6 +23,7 @@ class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
     private var mainView: MainView? = null
     private var adapter: DialogsRecyclerAdapter? = null
     var rvDialogs: RecyclerView? = null
+    private var analyticsManager: AnalyticsManager? = null
 
     override fun showDialogs(chapters: List<DialogResponse>?) {
         chapters?.let {
@@ -41,6 +45,7 @@ class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
 
         adapter = DialogsRecyclerAdapter(dialogs, this)
         rvDialogs?.adapter = adapter
+        initAnalytics()
         DialogsPresenter(
                 this,
                 view.context
@@ -48,9 +53,17 @@ class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
         return view
     }
 
+    private fun initAnalytics() {
+        activity?.let {
+            analyticsManager = AnalyticsManagerImpl(it.applicationContext)
+            analyticsManager?.onOpenScreen(ScreenNavigator.DIALOGS_SCREEN.screenName)
+        }
+    }
+
     override fun onDialogClick(dialog: DialogResponse) {
         this.mainView?.let {
             it.add(DialogFragment.newInstance(dialog.name, dialog))
+            analyticsManager?.openDialog(dialog.name)
         }
     }
 

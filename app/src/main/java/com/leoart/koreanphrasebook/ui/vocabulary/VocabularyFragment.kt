@@ -11,6 +11,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
+import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
@@ -28,11 +31,20 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
     private val stickyHeaderLayoutManager = StickyHeaderLayoutManager()
 
     private lateinit var adapter: DictionaryAdapter
+    private var analyticsManager: AnalyticsManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initAnalytics()
         mParam1 = arguments?.getString(ARG_PARAM1)
         mParam2 = arguments?.getString(ARG_PARAM2)
+    }
+
+    private fun initAnalytics() {
+        activity?.let {
+            analyticsManager = AnalyticsManagerImpl(it.applicationContext)
+            analyticsManager?.onOpenScreen(ScreenNavigator.SEARCH_SCREEN.screenName)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

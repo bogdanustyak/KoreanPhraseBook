@@ -12,6 +12,8 @@ import android.view.MenuItem
 import android.widget.ImageView
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
@@ -27,10 +29,13 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
 
     private var bottomMenu: BottomMenu? = null
     var auth: Auth? = null
+    private lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        analyticsManager = AnalyticsManagerImpl(applicationContext)
+        analyticsManager.onOpenScreen("main screen")
         initUI()
         auth = FRAuth()
     }

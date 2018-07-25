@@ -7,4 +7,5 @@ interface MainView {
     fun replace(fragment: BaseFragment)
     fun add(fragment: BaseFragment)
     fun add(fragment: BaseFragment, title: String)
+
 }

@@ -10,6 +10,9 @@ import android.text.InputType
 import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.widget.RxSearchView
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
+import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.network.firebase.search.DictType
 import com.leoart.koreanphrasebook.data.repository.search.SearchRepository
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
@@ -25,10 +28,13 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var adapter: SearchResultsAdapter
     private val compositeDisposable = CompositeDisposable()
+    private lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        analyticsManager = AnalyticsManagerImpl(applicationContext)
+        analyticsManager.onOpenScreen(ScreenNavigator.SEARCH_SCREEN.screenName)
         initUI()
         handleIntent(intent)
     }

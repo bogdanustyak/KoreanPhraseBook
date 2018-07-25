@@ -10,9 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
+import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 import java.util.*
 
 @SuppressLint("ValidFragment")

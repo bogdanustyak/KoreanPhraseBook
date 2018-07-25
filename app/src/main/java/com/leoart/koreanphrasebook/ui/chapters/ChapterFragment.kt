@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
+import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesFragment
@@ -21,11 +24,11 @@ class ChapterFragment : BaseFragment(), ChaptersView,
     private var mainView: MainView? = null
     private val chapters: List<Chapter>? = null
     private var adapter: ChaptersRecyclerAdapter? = null
+    private var analyticsManager: AnalyticsManager? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_chapter, container, false)
-
         val rvChapters = view.findViewById<RecyclerView>(R.id.rv_chapters)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvChapters.layoutManager = layoutManager
@@ -36,7 +39,15 @@ class ChapterFragment : BaseFragment(), ChaptersView,
         context?.let {
             ChaptersPresenter(this, it).requestChapters()
         }
+        initAnalytics()
         return view
+    }
+
+    private fun initAnalytics() {
+        activity?.let {
+            analyticsManager = AnalyticsManagerImpl(it.applicationContext)
+            analyticsManager?.onOpenScreen(ScreenNavigator.CHAPTERS_SCREEN.screenName)
+        }
     }
 
     override fun onChapterClick(chapter: Chapter) {
@@ -44,6 +55,7 @@ class ChapterFragment : BaseFragment(), ChaptersView,
             it.add(
                     CategoriesFragment.newInstance(chapter.name, chapter, mainView)
             )
+            analyticsManager?.openChapter(chapter.name)
         }
     }
 

@@ -76,6 +76,8 @@ dependencies {
     implementation "com.google.firebase:firebase-database:$firebase"
     implementation "com.google.firebase:firebase-auth:16.0.2"
 
+    implementation'com.google.android.gms:play-services-analytics:16.0.1'
+
     implementation 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
 
     implementation "com.android.support:appcompat-v7:$support_lib"
