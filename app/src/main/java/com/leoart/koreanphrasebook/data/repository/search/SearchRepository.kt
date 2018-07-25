@@ -1,11 +1,11 @@
 package com.leoart.koreanphrasebook.data.repository.search
 
 import android.content.Context
-import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.network.firebase.search.DictType
 import com.leoart.koreanphrasebook.data.network.firebase.search.SearchResult
 import com.leoart.koreanphrasebook.data.repository.AppDataBase
 import io.reactivex.Flowable
+import java.util.*
 
 
 /**
@@ -18,10 +18,11 @@ class SearchRepository(val context: Context) : Search {
     override fun search(query: String): Flowable<List<SearchResult>> {
         val searchQuery = "%$query%"
         return Flowable.merge(
-                searchDictionary(searchQuery),
-                searchDialogs(searchQuery),
-                searchChapters(searchQuery),
-                searchReplic(searchQuery)
+                Arrays.asList(searchDictionary(searchQuery),
+                        searchDialogs(searchQuery),
+                        searchChapters(searchQuery),
+                        searchReplic(searchQuery),
+                        searchPhrase(searchQuery))
         )
     }
 
@@ -66,6 +67,17 @@ class SearchRepository(val context: Context) : Search {
                 .flatMap { replics ->
                     val searchResults = replics.map {
                         SearchResult("Path", it.ukrainian, DictType.REPLICS)
+                    }
+                    Flowable.fromArray(searchResults)
+                }
+    }
+
+    fun searchPhrase(searchQuery: String): Flowable<List<SearchResult>> {
+        return AppDataBase.getInstance(context).phraseDao().findBy(searchQuery)
+                .toFlowable()
+                .flatMap { replics ->
+                    val searchResults = replics.map {
+                        SearchResult("Path", it.word + " " + it.translation + " " + it.transcription, DictType.REPLICS)
                     }
                     Flowable.fromArray(searchResults)
                 }
