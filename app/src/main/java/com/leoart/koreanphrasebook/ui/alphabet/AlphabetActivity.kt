@@ -56,12 +56,11 @@ class AlphabetActivity : AppCompatActivity() {
         val lettersList = findViewById<RecyclerView>(R.id.letters_list)
         lettersList.adapter = adapter
         lettersList.layoutManager = GridLayoutManager(this, LETTERS_IN_ROW)
-
     }
 
 
     companion object {
-        const val LETTERS_IN_ROW = 7
+        const val LETTERS_IN_ROW = 6
     }
 
 }
