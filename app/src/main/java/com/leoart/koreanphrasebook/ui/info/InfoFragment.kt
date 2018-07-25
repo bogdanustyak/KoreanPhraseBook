@@ -71,7 +71,6 @@ class InfoFragment(title: String) : BaseFragment(title), InfoRecyclerAdapter.Inf
         } catch (ex: android.content.ActivityNotFoundException) {
             Toast.makeText(this@InfoFragment.context, getString(R.string.share_error), Toast.LENGTH_SHORT).show()
         }
-
     }
 
     private fun sendEmail(){
