@@ -28,6 +28,9 @@
     <string name="password">Пароль</string>
     <string name="confirm_password">Повторіть пароль</string>
     <string name="auth">Авторизація</string>
+    <string name="notes_title">Мої нотатки</string>
+    <string name="new_note">Нова нотатка</string>
+    <string name="edit_note_title">Нотатка</string>
     <string name="about">Про додаток</string>
     <string name="about_info">App info...</string>
     <string name="dev_mail">test@gmail.com</string>

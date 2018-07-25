@@ -12,4 +12,7 @@
     <color name="blue_transparent">#800c0259</color>
 
     <color name="search_section_bg">#ffB0B0B0</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
 </resources>
