@@ -3,6 +3,7 @@ package com.leoart.koreanphrasebook.ui
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
+import com.leoart.koreanphrasebook.data.repository.AlphabetRepository
 import com.leoart.koreanphrasebook.data.repository.DictionaryRepository
 import com.leoart.koreanphrasebook.data.repository.NotesRepository
 import com.leoart.koreanphrasebook.ui.alphabet.AlphabetViewModel
@@ -28,7 +29,7 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
                 EditNoteViewModel(NotesRepository(context)) as T
             }
             modelClass.isAssignableFrom(AlphabetViewModel::class.java) -> {
-                AlphabetViewModel() as T
+                AlphabetViewModel(AlphabetRepository(context)) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")
         }
