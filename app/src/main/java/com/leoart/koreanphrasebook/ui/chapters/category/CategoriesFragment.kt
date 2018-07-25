@@ -20,7 +20,7 @@ import java.util.*
 /**
  * Created by bogdan on 6/18/17.
  */
-class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, CategoriesAdapter.CategoryInteractionListener {
+class CategoriesFragment : BaseFragment(), CategoriesView, CategoriesAdapter.CategoryInteractionListener {
 
     private var chapter: Chapter? = null
     private var adapter: CategoriesAdapter? = null
@@ -64,8 +64,9 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
     companion object {
 
         fun newInstance(title: String, chapter: Chapter, mainView: MainView?): CategoriesFragment {
-            val fragment = CategoriesFragment(title)
+            val fragment = CategoriesFragment()
             val args = Bundle()
+            fragment.title = title
             fragment.chapter = chapter
             fragment.mainView = mainView
             fragment.arguments = args
