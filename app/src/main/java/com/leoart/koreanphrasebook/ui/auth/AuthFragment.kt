@@ -12,7 +12,7 @@ import com.leoart.koreanphrasebook.ui.MainView
 /**
  * Created by bogdan on 6/18/17.
  */
-class AuthFragment(title: String) : BaseFragment(title) {
+class AuthFragment : BaseFragment() {
 
     private var mainView: MainView? = null
 
@@ -43,8 +43,9 @@ class AuthFragment(title: String) : BaseFragment(title) {
     companion object {
 
         fun newInstance(title: String, mainView: MainView?): AuthFragment {
-            val fragment = AuthFragment(title)
+            val fragment = AuthFragment()
             val args = Bundle()
+            fragment.title = title
             fragment.arguments = args
             fragment.mainView = mainView
             return fragment

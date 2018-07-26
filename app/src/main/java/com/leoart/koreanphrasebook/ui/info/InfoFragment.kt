@@ -24,15 +24,6 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
 
     private lateinit var mainView : MainView
 
-    companion object {
-        fun newInstance(title: String, mainView: MainView): InfoFragment {
-            val fragment = InfoFragment()
-            fragment.title = title
-            fragment.mainView = mainView
-            return fragment
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_info, container, false)
@@ -105,5 +96,14 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
         alertDialog.setMessage(getString(R.string.about_info))
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", { dialog, which -> dialog.dismiss() })
         alertDialog.show()
+    }
+
+    companion object {
+        fun newInstance(title: String, mainView: MainView): InfoFragment {
+            val fragment = InfoFragment()
+            fragment.title = title
+            fragment.mainView = mainView
+            return fragment
+        }
     }
 }

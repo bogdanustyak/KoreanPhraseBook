@@ -19,7 +19,7 @@ import java.util.*
 /**
  * Created by bogdan on 6/18/17.
  */
-class DialogFragment(title: String) : BaseFragment(title), DialogMessagesView {
+class DialogFragment : BaseFragment(), DialogMessagesView {
 
     var dialog: DialogResponse? = null
     private val adapter = DialogMessagesRecyclerAdapter(ArrayList())
@@ -52,8 +52,9 @@ class DialogFragment(title: String) : BaseFragment(title), DialogMessagesView {
 
     companion object {
         fun newInstance(title: String, dialog: DialogResponse): DialogFragment {
-            val fragment = DialogFragment(title)
+            val fragment = DialogFragment()
             val args = Bundle()
+            fragment.title = title
             fragment.arguments = args
             fragment.dialog = dialog
             return fragment

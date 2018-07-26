@@ -14,7 +14,7 @@ import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.dialogs.dialog.DialogFragment
 
-class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
+class DialogsFragment : BaseFragment(), DialogsView,
         DialogsRecyclerAdapter.DialogsListInteractionListener {
 
     private var mainView: MainView? = null
@@ -57,8 +57,9 @@ class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
     companion object {
 
         fun newInstance(title: String, mainView: MainView): DialogsFragment {
-            val fragment = DialogsFragment(title)
+            val fragment = DialogsFragment()
             val args = Bundle()
+            fragment.title = title
             fragment.arguments = args
             fragment.mainView = mainView
             return fragment

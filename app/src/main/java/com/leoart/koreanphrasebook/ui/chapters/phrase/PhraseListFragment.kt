@@ -15,7 +15,7 @@ import com.leoart.koreanphrasebook.ui.models.Phrase
 /**
  * Created by bogdan on 6/18/17.
  */
-class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView, OnPhrasesAdapterInteractionListener {
+class PhraseListFragment : BaseFragment(), PhrasesView, OnPhrasesAdapterInteractionListener {
 
     var category = ""
     private var adapter: PhrasesAdapter? = null
@@ -57,8 +57,9 @@ class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView, OnPh
     companion object {
 
         fun newInstance(title: String, category: String): PhraseListFragment {
-            val fragment = PhraseListFragment(title)
+            val fragment = PhraseListFragment()
             val args = Bundle()
+            fragment.title = title
             fragment.arguments = args
             fragment.category = category
             return fragment

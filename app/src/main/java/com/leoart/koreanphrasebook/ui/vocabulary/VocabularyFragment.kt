@@ -1,6 +1,5 @@
 package com.leoart.koreanphrasebook.ui.vocabulary
 
-import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -17,9 +16,7 @@ import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager
 
-
-@SuppressLint("ValidFragment")
-class VocabularyFragment(title: String) : BaseFragment(title) {
+class VocabularyFragment : BaseFragment() {
 
     private var mParam1: String? = null
     private var mParam2: String? = null
@@ -85,7 +82,8 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
         private val ARG_PARAM2 = "param2"
 
         fun newInstance(title: String): VocabularyFragment {
-            val fragment = VocabularyFragment(title)
+            val fragment = VocabularyFragment()
+            fragment.title = title
             return fragment
         }
     }

@@ -11,7 +11,7 @@ import com.leoart.koreanphrasebook.ui.MainView
 /**
  * Created by bogdan on 6/18/17.
  */
-class LoginFragment(title: String) : BaseFragment(title) {
+class LoginFragment : BaseFragment() {
 
     private var mainView: MainView? = null
 
@@ -28,8 +28,9 @@ class LoginFragment(title: String) : BaseFragment(title) {
     companion object {
 
         fun newInstance(title: String, mainView: MainView?): LoginFragment {
-            val fragment = LoginFragment(title)
+            val fragment = LoginFragment()
             val args = Bundle()
+            fragment.title = title
             fragment.arguments = args
             fragment.mainView = mainView
             return fragment

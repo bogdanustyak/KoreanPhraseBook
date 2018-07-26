@@ -18,7 +18,7 @@ import com.leoart.koreanphrasebook.ui.MainView
 /**
  * Created by bogdan on 6/18/17.
  */
-class SignUpFragment(title: String) : BaseFragment(title) {
+class SignUpFragment : BaseFragment() {
 
     private var etEmail: EditText? = null
     private var etPassword: EditText? = null
@@ -83,8 +83,9 @@ class SignUpFragment(title: String) : BaseFragment(title) {
 
     companion object {
         fun newInstance(title: String, mainView: MainView?): SignUpFragment {
-            val fragment = SignUpFragment(title)
+            val fragment = SignUpFragment()
             val args = Bundle()
+            fragment.title = title
             fragment.mainView = mainView
             fragment.arguments = args
             return fragment
