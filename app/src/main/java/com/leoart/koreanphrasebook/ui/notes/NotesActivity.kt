@@ -41,6 +41,11 @@ class NotesActivity : AppCompatActivity(), OnNoteClickListener {
         viewModel.deleteNote(note)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     private fun initView() {
         val listView = findViewById<RecyclerView>(R.id.notes_list)
         val layoutManager = LinearLayoutManager(this)
@@ -54,9 +59,11 @@ class NotesActivity : AppCompatActivity(), OnNoteClickListener {
     }
 
     private fun initToolbar() {
-        val toolbar = findViewById<Toolbar>(R.id.notes_toolbar)
+        val toolbar: Toolbar = findViewById(R.id.notes_toolbar)
         toolbar.title = getString(R.string.notes_title)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     private fun openCreateNote() {
