@@ -23,6 +23,9 @@ interface PhraseDao {
     @Query("SELECT * FROM phrase WHERE word LIKE :query OR transcription OR translation LIKE :query")
     fun findBy(query: String): Maybe<List<EPhrase>>
 
+    @Query("SELECT * FROM phrase WHERE word LIKE :query")
+    fun findByWord(query: String): Maybe<EPhrase>
+
     @Query("SELECT * FROM phrase WHERE favourite LIKE :query")
     fun getFavourite(query: Boolean): Flowable<List<EPhrase>>
 

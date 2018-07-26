@@ -3,27 +3,24 @@ package com.leoart.koreanphrasebook.ui.favourite
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.leoart.koreanphrasebook.data.parsers.favourite.Favourite
-import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteType
+import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteModel
 import com.leoart.koreanphrasebook.data.repository.FavouriteRepository
-import com.leoart.koreanphrasebook.data.repository.models.EDictionary
-import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class FavouriteViewModel(private val favouriteRepository: FavouriteRepository) : ViewModel() {
 
-    private var favourite: MutableLiveData<List<Favourite>>? = null
+    private var favourite: MutableLiveData<List<FavouriteModel>>? = null
 
-    fun getData(): LiveData<List<Favourite>> {
+    fun getData(): LiveData<List<FavouriteModel>> {
         if (favourite == null) {
             favourite = MutableLiveData()
             loadDictionary()
         }
-        return favourite as MutableLiveData<List<Favourite>>
+        return favourite as MutableLiveData<List<FavouriteModel>>
     }
 
-    fun onFavouriteClicked(favourite: Favourite) {
+    fun onFavouriteClicked(favourite: FavouriteModel) {
         favouriteRepository.markFavourite(favourite)
     }
 

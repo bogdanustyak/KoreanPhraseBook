@@ -9,16 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leoart.koreanphrasebook.R;
-import com.leoart.koreanphrasebook.data.parsers.favourite.Favourite;
+import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteModel;
 
 import java.util.List;
 
 public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.FavouriteViewHolder> {
 
-    private List<Favourite> favouriteList;
+    private List<FavouriteModel> favouriteList;
     private FavouriteFragment.Companion.OnFavouriteClickListener listener;
 
-    public FavouriteAdapter(List<Favourite> phraseList,
+    public FavouriteAdapter(List<FavouriteModel> phraseList,
                             FavouriteFragment.Companion.OnFavouriteClickListener listener) {
         this.favouriteList = phraseList;
         this.listener = listener;
@@ -33,7 +33,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
 
     @Override
     public void onBindViewHolder(FavouriteViewHolder holder, int position) {
-        Favourite favourite = favouriteList.get(position);
+        FavouriteModel favourite = favouriteList.get(position);
         if (favourite != null) {
             if (!TextUtils.isEmpty(favourite.getWord())) {
                 holder.tv_word.setText(favourite.getWord());
@@ -52,8 +52,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
             } else {
                 holder.tv_transcription.setText("");
             }
-            holder.ivFavourite.setSelected(favourite.isFavourite());
-            holder.ivFavourite.setImageResource(getFavoriteResource(favourite.isFavourite()));
+            holder.ivFavourite.setSelected(true);
         }
     }
 
@@ -65,21 +64,13 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
         return 0;
     }
 
-    public void updatePhrases(List<Favourite> phrases) {
+    public void updatePhrases(List<FavouriteModel> phrases) {
         this.favouriteList = phrases;
         notifyDataSetChanged();
     }
 
-    public Favourite getItemByPosition(int position) {
+    public FavouriteModel getItemByPosition(int position) {
         return favouriteList.get(position);
-    }
-
-    private int getFavoriteResource(boolean isFavourite) {
-        if (isFavourite) {
-            return R.drawable.ic_favorite_selected;
-        } else {
-            return R.drawable.ic_favorite_unselected;
-        }
     }
 
     static class FavouriteViewHolder extends RecyclerView.ViewHolder {
@@ -100,6 +91,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
                     listener.onFavouriteClick(getAdapterPosition());
                 }
             });
+            ivFavourite.setImageResource(R.drawable.ic_favorite_selected);
         }
     }
 }

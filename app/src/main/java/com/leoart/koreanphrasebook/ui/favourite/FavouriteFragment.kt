@@ -11,7 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
-import com.leoart.koreanphrasebook.data.parsers.favourite.Favourite
+import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteModel
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
@@ -35,7 +35,7 @@ class FavouriteFragment : BaseFragment() {
         rvPhrases.layoutManager = layoutManager
         rvPhrases.itemAnimator = DefaultItemAnimator()
 
-        adapter = FavouriteAdapter(emptyList<Favourite>(), object : OnFavouriteClickListener {
+        adapter = FavouriteAdapter(emptyList<FavouriteModel>(), object : OnFavouriteClickListener {
             override fun onFavouriteClick(position: Int) {
                 adapter?.getItemByPosition(position)?.let {
                     model.onFavouriteClicked(it)
@@ -48,7 +48,7 @@ class FavouriteFragment : BaseFragment() {
                 this,
                 ViewModelFactory(view.context)
         ).get(FavouriteViewModel::class.java)
-        model.getData().observe(this, Observer<List<Favourite>> {
+        model.getData().observe(this, Observer<List<FavouriteModel>> {
             it?.let {
                 Log.d("TAG", it.toString())
                 adapter?.updatePhrases(it)

@@ -21,6 +21,9 @@ interface DictionaryDao {
     @Query("SELECT * FROM dictionary WHERE word LIKE :query OR definition LIKE :query")
     fun findBy(query: String): Maybe<List<EDictionary>>
 
+    @Query("SELECT * FROM dictionary WHERE word LIKE :query")
+    fun findByWord(query: String): Maybe<EDictionary>
+
     @Query("SELECT * FROM dictionary WHERE favourite LIKE :query")
     fun getFavourite(query: String): Flowable<List<EDictionary>>
 
