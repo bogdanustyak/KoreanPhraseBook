@@ -44,11 +44,12 @@ class ChapterFragment : BaseFragment(), ChaptersView,
     override fun onChapterClick(chapter: Chapter) {
         if(chapter.name == getString(R.string.alphabet_chapter_name)) {
             startActivity(Intent(context, AlphabetActivity::class.java))
-        }
-        mainView?.let {
-            it.add(
-                    CategoriesFragment.newInstance(chapter.name, chapter, mainView)
-            )
+        }else{
+            mainView?.let {
+                it.add(
+                        CategoriesFragment.newInstance(chapter.name, chapter, mainView)
+                )
+            }
         }
     }
 

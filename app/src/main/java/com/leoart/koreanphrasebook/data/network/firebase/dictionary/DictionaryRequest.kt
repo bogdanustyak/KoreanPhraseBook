@@ -20,13 +20,13 @@ class DictionaryRequest : FireBaseRequest() {
             val words = entry.value
             val childUpdates = HashMap<String, Any>()
             childUpdates.put("/$DICTIONARY/$letter", words)
-            mDataBaseRef.updateChildren(childUpdates)
+            dataBaseRef.updateChildren(childUpdates)
         }
     }
 
     fun getDictionary(): Observable<Dictionary> {
         return Observable.create({ subscriber ->
-            mDataBase.reference
+            dataBase.reference
                     .child(DICTIONARY)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {

@@ -11,10 +11,9 @@ class AlphabetRequest : FireBaseRequest() {
 
     fun fetchAlphabet() : Observable<List<ELetter>> {
         return Observable.create { emitter ->
-            mDataBase.reference.child("alphabet").addListenerForSingleValueEvent(object : ValueEventListener {
+            dataBase.reference.child("alphabet").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     emitter.onError(Throwable("data was not found"))
-                    emitter.onComplete()
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {

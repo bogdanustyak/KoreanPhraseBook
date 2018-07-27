@@ -21,7 +21,7 @@ class CategoriesRequest : FireBaseRequest() {
             val key = "category" + count
             val childUpdates = HashMap<String, Any>()
             childUpdates.put("$CATEGORIES/$chapter/$key", it.name)
-            mDataBaseRef.updateChildren(childUpdates)
+            dataBaseRef.updateChildren(childUpdates)
             count++
         }
     }
@@ -29,7 +29,7 @@ class CategoriesRequest : FireBaseRequest() {
     fun getAllCategoriesOfChapter(chapter: Chapter): Observable<List<Category>> {
         val chapterName = chapter.key
         return Observable.create({ subscriber ->
-            mDataBase.reference?.child("$CATEGORIES/$chapterName")?.addListenerForSingleValueEvent(object : ValueEventListener {
+            dataBase.reference?.child("$CATEGORIES/$chapterName")?.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
                     subscriber.onComplete()
@@ -57,7 +57,7 @@ class CategoriesRequest : FireBaseRequest() {
 //        return Observable.create({ subscriber ->
 //
 //
-//            val categoriesRef = mDataBase.reference.child("categories")
+//            val categoriesRef = dataBase.reference.child("categories")
 //            val categories = mutableListOf<Category>()
 //
 //            for (category in chapter.categories.keys) {
@@ -85,7 +85,7 @@ class CategoriesRequest : FireBaseRequest() {
 
     fun getAllCategories(): Observable<List<Category>> {
         return Observable.create({ subscriber ->
-            mDataBase.reference.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
+            dataBase.reference.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
                     subscriber.onComplete()

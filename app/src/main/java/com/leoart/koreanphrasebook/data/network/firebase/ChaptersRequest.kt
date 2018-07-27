@@ -13,7 +13,7 @@ import io.reactivex.Observable
 class ChaptersRequest : FireBaseRequest() {
     fun getAllChapters(): Observable<List<Chapter>> {
         return Observable.create({ subscriber ->
-            mDataBase.reference.child("chapters").addListenerForSingleValueEvent(object : ValueEventListener {
+            dataBase.reference.child("chapters").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
                     subscriber.onComplete()
