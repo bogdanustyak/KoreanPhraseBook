@@ -20,12 +20,9 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
     override fun getItems(): Flowable<List<Chapter>> {
         Log.d(DialogsRepository.TAG, "getDialogs")
         return getDataFromDB()
-                .flatMap { chapters ->
-                    if (chapters.isNotEmpty()) {
-                        return@flatMap Flowable.fromArray(chapters)
-                    } else {
-                        return@flatMap requestFromNetwork()
-                                .toFlowable(BackpressureStrategy.LATEST)
+                .doOnNext {
+                    if(it.isEmpty()){
+                        requestFromNetwork()
                     }
                 }
     }
@@ -47,22 +44,20 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
         })
     }
 
-    override fun requestFromNetwork(): Observable<List<Chapter>> {
-        return ChaptersRequest().getAllChapters()
-                .flatMap {
+    override fun requestFromNetwork() {
+        ChaptersRequest().getAllChapters()
+                .subscribeOn(Schedulers.io())
+                .subscribe{
                     saveIntoDB(it)
                 }
     }
 
-    override fun saveIntoDB(chapters: List<Chapter>): Observable<List<Chapter>> {
-        return Observable.create { emitter ->
-            val eChapters = chapters.map {
-                EChapter(it.key, it.name, it.icon)
-            }.toTypedArray()
-            localDB().subscribe {
-                it.chaptersDao().insertAll(*eChapters)
-                emitter.onNext(chapters)
-            }
+    override fun saveIntoDB(chapters: List<Chapter>) {
+        val eChapters = chapters.map {
+            EChapter(it.key, it.name, it.icon)
+        }.toTypedArray()
+        localDB().subscribe {
+            it.chaptersDao().insertAll(*eChapters)
         }
     }
 

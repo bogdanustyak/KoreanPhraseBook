@@ -4,6 +4,7 @@ import android.content.Context
 import com.leoart.koreanphrasebook.data.network.firebase.AlphabetRequest
 import com.leoart.koreanphrasebook.data.repository.models.ELetter
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -12,12 +13,9 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
 
     override fun getItems(): Flowable<List<ELetter>> {
         return getDataFromDB()
-                .flatMap { chapters ->
-                    if (chapters.isNotEmpty()) {
-                        return@flatMap Flowable.fromArray(chapters)
-                    } else {
-                        return@flatMap requestFromNetwork()
-                                .toFlowable(BackpressureStrategy.LATEST)
+                .doOnNext{
+                    if(it.isEmpty()) {
+                        requestFromNetwork()
                     }
                 }
     }
@@ -26,19 +24,17 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
         return AppDataBase.getInstance(context).letterDao().fetchAll()
     }
 
-    override fun requestFromNetwork(): Observable<List<ELetter>> {
-        return AlphabetRequest().fetchAlphabet()
-                .flatMap {
+    override fun requestFromNetwork() {
+        AlphabetRequest().fetchAlphabet()
+                .subscribeOn(Schedulers.io())
+                .subscribe {
                     saveIntoDB(it)
                 }
     }
 
-    override fun saveIntoDB(items: List<ELetter>): Observable<List<ELetter>> {
-        return Observable.create { emitter ->
-            localDB().subscribe {
-                it.letterDao().insertAll(*items.toTypedArray())
-                emitter.onNext(items)
-            }
+    override fun saveIntoDB(items: List<ELetter>) {
+        localDB().subscribe {
+            it.letterDao().insertAll(*items.toTypedArray())
         }
     }
 
