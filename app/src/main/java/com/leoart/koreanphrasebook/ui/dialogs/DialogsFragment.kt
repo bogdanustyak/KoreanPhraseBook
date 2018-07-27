@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -48,18 +49,22 @@ class DialogsFragment : BaseFragment(), DialogsView,
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.dialogs))
+    }
+
     override fun onDialogClick(dialog: DialogResponse) {
         this.mainView?.let {
-            it.add(DialogFragment.newInstance(dialog.name, dialog))
+            it.replace(DialogFragment.newInstance(dialog.name, dialog))
         }
     }
 
     companion object {
 
-        fun newInstance(title: String, mainView: MainView): DialogsFragment {
+        fun newInstance(mainView: MainView): DialogsFragment {
             val fragment = DialogsFragment()
             val args = Bundle()
-            fragment.title = title
             fragment.arguments = args
             fragment.mainView = mainView
             return fragment

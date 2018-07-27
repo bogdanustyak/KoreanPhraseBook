@@ -2,6 +2,7 @@ package com.leoart.koreanphrasebook.ui.vocabulary
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager
@@ -50,6 +52,11 @@ class VocabularyFragment : BaseFragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.vocabulary))
+    }
+
     private fun initAdapter(view: View) {
         recyclerViewVocabulary = view.findViewById<RecyclerView>(R.id.rv_vocabulary)
         recyclerViewVocabulary?.layoutManager = stickyHeaderLayoutManager
@@ -81,9 +88,8 @@ class VocabularyFragment : BaseFragment() {
         private val ARG_PARAM1 = "param1"
         private val ARG_PARAM2 = "param2"
 
-        fun newInstance(title: String): VocabularyFragment {
+        fun newInstance(): VocabularyFragment {
             val fragment = VocabularyFragment()
-            fragment.title = title
             return fragment
         }
     }

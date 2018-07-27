@@ -21,16 +21,20 @@ class LoginFragment : BaseFragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.bt_login))
+    }
+
     private fun onLoginClick() {
 
     }
 
     companion object {
 
-        fun newInstance(title: String, mainView: MainView?): LoginFragment {
+        fun newInstance(mainView: MainView?): LoginFragment {
             val fragment = LoginFragment()
             val args = Bundle()
-            fragment.title = title
             fragment.arguments = args
             fragment.mainView = mainView
             return fragment

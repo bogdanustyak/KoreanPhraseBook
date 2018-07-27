@@ -28,24 +28,28 @@ class AuthFragment : BaseFragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.auth))
+    }
+
     private fun onLoginClick() {
-        this.mainView?.add(
-                LoginFragment.newInstance(getString(R.string.bt_login), mainView)
+        this.mainView?.replace(
+                LoginFragment.newInstance(mainView)
         )
     }
 
     private fun onSignUpClick() {
-        this.mainView?.add(
-                SignUpFragment.newInstance(getString(R.string.bt_register), mainView)
+        this.mainView?.replace(
+                SignUpFragment.newInstance(mainView)
         )
     }
 
     companion object {
 
-        fun newInstance(title: String, mainView: MainView?): AuthFragment {
+        fun newInstance(mainView: MainView?): AuthFragment {
             val fragment = AuthFragment()
             val args = Bundle()
-            fragment.title = title
             fragment.arguments = args
             fragment.mainView = mainView
             return fragment

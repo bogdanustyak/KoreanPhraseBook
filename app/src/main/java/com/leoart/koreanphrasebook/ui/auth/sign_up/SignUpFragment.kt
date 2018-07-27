@@ -34,6 +34,11 @@ class SignUpFragment : BaseFragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.bt_register))
+    }
+
     private fun initUI(view: View) {
         etEmail = view.findViewById<EditText>(R.id.et_email)
         etPassword = view.findViewById<EditText>(R.id.et_password)
@@ -53,7 +58,7 @@ class SignUpFragment : BaseFragment() {
                     ?.subscribe(
                             { user ->
                                 progress.dismiss()
-                                mainView?.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), mainView))
+                                mainView?.replace(FavouriteFragment.newInstance())
                                 Toast.makeText(context, "SIGNED up!!!", Toast.LENGTH_SHORT).show()
                             },
                             { throwable ->
@@ -82,10 +87,9 @@ class SignUpFragment : BaseFragment() {
     private fun password() = etPassword!!.text.toString()
 
     companion object {
-        fun newInstance(title: String, mainView: MainView?): SignUpFragment {
+        fun newInstance(mainView: MainView?): SignUpFragment {
             val fragment = SignUpFragment()
             val args = Bundle()
-            fragment.title = title
             fragment.mainView = mainView
             fragment.arguments = args
             return fragment

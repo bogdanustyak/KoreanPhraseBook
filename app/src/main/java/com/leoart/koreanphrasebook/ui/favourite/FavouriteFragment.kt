@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.favourite
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -19,7 +20,6 @@ import com.leoart.koreanphrasebook.ui.models.Phrase
  */
 class FavouriteFragment : BaseFragment(), FavouriteView, OnPhrasesAdapterInteractionListener {
 
-    private var mainView: MainView? = null
     private var adapter: PhrasesAdapter? = null
     private var presenter: FavouritePresenter? = null
 
@@ -42,6 +42,11 @@ class FavouriteFragment : BaseFragment(), FavouriteView, OnPhrasesAdapterInterac
         return view
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        (context as MainView).setTitle(getString(R.string.menu_favourite))
+    }
+
     override fun showPhrases(phrases: List<Phrase>) {
         adapter?.updatePhrases(phrases)
     }
@@ -56,12 +61,10 @@ class FavouriteFragment : BaseFragment(), FavouriteView, OnPhrasesAdapterInterac
 
     companion object {
 
-        fun newInstance(title: String, mainView: MainView?): FavouriteFragment {
+        fun newInstance(): FavouriteFragment {
             val fragment = FavouriteFragment()
             val args = Bundle()
             fragment.arguments = args
-            fragment.mainView = mainView
-            fragment.title = title
             return fragment
         }
     }

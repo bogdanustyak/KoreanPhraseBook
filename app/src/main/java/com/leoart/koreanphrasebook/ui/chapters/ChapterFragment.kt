@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.chapters
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -39,9 +40,14 @@ class ChapterFragment : BaseFragment(), ChaptersView,
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.chapters))
+    }
+
     override fun onChapterClick(chapter: Chapter) {
         mainView?.let {
-            it.add(
+            it.replace(
                     CategoriesFragment.newInstance(chapter.name, chapter, mainView)
             )
         }
@@ -55,12 +61,11 @@ class ChapterFragment : BaseFragment(), ChaptersView,
 
     companion object {
 
-        fun newInstance(title: String, mainView: MainView?): ChapterFragment {
+        fun newInstance(mainView: MainView?): ChapterFragment {
             val fragment = ChapterFragment()
             val args = Bundle()
             fragment.arguments = args
             fragment.mainView = mainView
-            fragment.title = title
             return fragment
         }
     }

@@ -1,6 +1,7 @@
 package com.leoart.koreanphrasebook.ui.info
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -36,6 +37,11 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
         val adapter = InfoRecyclerAdapter(infoItems(), this)
         rvInfo.adapter = adapter
         return view
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        (context as MainView).setTitle(getString(R.string.menu_info))
     }
 
     private fun infoItems(): List<InfoItem>? {
@@ -99,9 +105,8 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
     }
 
     companion object {
-        fun newInstance(title: String, mainView: MainView): InfoFragment {
+        fun newInstance(mainView: MainView): InfoFragment {
             val fragment = InfoFragment()
-            fragment.title = title
             fragment.mainView = mainView
             return fragment
         }

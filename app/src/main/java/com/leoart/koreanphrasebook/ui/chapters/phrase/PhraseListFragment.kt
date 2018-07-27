@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.chapters.phrase
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -9,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainActivity
+import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhrasesAdapter.OnPhrasesAdapterInteractionListener
 import com.leoart.koreanphrasebook.ui.models.Phrase
 
@@ -24,7 +27,6 @@ class PhraseListFragment : BaseFragment(), PhrasesView, OnPhrasesAdapterInteract
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.activity_phrase, container, false)
-
         val rvPhrases = view.findViewById<RecyclerView>(R.id.rv_phrases)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvPhrases.layoutManager = layoutManager
@@ -40,6 +42,11 @@ class PhraseListFragment : BaseFragment(), PhrasesView, OnPhrasesAdapterInteract
         phrasePresenter?.requestPhrases()
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setTitle()
     }
 
     override fun showPhrases(phrases: List<Phrase>) {
@@ -59,7 +66,7 @@ class PhraseListFragment : BaseFragment(), PhrasesView, OnPhrasesAdapterInteract
         fun newInstance(title: String, category: String): PhraseListFragment {
             val fragment = PhraseListFragment()
             val args = Bundle()
-            fragment.title = title
+            args.putString(MainActivity.TITLE, title)
             fragment.arguments = args
             fragment.category = category
             return fragment
