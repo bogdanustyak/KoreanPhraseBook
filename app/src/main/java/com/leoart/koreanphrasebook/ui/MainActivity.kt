@@ -56,12 +56,6 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
         } else {
             showNoNetworkFragment()
         }
-        supportFragmentManager.addOnBackStackChangedListener {
-            val fragment = supportFragmentManager.findFragmentById(R.id.main_content)
-            if (fragment != null && fragment is BaseFragment) {
-                this.title = fragment.title
-            }
-        }
     }
 
     private fun showNoNetworkFragment() {
@@ -114,7 +108,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
 
     override fun dictSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(VocabularyFragment.newInstance(getString(R.string.menu_dict)))
+            this.replace(VocabularyFragment.newInstance(), false)
         } else {
             showNoNetworkFragment()
         }
@@ -122,7 +116,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
 
     override fun favouriteSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), this))
+            this.replace(FavouriteFragment.newInstance(), false)
         } else {
             showNoNetworkFragment()
         }
@@ -135,7 +129,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
 
     override fun chaptersSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(ChapterFragment.newInstance(getString(R.string.menu_chapters), this))
+            this.replace(ChapterFragment.newInstance(this), false)
         } else {
             showNoNetworkFragment()
         }
@@ -143,32 +137,30 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
 
     override fun dialogsSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(DialogsFragment.newInstance(getString(R.string.menu_dialogs), this))
+            this.replace(DialogsFragment.newInstance(this), false)
         } else {
             showNoNetworkFragment()
         }
     }
 
     override fun infoSelected() {
-        this.replace(InfoFragment.newInstance(getString(R.string.menu_info), this))
+        this.replace(InfoFragment.newInstance(this), false)
     }
 
-    override fun replace(fragment: BaseFragment) {
-        title = fragment.title
-        supportFragmentManager.beginTransaction()
+    override fun replace(fragment: BaseFragment, addToBackStack: Boolean) {
+        val transaction = supportFragmentManager.beginTransaction()
                 .replace(R.id.main_content, fragment)
-                .commit()
+        if(addToBackStack){
+            transaction.addToBackStack(fragment.javaClass.name)
+        }
+        transaction.commit()
     }
 
-    override fun add(fragment: BaseFragment) {
-        this.add(fragment, fragment.title)
+    override fun setTitle(title: String) {
+        supportActionBar?.title = title
     }
 
-    override fun add(fragment: BaseFragment, title: String) {
-        this.title = title
-        supportFragmentManager.beginTransaction()
-                .add(R.id.main_content, fragment, title)
-                .addToBackStack(title)
-                .commit()
+    companion object {
+        const val TITLE = "title"
     }
 }

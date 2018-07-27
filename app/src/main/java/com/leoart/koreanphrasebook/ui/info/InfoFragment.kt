@@ -1,6 +1,7 @@
 package com.leoart.koreanphrasebook.ui.info
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -24,15 +25,6 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
 
     private lateinit var mainView : MainView
 
-    companion object {
-        fun newInstance(title: String, mainView: MainView): InfoFragment {
-            val fragment = InfoFragment()
-            fragment.title = title
-            fragment.mainView = mainView
-            return fragment
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_info, container, false)
@@ -45,6 +37,11 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
         val adapter = InfoRecyclerAdapter(infoItems(), this)
         rvInfo.adapter = adapter
         return view
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        (context as MainView).setTitle(getString(R.string.menu_info))
     }
 
     private fun infoItems(): List<InfoItem>? {
@@ -104,5 +101,13 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
         alertDialog.setMessage(getString(R.string.about_info))
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", { dialog, which -> dialog.dismiss() })
         alertDialog.show()
+    }
+
+    companion object {
+        fun newInstance(mainView: MainView): InfoFragment {
+            val fragment = InfoFragment()
+            fragment.mainView = mainView
+            return fragment
+        }
     }
 }
