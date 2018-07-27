@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.chapters.phrase
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -9,13 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainActivity
+import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhrasesAdapter.OnPhrasesAdapterInteractionListener
 import com.leoart.koreanphrasebook.ui.models.Phrase
 
 /**
  * Created by bogdan on 6/18/17.
  */
-class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView, OnPhrasesAdapterInteractionListener {
+class PhraseListFragment : BaseFragment(), PhrasesView, OnPhrasesAdapterInteractionListener {
 
     var category = ""
     private var adapter: PhrasesAdapter? = null
@@ -24,7 +27,6 @@ class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView, OnPh
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.activity_phrase, container, false)
-
         val rvPhrases = view.findViewById<RecyclerView>(R.id.rv_phrases)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvPhrases.layoutManager = layoutManager
@@ -42,6 +44,11 @@ class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView, OnPh
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        setTitle()
+    }
+
     override fun showPhrases(phrases: List<Phrase>) {
         adapter?.updatePhrases(phrases)
     }
@@ -57,8 +64,9 @@ class PhraseListFragment(title: String) : BaseFragment(title), PhrasesView, OnPh
     companion object {
 
         fun newInstance(title: String, category: String): PhraseListFragment {
-            val fragment = PhraseListFragment(title)
+            val fragment = PhraseListFragment()
             val args = Bundle()
+            args.putString(MainActivity.TITLE, title)
             fragment.arguments = args
             fragment.category = category
             return fragment

@@ -12,7 +12,7 @@ import com.leoart.koreanphrasebook.ui.MainView
 /**
  * Created by bogdan on 6/18/17.
  */
-class AuthFragment(title: String) : BaseFragment(title) {
+class AuthFragment : BaseFragment() {
 
     private var mainView: MainView? = null
 
@@ -28,22 +28,27 @@ class AuthFragment(title: String) : BaseFragment(title) {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.auth))
+    }
+
     private fun onLoginClick() {
-        this.mainView?.add(
-                LoginFragment.newInstance(getString(R.string.bt_login), mainView)
+        this.mainView?.replace(
+                LoginFragment.newInstance(mainView)
         )
     }
 
     private fun onSignUpClick() {
-        this.mainView?.add(
-                SignUpFragment.newInstance(getString(R.string.bt_register), mainView)
+        this.mainView?.replace(
+                SignUpFragment.newInstance(mainView)
         )
     }
 
     companion object {
 
-        fun newInstance(title: String, mainView: MainView?): AuthFragment {
-            val fragment = AuthFragment(title)
+        fun newInstance(mainView: MainView?): AuthFragment {
+            val fragment = AuthFragment()
             val args = Bundle()
             fragment.arguments = args
             fragment.mainView = mainView

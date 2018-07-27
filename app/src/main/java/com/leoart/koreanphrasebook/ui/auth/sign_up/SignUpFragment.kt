@@ -18,7 +18,7 @@ import com.leoart.koreanphrasebook.ui.MainView
 /**
  * Created by bogdan on 6/18/17.
  */
-class SignUpFragment(title: String) : BaseFragment(title) {
+class SignUpFragment : BaseFragment() {
 
     private var etEmail: EditText? = null
     private var etPassword: EditText? = null
@@ -32,6 +32,11 @@ class SignUpFragment(title: String) : BaseFragment(title) {
         initUI(view)
         auth = FRAuth()
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.bt_register))
     }
 
     private fun initUI(view: View) {
@@ -53,7 +58,7 @@ class SignUpFragment(title: String) : BaseFragment(title) {
                     ?.subscribe(
                             { user ->
                                 progress.dismiss()
-                                mainView?.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), mainView))
+                                mainView?.replace(FavouriteFragment.newInstance())
                                 Toast.makeText(context, "SIGNED up!!!", Toast.LENGTH_SHORT).show()
                             },
                             { throwable ->
@@ -82,8 +87,8 @@ class SignUpFragment(title: String) : BaseFragment(title) {
     private fun password() = etPassword!!.text.toString()
 
     companion object {
-        fun newInstance(title: String, mainView: MainView?): SignUpFragment {
-            val fragment = SignUpFragment(title)
+        fun newInstance(mainView: MainView?): SignUpFragment {
+            val fragment = SignUpFragment()
             val args = Bundle()
             fragment.mainView = mainView
             fragment.arguments = args

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainActivity
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhraseListFragment
 import com.leoart.koreanphrasebook.ui.models.Category
@@ -25,6 +26,11 @@ class CategoriesFragment : BaseFragment(), CategoriesView, CategoriesAdapter.Cat
     private var chapter: Chapter? = null
     private var adapter: CategoriesAdapter? = null
     private var mainView: MainView? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -42,8 +48,13 @@ class CategoriesFragment : BaseFragment(), CategoriesView, CategoriesAdapter.Cat
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        setTitle()
+    }
+
     override fun onCategoryClick(category: Category) {
-        mainView?.add(PhraseListFragment.newInstance(category.name["word"] ?: "", category.id))
+        mainView?.replace(PhraseListFragment.newInstance(category.name["word"] ?: "", category.id))
     }
 
     override fun showCategories(categories: List<Category>) {
@@ -60,13 +71,12 @@ class CategoriesFragment : BaseFragment(), CategoriesView, CategoriesAdapter.Cat
         return super.onOptionsItemSelected(item)
     }
 
-
     companion object {
 
         fun newInstance(title: String, chapter: Chapter, mainView: MainView?): CategoriesFragment {
             val fragment = CategoriesFragment()
             val args = Bundle()
-            fragment.title = title
+            args.putString(MainActivity.TITLE, title)
             fragment.chapter = chapter
             fragment.mainView = mainView
             fragment.arguments = args
