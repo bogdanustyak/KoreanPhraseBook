@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.text.InputType
 import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.widget.RxSearchView
+import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
@@ -22,18 +23,20 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_search.*
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var adapter: SearchResultsAdapter
     private val compositeDisposable = CompositeDisposable()
-    private lateinit var analyticsManager: AnalyticsManager
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        analyticsManager = AnalyticsManagerImpl(applicationContext)
+        (application as KoreanPhrasebookApp).analyticsComponent.inject(this)
         analyticsManager.onOpenScreen(ScreenNavigator.SEARCH_SCREEN.screenName)
         initUI()
         handleIntent(intent)

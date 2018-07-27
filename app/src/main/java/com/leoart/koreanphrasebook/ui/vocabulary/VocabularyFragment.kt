@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
@@ -19,6 +20,7 @@ import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager
+import javax.inject.Inject
 
 
 @SuppressLint("ValidFragment")
@@ -31,7 +33,8 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
     private val stickyHeaderLayoutManager = StickyHeaderLayoutManager()
 
     private lateinit var adapter: DictionaryAdapter
-    private var analyticsManager: AnalyticsManager? = null
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,10 +44,8 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
     }
 
     private fun initAnalytics() {
-        activity?.let {
-            analyticsManager = AnalyticsManagerImpl(it.applicationContext)
-            analyticsManager?.onOpenScreen(ScreenNavigator.SEARCH_SCREEN.screenName)
-        }
+        (activity?.application as KoreanPhrasebookApp).analyticsComponent.inject(this)
+        analyticsManager.onOpenScreen(ScreenNavigator.DICTIONARY_SCREEN.screenName)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

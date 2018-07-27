@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
@@ -16,6 +17,7 @@ import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogRe
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.dialogs.dialog.DialogFragment
+import javax.inject.Inject
 
 class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
         DialogsRecyclerAdapter.DialogsListInteractionListener {
@@ -23,7 +25,8 @@ class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
     private var mainView: MainView? = null
     private var adapter: DialogsRecyclerAdapter? = null
     var rvDialogs: RecyclerView? = null
-    private var analyticsManager: AnalyticsManager? = null
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun showDialogs(chapters: List<DialogResponse>?) {
         chapters?.let {
@@ -54,10 +57,8 @@ class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
     }
 
     private fun initAnalytics() {
-        activity?.let {
-            analyticsManager = AnalyticsManagerImpl(it.applicationContext)
-            analyticsManager?.onOpenScreen(ScreenNavigator.DIALOGS_SCREEN.screenName)
-        }
+        (activity?.application as KoreanPhrasebookApp).analyticsComponent.inject(this)
+        analyticsManager.onOpenScreen(ScreenNavigator.DIALOGS_SCREEN.screenName)
     }
 
     override fun onDialogClick(dialog: DialogResponse) {

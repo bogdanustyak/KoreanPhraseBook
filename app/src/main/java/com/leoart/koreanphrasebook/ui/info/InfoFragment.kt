@@ -11,14 +11,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
-import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.InfoRecyclerAdapter
 import com.leoart.koreanphrasebook.ui.notes.NotesActivity
+import javax.inject.Inject
 
 /**
  * Created by bogdan on 6/14/17.
@@ -26,7 +27,8 @@ import com.leoart.koreanphrasebook.ui.notes.NotesActivity
 class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener {
 
     private lateinit var mainView: MainView
-    private var analyticsManager: AnalyticsManager? = null
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     companion object {
 
@@ -54,10 +56,9 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
     }
 
     private fun initAnalytics() {
-        activity?.let {
-            analyticsManager = AnalyticsManagerImpl(it.applicationContext)
-            analyticsManager?.onOpenScreen(ScreenNavigator.INFO_SCREEN.screenName)
-        }
+        (activity?.application as KoreanPhrasebookApp).analyticsComponent.inject(this)
+        analyticsManager.onOpenScreen(ScreenNavigator.INFO_SCREEN.screenName)
+
     }
 
     private fun infoItems(): List<InfoItem>? {

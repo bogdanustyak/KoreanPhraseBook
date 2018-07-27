@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
@@ -27,7 +28,7 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
     private var chapter: Chapter? = null
     private var adapter: CategoriesAdapter? = null
     private var mainView: MainView? = null
-    private var analyticsManager: AnalyticsManager? = null
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -39,9 +40,7 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
         rvCategories.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         adapter = CategoriesAdapter(ArrayList<Category>(), this)
         rvCategories.adapter = adapter
-        activity?.let {
-            analyticsManager = AnalyticsManagerImpl(it.applicationContext)
-        }
+        (activity?.application as KoreanPhrasebookApp).analyticsComponent.inject(this)
         this.chapter?.let {
             CategoriesPresenter(this).requestCategories(it)
         }
@@ -52,7 +51,7 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
         mainView?.let {
             it.add(PhraseListFragment.newInstance(category.name["word"] ?: "", category.id))
             category.name["word"]?.let {
-                analyticsManager?.openChapterCategory(it)
+                analyticsManager.openChapterCategory(it)
             }
         }
     }

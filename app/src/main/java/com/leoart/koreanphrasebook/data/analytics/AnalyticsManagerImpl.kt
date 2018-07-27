@@ -2,6 +2,7 @@ package com.leoart.koreanphrasebook.data.analytics
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import com.google.firebase.analytics.FirebaseAnalytics
 
 class AnalyticsManagerImpl(private val context: Context) : AnalyticsManager {
@@ -17,6 +18,7 @@ class AnalyticsManagerImpl(private val context: Context) : AnalyticsManager {
         params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "screen")
         params.putString(FirebaseAnalytics.Param.ITEM_NAME, screenName)
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params)
+        Log.d("ASD", screenName)
     }
 
     override fun openChapter(chapter: String) {
@@ -27,6 +29,7 @@ class AnalyticsManagerImpl(private val context: Context) : AnalyticsManager {
     override fun openChapterCategory(chapterCategory: String) {
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT,
                 generateContent("chapter_category", chapterCategory))
+        Log.d("ASD", "DAGGER WORKS FINE")
     }
 
     override fun openDialog(dialog: String) {

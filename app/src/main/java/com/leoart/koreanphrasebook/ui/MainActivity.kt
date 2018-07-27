@@ -10,10 +10,10 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
-import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
@@ -23,19 +23,24 @@ import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView {
 
     private var bottomMenu: BottomMenu? = null
     var auth: Auth? = null
-    private lateinit var analyticsManager: AnalyticsManager
+
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        analyticsManager = AnalyticsManagerImpl(applicationContext)
-        analyticsManager.onOpenScreen("main screen")
+
+        (application as KoreanPhrasebookApp).analyticsComponent.inject(this)
+        analyticsManager.openChapterCategory("main screen")
+
         initUI()
         auth = FRAuth()
     }
