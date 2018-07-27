@@ -6,6 +6,7 @@ import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesReque
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -25,9 +26,18 @@ class PhraseRepository(val context: Context) {
                 }
     }
 
-    fun markFavourite(phrase: EPhrase) {
-        localDB().subscribe {
-            it.phraseDao().updateFavorite(phrase)
+    fun markFavourite(phrase: EPhrase): Completable {
+        return Completable.create { emitter ->
+            localDB().subscribe({
+                try {
+                    it.phraseDao().updateFavorite(phrase)
+                    emitter.onComplete()
+                } catch (e: Exception) {
+                    emitter.onError(e)
+                }
+            }, {
+                emitter.onError(it)
+            })
         }
     }
 
@@ -45,7 +55,6 @@ class PhraseRepository(val context: Context) {
     private fun saveIntoDB(list: List<Phrase>, categoryName: String): Observable<List<EPhrase>> {
         return Observable.create { emitter ->
             val ePhrases = mapToRoomEntity(list, categoryName)
-
             emitter.onNext(ePhrases)
             localDB().subscribe { db ->
                 db.phraseDao().insertAll(*ePhrases.toTypedArray())

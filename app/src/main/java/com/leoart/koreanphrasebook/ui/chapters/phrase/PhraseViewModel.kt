@@ -22,7 +22,10 @@ class PhraseViewModel(private val phrasesRepository: PhraseRepository) : ViewMod
 
     fun onFavouriteClicked(phrase: EPhrase) {
         phrase.isFavourite = !phrase.isFavourite
-        phrasesRepository.markFavourite(phrase)
+        phrasesRepository.markFavourite(phrase).subscribe({},
+                {
+                    it.printStackTrace()
+                })
     }
 
     private fun loadDictionary(categoryName: String) {

@@ -27,7 +27,7 @@ class SearchRepository(val context: Context) : Search {
     }
 
     fun searchChapters(searchQuery: String): Flowable<List<SearchResult>> {
-        return AppDataBase.getInstance(context).chaptersDao().findByName(searchQuery)
+        return getDB().chaptersDao().findByName(searchQuery)
                 .toFlowable()
                 .flatMap { chapters ->
                     val searchResults = chapters.map {
@@ -38,7 +38,7 @@ class SearchRepository(val context: Context) : Search {
     }
 
     fun searchDialogs(searchQuery: String): Flowable<List<SearchResult>> {
-        return AppDataBase.getInstance(context).dialogDao().findByName(searchQuery)
+        return getDB().dialogDao().findByName(searchQuery)
                 .toFlowable()
                 .flatMap { dialogs ->
                     val searchResults = dialogs.map {
@@ -49,7 +49,7 @@ class SearchRepository(val context: Context) : Search {
     }
 
     fun searchDictionary(searchQuery: String): Flowable<List<SearchResult>> {
-        return AppDataBase.getInstance(context).dictionaryDao().findBy(searchQuery)
+        return getDB().dictionaryDao().findBy(searchQuery)
                 .toFlowable()
                 .flatMap { dict ->
                     val searchResults = ArrayList<SearchResult>()
@@ -62,7 +62,7 @@ class SearchRepository(val context: Context) : Search {
     }
 
     fun searchReplic(searchQuery: String): Flowable<List<SearchResult>> {
-        return AppDataBase.getInstance(context).replicsDao().findByReplic(searchQuery)
+        return getDB().replicsDao().findByReplic(searchQuery)
                 .toFlowable()
                 .flatMap { replics ->
                     val searchResults = replics.map {
@@ -73,7 +73,7 @@ class SearchRepository(val context: Context) : Search {
     }
 
     fun searchPhrase(searchQuery: String): Flowable<List<SearchResult>> {
-        return AppDataBase.getInstance(context).phraseDao().findBy(searchQuery)
+        return getDB().phraseDao().findBy(searchQuery)
                 .toFlowable()
                 .flatMap { replics ->
                     val searchResults = replics.map {
@@ -81,5 +81,9 @@ class SearchRepository(val context: Context) : Search {
                     }
                     Flowable.fromArray(searchResults)
                 }
+    }
+
+    fun getDB(): AppDataBase {
+        return AppDataBase.getInstance(context)
     }
 }

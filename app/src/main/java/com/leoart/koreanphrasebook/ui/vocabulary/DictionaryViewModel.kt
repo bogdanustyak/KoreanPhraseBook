@@ -3,6 +3,7 @@ package com.leoart.koreanphrasebook.ui.vocabulary
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.widget.Toast
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.data.repository.DictionaryRepository
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
@@ -31,7 +32,10 @@ class DictionaryViewModel(private val dictionaryRepository: DictionaryRepository
         } else {
             dictionary.isFavourite = "true"
         }
-        dictionaryRepository.markFavourite(dictionary)
+        dictionaryRepository.markFavourite(dictionary).subscribe({},
+                {
+                    it.printStackTrace()
+                })
     }
 
     private fun loadDictionary() {

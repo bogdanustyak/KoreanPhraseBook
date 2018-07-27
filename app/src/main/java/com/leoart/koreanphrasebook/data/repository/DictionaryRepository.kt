@@ -2,13 +2,12 @@ package com.leoart.koreanphrasebook.data.repository
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
+import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.DictionaryRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -31,11 +30,21 @@ class DictionaryRepository(val context: Context) {
                 }
     }
 
-    fun markFavourite(dict: EDictionary) {
-        localDB().subscribe {
-            it.dictionaryDao().updateFavorite(dict)
+    fun markFavourite(dict: EDictionary): Completable {
+        return Completable.create { emitter ->
+            localDB().subscribe({
+                try {
+                    it.dictionaryDao().updateFavorite(dict)
+                    emitter.onComplete()
+                } catch (e: Exception) {
+                    emitter.onError(e)
+                }
+            }, {
+                emitter.onError(it)
+            })
         }
     }
+
 
     fun getDataFromDB(): Flowable<Dictionary> {
         return AppDataBase.getInstance(context).dictionaryDao().getAll()

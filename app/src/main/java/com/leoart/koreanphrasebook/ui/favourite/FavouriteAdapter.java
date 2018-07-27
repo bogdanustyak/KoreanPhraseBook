@@ -35,24 +35,34 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
     public void onBindViewHolder(FavouriteViewHolder holder, int position) {
         FavouriteModel favourite = favouriteList.get(position);
         if (favourite != null) {
-            if (!TextUtils.isEmpty(favourite.getWord())) {
-                holder.tv_word.setText(favourite.getWord());
-            } else {
-                holder.tv_word.setText("");
-            }
-
-            if (!TextUtils.isEmpty(favourite.getTranslation())) {
-                holder.tv_translation.setText(favourite.getTranslation());
-            } else {
-                holder.tv_translation.setText("");
-            }
-
-            if (!TextUtils.isEmpty(favourite.getTranscription())) {
-                holder.tv_transcription.setText(favourite.getTranscription());
-            } else {
-                holder.tv_transcription.setText("");
-            }
+            holder.tv_word.setText(getWord(favourite));
+            holder.tv_translation.setText(getTranslation(favourite));
+            holder.tv_transcription.setText(getTranscription(favourite));
             holder.ivFavourite.setSelected(true);
+        }
+    }
+
+    private String getWord(FavouriteModel favourite) {
+        if (!TextUtils.isEmpty(favourite.getWord())) {
+            return favourite.getWord();
+        } else {
+            return "";
+        }
+    }
+
+    private String getTranslation(FavouriteModel favourite) {
+        if (!TextUtils.isEmpty(favourite.getTranslation())) {
+            return favourite.getTranslation();
+        } else {
+            return "";
+        }
+    }
+
+    private String getTranscription(FavouriteModel favourite) {
+        if (!TextUtils.isEmpty(favourite.getTranscription())) {
+            return favourite.getTranscription();
+        } else {
+            return "";
         }
     }
 
