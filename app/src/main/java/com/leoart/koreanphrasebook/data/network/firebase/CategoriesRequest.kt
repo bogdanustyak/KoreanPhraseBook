@@ -54,33 +54,6 @@ class CategoriesRequest : FireBaseRequest() {
                 }
             })
         })
-//        return Observable.create({ subscriber ->
-//
-//
-//            val categoriesRef = mDataBase.reference.child("categories")
-//            val categories = mutableListOf<Category>()
-//
-//            for (category in chapter.categories.keys) {
-//                val categoryRef = categoriesRef?.child(category)
-//
-//                categoryRef
-//                        ?.addListenerForSingleValueEvent(object : ValueEventListener {
-//                            override fun onCancelled(p0: DatabaseError?) {
-//                                throw UnsupportedOperationException("not implemented")
-//                            }
-//
-//                            override fun onDataChange(dataSnapshot: DataSnapshot?) {
-//                                if (dataSnapshot != null) {
-//                                    val cat = dataSnapshot.getValue(Category::class.java)
-//                                    categories.add(cat)
-//                                    subscriber.onNext(categories)
-//                                    subscriber.onCompleted()
-//                                }
-//                            }
-//
-//                        })
-//            }
-//        })
     }
 
     fun getAllCategories(): Observable<List<Category>> {
