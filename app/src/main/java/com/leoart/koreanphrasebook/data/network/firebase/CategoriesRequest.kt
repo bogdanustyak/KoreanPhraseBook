@@ -40,11 +40,9 @@ class CategoriesRequest : FireBaseRequest() {
                     val categoryList = ArrayList<Category>()
                     for (item in dataSnapshot.children) {
                         item.key?.let {
-                            Log.d("test", item.value.toString())
                             val categoryPhrase = item
                                     .value
                                     as HashMap<String, String>
-                            Log.d("tes", categoryPhrase.toString())
                             val category = Category(it, categoryPhrase)
                             categoryList.add(category)
                         }

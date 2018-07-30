@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.chapters
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -17,6 +18,7 @@ import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesFragment
 import com.leoart.koreanphrasebook.ui.models.Chapter
+import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 
@@ -28,6 +30,11 @@ class ChapterFragment : BaseFragment(), ChaptersView,
     private var adapter: ChaptersRecyclerAdapter? = null
     @Inject
     lateinit var analyticsManager: AnalyticsManager
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -42,13 +49,8 @@ class ChapterFragment : BaseFragment(), ChaptersView,
         context?.let {
             ChaptersPresenter(this, it).requestChapters()
         }
-        initAnalytics()
-        return view
-    }
-
-    private fun initAnalytics() {
-        (activity?.application as KoreanPhrasebookApp).analyticsComponent.inject(this)
         analyticsManager.onOpenScreen(ScreenNavigator.CHAPTERS_SCREEN.screenName)
+        return view
     }
 
     override fun onChapterClick(chapter: Chapter) {
@@ -56,7 +58,7 @@ class ChapterFragment : BaseFragment(), ChaptersView,
             it.add(
                     CategoriesFragment.newInstance(chapter.name, chapter, mainView)
             )
-            analyticsManager?.openChapter(chapter.name)
+            analyticsManager.openChapter(chapter.name)
         }
     }
 

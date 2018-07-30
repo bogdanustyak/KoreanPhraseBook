@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.chapters.category
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -18,6 +19,7 @@ import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhraseListFragment
 import com.leoart.koreanphrasebook.ui.models.Category
 import com.leoart.koreanphrasebook.ui.models.Chapter
+import dagger.android.support.AndroidSupportInjection
 import java.util.*
 
 /**
@@ -30,6 +32,11 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
     private var mainView: MainView? = null
     lateinit var analyticsManager: AnalyticsManager
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.activity_categories, container, false)
@@ -40,7 +47,6 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
         rvCategories.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         adapter = CategoriesAdapter(ArrayList<Category>(), this)
         rvCategories.adapter = adapter
-        (activity?.application as KoreanPhrasebookApp).analyticsComponent.inject(this)
         this.chapter?.let {
             CategoriesPresenter(this).requestCategories(it)
         }

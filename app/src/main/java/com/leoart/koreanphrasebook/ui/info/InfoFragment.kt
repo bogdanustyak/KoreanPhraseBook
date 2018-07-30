@@ -1,6 +1,7 @@
 package com.leoart.koreanphrasebook.ui.info
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
@@ -19,6 +20,7 @@ import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.InfoRecyclerAdapter
 import com.leoart.koreanphrasebook.ui.notes.NotesActivity
+import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 /**
@@ -40,6 +42,11 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
         }
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_info, container, false)
@@ -51,14 +58,8 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
         rvInfo.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
         val adapter = InfoRecyclerAdapter(infoItems(), this)
         rvInfo.adapter = adapter
-        initAnalytics()
-        return view
-    }
-
-    private fun initAnalytics() {
-        (activity?.application as KoreanPhrasebookApp).analyticsComponent.inject(this)
         analyticsManager.onOpenScreen(ScreenNavigator.INFO_SCREEN.screenName)
-
+        return view
     }
 
     private fun infoItems(): List<InfoItem>? {

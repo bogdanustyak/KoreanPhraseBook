@@ -3,6 +3,7 @@ package com.leoart.koreanphrasebook.ui.vocabulary
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -19,6 +20,8 @@ import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
+import dagger.android.AndroidInjection
+import dagger.android.support.AndroidSupportInjection
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager
 import javax.inject.Inject
 
@@ -38,14 +41,14 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initAnalytics()
+        analyticsManager.onOpenScreen(ScreenNavigator.DICTIONARY_SCREEN.screenName)
         mParam1 = arguments?.getString(ARG_PARAM1)
         mParam2 = arguments?.getString(ARG_PARAM2)
     }
 
-    private fun initAnalytics() {
-        (activity?.application as KoreanPhrasebookApp).analyticsComponent.inject(this)
-        analyticsManager.onOpenScreen(ScreenNavigator.DICTIONARY_SCREEN.screenName)
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

@@ -23,6 +23,8 @@ import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
+import dagger.android.AndroidInjection
+import dagger.android.DaggerActivity_MembersInjector
 import javax.inject.Inject
 
 
@@ -38,9 +40,8 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        (application as KoreanPhrasebookApp).analyticsComponent.inject(this)
+        AndroidInjection.inject(this)
         analyticsManager.openChapterCategory("main screen")
-
         initUI()
         auth = FRAuth()
     }

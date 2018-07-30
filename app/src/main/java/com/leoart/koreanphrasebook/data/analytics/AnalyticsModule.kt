@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.data.analytics
 
+import android.app.Application
 import android.content.Context
 import dagger.Module
 import dagger.Provides
@@ -10,7 +11,7 @@ class AnalyticsModule{
 
     @Provides
     @Singleton
-    fun analyticsManager(context: Context):AnalyticsManager{
-        return AnalyticsManagerImpl(context.applicationContext)
+    fun analyticsManager(application: Application):AnalyticsManager{
+        return AnalyticsManagerImpl(application)
     }
 }

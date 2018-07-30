@@ -17,6 +17,7 @@ import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.network.firebase.search.DictType
 import com.leoart.koreanphrasebook.data.repository.search.SearchRepository
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
+import dagger.android.AndroidInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -36,7 +37,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        (application as KoreanPhrasebookApp).analyticsComponent.inject(this)
+        AndroidInjection.inject(this)
         analyticsManager.onOpenScreen(ScreenNavigator.SEARCH_SCREEN.screenName)
         initUI()
         handleIntent(intent)

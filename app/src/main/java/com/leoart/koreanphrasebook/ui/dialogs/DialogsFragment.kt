@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -17,6 +18,7 @@ import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogRe
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.dialogs.dialog.DialogFragment
+import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
@@ -27,6 +29,11 @@ class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
     var rvDialogs: RecyclerView? = null
     @Inject
     lateinit var analyticsManager: AnalyticsManager
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+    }
 
     override fun showDialogs(chapters: List<DialogResponse>?) {
         chapters?.let {
@@ -48,7 +55,7 @@ class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
 
         adapter = DialogsRecyclerAdapter(dialogs, this)
         rvDialogs?.adapter = adapter
-        initAnalytics()
+        analyticsManager.onOpenScreen(ScreenNavigator.DIALOGS_SCREEN.screenName)
         DialogsPresenter(
                 this,
                 view.context
@@ -56,15 +63,10 @@ class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
         return view
     }
 
-    private fun initAnalytics() {
-        (activity?.application as KoreanPhrasebookApp).analyticsComponent.inject(this)
-        analyticsManager.onOpenScreen(ScreenNavigator.DIALOGS_SCREEN.screenName)
-    }
-
     override fun onDialogClick(dialog: DialogResponse) {
         this.mainView?.let {
             it.add(DialogFragment.newInstance(dialog.name, dialog))
-            analyticsManager?.openDialog(dialog.name)
+            analyticsManager.openDialog(dialog.name)
         }
     }
 
