@@ -1,6 +1,6 @@
 package com.leoart.koreanphrasebook.ui.chapters
 
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
+import com.leoart.koreanphrasebook.ui.alphabet.AlphabetActivity
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesFragment
 import com.leoart.koreanphrasebook.ui.models.Chapter
 
@@ -46,10 +47,14 @@ class ChapterFragment : BaseFragment(), ChaptersView,
     }
 
     override fun onChapterClick(chapter: Chapter) {
-        mainView?.let {
-            it.replace(
-                    CategoriesFragment.newInstance(chapter.name, chapter, mainView)
-            )
+        if(chapter.name == getString(R.string.alphabet_chapter_name)) {
+            startActivity(Intent(context, AlphabetActivity::class.java))
+        }else{
+            mainView?.let {
+                it.replace(
+                        CategoriesFragment.newInstance(chapter.name, chapter, mainView)
+                )
+            }
         }
     }
 

@@ -21,7 +21,7 @@ class FBSearch(val searchPhrase: String) : FireBaseRequest() {
 
     private fun searchPhrases(): Observable<List<SearchResult>> {
         return Observable.create({ subscriber ->
-            mDataBaseRef
+            dataBaseRef
                     .child(DictType.CATEGORY_PHRASES.title)
                     //.orderByChild("word").startAt(searchPhrase).endAt("\uf8ff")
                     .addValueEventListener(object : ValueEventListener {
@@ -62,7 +62,7 @@ class FBSearch(val searchPhrase: String) : FireBaseRequest() {
 
     private fun searchDictionary(): Observable<List<SearchResult>> {
         return Observable.create({ subscriber ->
-            mDataBaseRef
+            dataBaseRef
                     .child(DictType.DICTIONARY.title)
                     .addValueEventListener(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {

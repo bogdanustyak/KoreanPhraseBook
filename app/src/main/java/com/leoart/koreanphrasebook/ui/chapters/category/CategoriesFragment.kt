@@ -1,6 +1,5 @@
 package com.leoart.koreanphrasebook.ui.chapters.category
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
