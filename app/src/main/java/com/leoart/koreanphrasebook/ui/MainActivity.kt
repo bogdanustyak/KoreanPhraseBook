@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
         //        val data = PhrasesParser(baseContext, "phrases.txt").parse()
         //        PhrasesRequest().writePhrases("category33", data)
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        bottomNav.selectedItemId = R.id.action_chapters
         bottomNav.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.action_dict -> dictSelected()
