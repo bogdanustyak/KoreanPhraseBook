@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
@@ -26,7 +27,7 @@ import com.leoart.koreanphrasebook.utils.SoftKeyboard
 
 class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView {
 
-    private var bottomMenu: BottomMenu? = null
+//    private var bottomMenu: BottomMenu? = null
     var auth: Auth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,15 +44,18 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
         //        CategoryParser(baseContext).writeToFirebaseDB()
         //        val data = PhrasesParser(baseContext, "phrases.txt").parse()
         //        PhrasesRequest().writePhrases("category33", data)
-
-        this.bottomMenu = BottomMenu(
-                findViewById<ImageView>(R.id.iv_dict),
-                findViewById<ImageView>(R.id.iv_favorite),
-                findViewById<ImageView>(R.id.iv_chapters),
-                findViewById<ImageView>(R.id.iv_dialogs),
-                findViewById<ImageView>(R.id.iv_info),
-                this
-        )
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        bottomNav.selectedItemId = R.id.action_chapters
+        bottomNav.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.action_dict -> dictSelected()
+                R.id.action_favourite -> favouriteSelected()
+                R.id.action_chapters -> chaptersSelected()
+                R.id.action_dialogs -> dialogsSelected()
+                R.id.action_info -> infoSelected()
+            }
+            true
+        }
         if (NetworkChecker(this).isNetworkAvailable) {
             chaptersSelected()
         } else {
