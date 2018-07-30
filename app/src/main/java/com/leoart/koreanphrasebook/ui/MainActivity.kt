@@ -55,14 +55,6 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
             }
             true
         }
-//        this.bottomMenu = BottomMenu(
-//                findViewById<ImageView>(R.id.iv_dict),
-//                findViewById<ImageView>(R.id.iv_favorite),
-//                findViewById<ImageView>(R.id.iv_chapters),
-//                findViewById<ImageView>(R.id.iv_dialogs),
-//                findViewById<ImageView>(R.id.iv_info),
-//                this
-//        )
         if (NetworkChecker(this).isNetworkAvailable) {
             chaptersSelected()
         } else {
