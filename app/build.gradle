@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'realm-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 27
@@ -107,6 +108,9 @@ dependencies {
     //images loading
     implementation "com.github.bumptech.glide:glide:$glide"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide"
+
+    //Crash analytics
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
 }
 
 apply plugin: 'com.google.gms.google-services'
