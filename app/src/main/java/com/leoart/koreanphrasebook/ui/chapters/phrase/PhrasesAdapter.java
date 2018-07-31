@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leoart.koreanphrasebook.R;
+import com.leoart.koreanphrasebook.data.repository.models.EDictionary;
+import com.leoart.koreanphrasebook.data.repository.models.EPhrase;
 import com.leoart.koreanphrasebook.ui.models.Phrase;
 
 import java.util.List;
@@ -18,10 +20,10 @@ import java.util.List;
  */
 public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseViewHolder> {
 
-    private List<Phrase> phraseList;
+    private List<EPhrase> phraseList;
     private OnPhrasesAdapterInteractionListener listener;
 
-    public PhrasesAdapter(List<Phrase> phraseList, OnPhrasesAdapterInteractionListener listener) {
+    public PhrasesAdapter(List<EPhrase> phraseList, OnPhrasesAdapterInteractionListener listener) {
         this.phraseList = phraseList;
         this.listener = listener;
     }
@@ -35,7 +37,7 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseVi
 
     @Override
     public void onBindViewHolder(PhraseViewHolder holder, int position) {
-        Phrase phrase = phraseList.get(position);
+        EPhrase phrase = phraseList.get(position);
         if (phrase != null) {
             if (!TextUtils.isEmpty(phrase.getWord())) {
                 holder.tv_word.setText(phrase.getWord());
@@ -55,6 +57,7 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseVi
                 holder.tv_transcription.setText("");
             }
             holder.ivFavourite.setSelected(phrase.isFavourite());
+            holder.ivFavourite.setImageResource(getFavoriteResource(phrase.isFavourite()));
         }
     }
 
@@ -66,9 +69,21 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseVi
         return 0;
     }
 
-    public void updatePhrases(List<Phrase> phrases) {
+    public void updatePhrases(List<EPhrase> phrases) {
         this.phraseList = phrases;
         notifyDataSetChanged();
+    }
+
+    public EPhrase getPhraseByPosition(int position) {
+        return phraseList.get(position);
+    }
+
+    private int getFavoriteResource(boolean isFavourite) {
+        if (isFavourite) {
+            return R.drawable.ic_favorite_selected;
+        } else {
+            return R.drawable.ic_favorite_unselected;
+        }
     }
 
     static class PhraseViewHolder extends RecyclerView.ViewHolder {

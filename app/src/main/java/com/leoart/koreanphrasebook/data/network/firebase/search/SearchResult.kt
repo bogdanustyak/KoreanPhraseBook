@@ -10,5 +10,6 @@ enum class DictType(val title: String) {
     CATEGORY_PHRASES("categoryPhrases"),
     DIALOGS("dialogs"),
     REPLICS("replics"),
-    CHAPTERS("chapters")
+    CHAPTERS("chapters"),
+    PHRASE("phrases")
 }

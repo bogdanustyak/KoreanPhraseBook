@@ -3,23 +3,27 @@ package com.leoart.koreanphrasebook.ui.vocabulary
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
+import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import org.zakariya.stickyheaders.SectioningAdapter
-import org.zakariya.stickyheaders.StickyHeaderLayoutManager
 import java.util.*
 
 /**
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
 
+
+//TODO create method to update single item on favourite state change ? ? ?
 class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrollRecyclerView.SectionedAdapter {
 
     private var list: Map<Char, List<HashMap<String, String>>>?
     private var letters: Array<Char>?
     private var size = 0
+    private var favoriteClickLisener: VocabularyFragment.Companion.OnFavoriteClickListener? = null
 
     init {
         this.list = dictionary.sortedData()
@@ -54,8 +58,11 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
 
     override fun onCreateItemViewHolder(parent: ViewGroup?, itemType: Int): DictViewHolder {
         val inflater = LayoutInflater.from(parent!!.context)
-        val v = inflater.inflate(R.layout.dict_item, parent, false)
-        return DictViewHolder(v)
+        val vh = DictViewHolder(inflater.inflate(R.layout.dict_item, parent, false))
+        vh.icFavourite.setOnClickListener {
+            favoriteClickLisener?.onFavoriteCLick(vh.adapterPosition)
+        }
+        return vh
     }
 
     override fun onCreateHeaderViewHolder(parent: ViewGroup?, headerType: Int): HeaderViewHolder {
@@ -74,10 +81,18 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
                         val text = item["word"] + " - " + item["translation"]
                         (viewHolder as DictViewHolder)
                                 .text.text = text
+                        viewHolder.icFavourite.setImageResource(getFavoriteResource(item["favourite"]))
                     }
-
                 }
             }
+        }
+    }
+
+    private fun getFavoriteResource(isFavourite: String?): Int {
+        return if (isFavourite == "true") {
+            R.drawable.ic_favorite_selected
+        } else {
+            R.drawable.ic_favorite_unselected
         }
     }
 
@@ -95,7 +110,8 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
     }
 
     override fun getItemCount(): Int {
-        return size
+        val ghostHeadersCount = letters?.size ?: 0
+        return size + ghostHeadersCount
     }
 
     override fun getSectionName(position: Int): String {
@@ -108,6 +124,36 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
 
     class DictViewHolder internal constructor(itemView: View) : SectioningAdapter.ItemViewHolder(itemView) {
         var text = itemView.findViewById<TextView>(R.id.text)
+        var icFavourite = itemView.findViewById<ImageView>(R.id.ivFavourite)
+    }
+
+    fun setFavoriteClickListener(favoriteClickLisener: VocabularyFragment.Companion.OnFavoriteClickListener) {
+        this.favoriteClickLisener = favoriteClickLisener
+    }
+
+    fun getDictionaryByPosition(position: Int): EDictionary? {
+        var dictionary: EDictionary? = null
+        val letterPosition = getSectionForAdapterPosition(position)
+        val itemPositionInSection = getPositionOfItemInSection(letterPosition, position)
+        var letter: Char? = null
+        letters?.let {
+            letter = it[letterPosition]
+        }
+        val section =
+                letter?.let { itLetter ->
+                    list?.let { itList ->
+                        itList[itLetter]
+                    }
+                }
+        val item = section?.get(itemPositionInSection)
+        var isFavourite = "false"
+        item?.let {
+            it["favourite"]?.let { favourite ->
+                isFavourite = favourite
+            }
+            dictionary = EDictionary(letter!!, it["word"]!!, it["translation"]!!, isFavourite)
+        }
+        return dictionary
     }
 
     fun setData(dictionary: Dictionary) {

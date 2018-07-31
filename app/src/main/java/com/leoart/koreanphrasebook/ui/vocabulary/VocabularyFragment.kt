@@ -34,6 +34,8 @@ class VocabularyFragment : BaseFragment() {
     private val stickyHeaderLayoutManager = StickyHeaderLayoutManager()
 
     private lateinit var adapter: DictionaryAdapter
+    private lateinit var model: DictionaryViewModel
+
     @Inject
     lateinit var analyticsManager: AnalyticsManager
 
@@ -53,7 +55,7 @@ class VocabularyFragment : BaseFragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_vocabulary, container, false)
-        val model: DictionaryViewModel = ViewModelProviders.of(
+        model = ViewModelProviders.of(
                 this,
                 ViewModelFactory(view.context)
         ).get(DictionaryViewModel::class.java)
@@ -76,6 +78,14 @@ class VocabularyFragment : BaseFragment() {
         recyclerViewVocabulary = view.findViewById<RecyclerView>(R.id.rv_vocabulary)
         recyclerViewVocabulary?.layoutManager = stickyHeaderLayoutManager
         adapter = DictionaryAdapter(Dictionary())
+        adapter.setFavoriteClickListener(object : OnFavoriteClickListener {
+            override fun onFavoriteCLick(position: Int) {
+                val word = adapter.getDictionaryByPosition(position)
+                word?.let {
+                    model.onFavouriteClicked(it)
+                }
+            }
+        })
         recyclerViewVocabulary?.adapter = adapter
     }
 
@@ -92,7 +102,7 @@ class VocabularyFragment : BaseFragment() {
         fastScrollingRecycler.adapter = FastScrollingAdapter(
                 letters,
                 FastScrollingAdapter.FastScrollingAdapterInteractionListener {
-                    val position = data.positionOf(it)
+                    val position = adapter.getAdapterPositionForSectionHeader(it)
                     stickyHeaderLayoutManager.scrollToPosition(position)
                 }
         )
@@ -106,6 +116,10 @@ class VocabularyFragment : BaseFragment() {
         fun newInstance(): VocabularyFragment {
             val fragment = VocabularyFragment()
             return fragment
+        }
+
+        interface OnFavoriteClickListener {
+            fun onFavoriteCLick(position: Int)
         }
     }
 

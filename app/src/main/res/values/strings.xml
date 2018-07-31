@@ -7,7 +7,6 @@
     <string name="chapters">Розділи</string>
     <string name="vocabulary">Словник</string>
 
-
     <!-- menu -->
     <string name="menu_dict">Словник</string>
     <string name="menu_favourite">Улюблене</string>
@@ -42,6 +41,8 @@
 
     <string name="share_text">"Korean phrase book"</string>
     <string name="alphabet_chapter_name">Алфавіт</string>
+
+    <string name="request_error">Неможливо здійснити дію</string>
 
     <string name="note_title_hint">Заголовок</string>
     <string name="note_body_hint">Текст нотатки</string>

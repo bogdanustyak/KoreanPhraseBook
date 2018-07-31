@@ -3,8 +3,10 @@ package com.leoart.koreanphrasebook.ui.vocabulary
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.widget.Toast
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.data.repository.DictionaryRepository
+import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -22,6 +24,18 @@ class DictionaryViewModel(private val dictionaryRepository: DictionaryRepository
             loadDictionary()
         }
         return dictionary as MutableLiveData<Dictionary>
+    }
+
+    fun onFavouriteClicked(dictionary: EDictionary) {
+        if (dictionary.isFavourite.toBoolean()) {
+            dictionary.isFavourite = "false"
+        } else {
+            dictionary.isFavourite = "true"
+        }
+        dictionaryRepository.markFavourite(dictionary).subscribe({},
+                {
+                    it.printStackTrace()
+                })
     }
 
     private fun loadDictionary() {

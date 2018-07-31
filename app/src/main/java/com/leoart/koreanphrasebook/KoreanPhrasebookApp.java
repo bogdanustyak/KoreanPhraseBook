@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.app.Fragment;
 
-import com.leoart.koreanphrasebook.data.analytics.ApplicationComponent;
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsModule;
+import com.leoart.koreanphrasebook.data.analytics.ApplicationComponent;
 import com.leoart.koreanphrasebook.data.analytics.DaggerApplicationComponent;
 import com.leoart.koreanphrasebook.di.AppModule;
 
@@ -15,28 +15,25 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import dagger.android.support.HasSupportFragmentInjector;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 /**
  * Created by bogdan on 6/18/17.
  */
 
-public class KoreanPhrasebookApp extends MultiDexApplication implements HasActivityInjector {
+public class KoreanPhrasebookApp extends MultiDexApplication implements HasActivityInjector, HasSupportFragmentInjector {
 
     private ApplicationComponent applicationComponent;
     @Inject
+
     DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
+
+    @Inject
+    DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm.setDefaultConfiguration(config);
-
         applicationComponent = DaggerApplicationComponent
                 .builder()
                 .appModule(new AppModule(this))
@@ -54,4 +51,8 @@ public class KoreanPhrasebookApp extends MultiDexApplication implements HasActiv
         return dispatchingAndroidInjector;
     }
 
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return fragmentDispatchingAndroidInjector;
+    }
 }
