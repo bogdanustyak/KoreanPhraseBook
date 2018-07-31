@@ -58,6 +58,7 @@ ext {
     archRoomVersion = "1.1.0"
     glide = "4.6.1"
     android_arch = "1.1.0"
+    daggerVersion = "2.16"
 }
 
 dependencies {
@@ -76,6 +77,8 @@ dependencies {
     implementation "com.google.firebase:firebase-core:$firebase"
     implementation "com.google.firebase:firebase-database:$firebase"
     implementation "com.google.firebase:firebase-auth:16.0.2"
+
+    implementation'com.google.android.gms:play-services-analytics:16.0.1'
 
     implementation 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
 
@@ -108,6 +111,12 @@ dependencies {
     //images loading
     implementation "com.github.bumptech.glide:glide:$glide"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide"
+
+    //dager 2
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     //Crash analytics
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'

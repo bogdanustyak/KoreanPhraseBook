@@ -5,15 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import com.crashlytics.android.Crashlytics
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
@@ -23,16 +21,23 @@ import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
+import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView {
+class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
 
-//    private var bottomMenu: BottomMenu? = null
     var auth: Auth? = null
+
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        AndroidInjection.inject(this)
+        analyticsManager.openChapterCategory("main screen")
         initUI()
         auth = FRAuth()
     }
@@ -47,7 +52,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
         bottomNav.selectedItemId = R.id.action_chapters
         bottomNav.setOnNavigationItemSelectedListener {
-            when(it.itemId){
+            when (it.itemId) {
                 R.id.action_dict -> dictSelected()
                 R.id.action_favourite -> favouriteSelected()
                 R.id.action_chapters -> chaptersSelected()
@@ -155,7 +160,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
     override fun replace(fragment: BaseFragment, addToBackStack: Boolean) {
         val transaction = supportFragmentManager.beginTransaction()
                 .replace(R.id.main_content, fragment)
-        if(addToBackStack){
+        if (addToBackStack) {
             transaction.addToBackStack(fragment.javaClass.name)
         }
         transaction.commit()

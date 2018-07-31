@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.chapters.category
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -10,13 +11,16 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainActivity
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhraseListFragment
 import com.leoart.koreanphrasebook.ui.models.Category
 import com.leoart.koreanphrasebook.ui.models.Chapter
+import dagger.android.support.AndroidSupportInjection
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by bogdan on 6/18/17.
@@ -26,6 +30,13 @@ class CategoriesFragment : BaseFragment(), CategoriesView, CategoriesAdapter.Cat
     private var chapter: Chapter? = null
     private var adapter: CategoriesAdapter? = null
     private var mainView: MainView? = null
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +66,9 @@ class CategoriesFragment : BaseFragment(), CategoriesView, CategoriesAdapter.Cat
 
     override fun onCategoryClick(category: Category) {
         mainView?.replace(PhraseListFragment.newInstance(category.name["word"] ?: "", category.id))
+        category.name["word"]?.let {
+            analyticsManager.openChapterCategory(it)
+        }
     }
 
     override fun showCategories(categories: List<Category>) {
