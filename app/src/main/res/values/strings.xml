@@ -43,6 +43,9 @@
     <string name="share_text">"Korean phrase book"</string>
     <string name="alphabet_chapter_name">Алфавіт</string>
 
+    <string name="note_title_hint">Заголовок</string>
+    <string name="note_body_hint">Текст нотатки</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
