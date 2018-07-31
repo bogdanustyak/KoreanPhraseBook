@@ -25,14 +25,10 @@ class DialogsRepository(private val context: Context) {
     fun getDialogs(): Flowable<List<DialogResponse>> {
         Log.d(TAG, "getDialogs")
         return getDataFromDB()
-                .flatMap { dialogs ->
-                    if (dialogs.isNotEmpty()) {
-                        return@flatMap Flowable.just(
-                                mapDialogs(dialogs)
-                        )
-                    } else {
-                        return@flatMap requestFromNetwork()
-                                .toFlowable(BackpressureStrategy.LATEST)
+                .flatMap {  Flowable.just(mapDialogs(it)) }
+                .doOnNext {
+                    if(it.isEmpty()){
+                        requestFromNetwork()
                     }
                 }
     }
@@ -42,26 +38,22 @@ class DialogsRepository(private val context: Context) {
         return AppDataBase.getInstance(context).dialogDao().getAll()
     }
 
-    private fun requestFromNetwork(): Observable<List<DialogResponse>> {
+    private fun requestFromNetwork() {
         Log.d(TAG, "requestFromNetwork")
-        return DialogsRequest().getAllDialogNames()
-                .flatMap {
+        DialogsRequest().getAllDialogNames()
+                .subscribeOn(Schedulers.io())
+                .subscribe {
                     saveDialogsIntoDB(it)
                 }
     }
 
-    private fun saveDialogsIntoDB(dialogNames: List<DialogResponse>): Observable<List<DialogResponse>> {
-        return Observable.create { emitter ->
+    private fun saveDialogsIntoDB(dialogNames: List<DialogResponse>) {
             val eDialogs = dialogNames.map {
                 EDialog(it.uid, it.name)
             }.toTypedArray()
-            Observable.just(AppDataBase.getInstance(context))
-                    .subscribeOn(Schedulers.io())
-                    .subscribe {
-                        it.dialogDao().insertAll(*eDialogs)
-                        emitter.onNext(dialogNames)
-                    }
-        }
+            localDB().subscribe {
+                it.dialogDao().insertAll(*eDialogs)
+            }
     }
 
     fun getAllDialogReplics(dialogID: String): Observable<List<Replic>> {
@@ -75,5 +67,10 @@ class DialogsRepository(private val context: Context) {
                     it.dialogTitle
             )
         }
+    }
+
+    fun localDB(): Observable<AppDataBase> {
+        return Observable.just(AppDataBase.getInstance(context))
+                .subscribeOn(Schedulers.io())
     }
 }

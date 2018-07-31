@@ -15,7 +15,7 @@ class DialogsRequest : FireBaseRequest() {
 
     fun getAllDialogNames(): Observable<List<DialogResponse>> {
         return Observable.create({ emmitter ->
-            mDataBase.reference.child("dialogs").addListenerForSingleValueEvent(object : ValueEventListener {
+            dataBase.reference.child("dialogs").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     emmitter.onError(Throwable("data was not found"))
                     emmitter.onComplete()
@@ -38,7 +38,7 @@ class DialogsRequest : FireBaseRequest() {
 
     fun getAllDialogReplics(dialogUID: String): Observable<List<Replic>> {
         return Observable.create({ subscriber ->
-            mDataBase.reference?.child("dialogReplics/" + dialogUID)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            dataBase.reference?.child("dialogReplics/" + dialogUID)?.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
                     subscriber.onComplete()

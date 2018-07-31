@@ -20,12 +20,9 @@ class DictionaryRepository(val context: Context) {
     fun getDictionary(): Flowable<Dictionary> {
         Log.d(DialogsRepository.TAG, "getDictionary")
         return getDataFromDB()
-                .flatMap { dictionary ->
-                    if (dictionary.data().isNotEmpty()) {
-                        return@flatMap Flowable.just(dictionary)
-                    } else {
-                        return@flatMap requestFromNetwork()
-                                .toFlowable(BackpressureStrategy.LATEST)
+                .doOnNext {
+                    if (it.data().isEmpty()) {
+                        requestFromNetwork()
                     }
                 }
     }
@@ -83,29 +80,27 @@ class DictionaryRepository(val context: Context) {
         return map
     }
 
-    fun requestFromNetwork(): Observable<Dictionary> {
-        return DictionaryRequest().getDictionary()
-                .flatMap {
+    fun requestFromNetwork() {
+        DictionaryRequest().getDictionary()
+                .subscribeOn(Schedulers.io())
+                .subscribe {
                     saveIntoDB(it)
                 }
     }
 
-    fun saveIntoDB(dict: Dictionary): Observable<Dictionary> {
-        return Observable.create { emitter ->
-            val dictionary: ArrayList<EDictionary> = ArrayList()
-            dict.data().forEach {
-                val key = it.key
-                val value = it.value
-                value.forEach {
-                    dictionary.add(EDictionary(key, it["word"] ?: "", it["translation"]
-                            ?: "", it["favourite"] ?: "false"))
-                }
+    fun saveIntoDB(dict: Dictionary) {
+        val dictionary: ArrayList<EDictionary> = ArrayList()
+        dict.data().forEach {
+            val key = it.key
+            val value = it.value
+            value.forEach {
+                dictionary.add(EDictionary(key, it["word"] ?: "", it["translation"]
+                        ?: "", it["favourite"] ?: "false"))
             }
+        }
 
-            emitter.onNext(dict)
-            localDB().subscribe { db ->
-                db.dictionaryDao().insertAll(*dictionary.toTypedArray())
-            }
+        localDB().subscribe { db ->
+            db.dictionaryDao().insertAll(*dictionary.toTypedArray())
         }
     }
 

@@ -11,14 +11,14 @@ import java.util.*
 class DialogsWriter : FireBaseRequest() {
 
     fun addReplica(dialogUID: String, replic: Replic) {
-        val key = mDataBaseRef.child("replics").push().key
-        mDataBaseRef.child("replics")
+        val key = dataBaseRef.child("replics").push().key
+        dataBaseRef.child("replics")
 
         val childUpdates = HashMap<String, Any>()
         childUpdates.put("/replics/" + key, replic)
         childUpdates.put("/dialogReplics/$dialogUID/$key", replic.toMap())
 
-        mDataBaseRef.updateChildren(childUpdates)
+        dataBaseRef.updateChildren(childUpdates)
     }
 
 }

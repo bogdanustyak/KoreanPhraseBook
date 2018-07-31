@@ -13,13 +13,14 @@ import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainActivity
 import java.util.*
 
 @SuppressLint("ValidFragment")
 /**
  * Created by bogdan on 6/18/17.
  */
-class DialogFragment(title: String) : BaseFragment(title), DialogMessagesView {
+class DialogFragment : BaseFragment(), DialogMessagesView {
 
     var dialog: DialogResponse? = null
     private val adapter = DialogMessagesRecyclerAdapter(ArrayList())
@@ -31,6 +32,11 @@ class DialogFragment(title: String) : BaseFragment(title), DialogMessagesView {
         presenter = DialogPresenter(this, view.context)
         initUI(view)
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setTitle()
     }
 
     private fun initUI(view: View) {
@@ -52,8 +58,9 @@ class DialogFragment(title: String) : BaseFragment(title), DialogMessagesView {
 
     companion object {
         fun newInstance(title: String, dialog: DialogResponse): DialogFragment {
-            val fragment = DialogFragment(title)
+            val fragment = DialogFragment()
             val args = Bundle()
+            args.putString(MainActivity.TITLE, title)
             fragment.arguments = args
             fragment.dialog = dialog
             return fragment

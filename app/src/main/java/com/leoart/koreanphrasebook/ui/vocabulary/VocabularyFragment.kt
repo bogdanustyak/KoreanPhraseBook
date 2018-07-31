@@ -1,8 +1,8 @@
 package com.leoart.koreanphrasebook.ui.vocabulary
 
-import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -10,16 +10,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
+import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
+import dagger.android.AndroidInjection
+import dagger.android.support.AndroidSupportInjection
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager
+import javax.inject.Inject
 
-
-@SuppressLint("ValidFragment")
-class VocabularyFragment(title: String) : BaseFragment(title) {
+class VocabularyFragment : BaseFragment() {
 
     private var mParam1: String? = null
     private var mParam2: String? = null
@@ -27,14 +33,22 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
     private var recyclerViewVocabulary: RecyclerView? = null
     private val stickyHeaderLayoutManager = StickyHeaderLayoutManager()
 
-
     private lateinit var adapter: DictionaryAdapter
     private lateinit var model: DictionaryViewModel
 
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        analyticsManager.onOpenScreen(ScreenNavigator.DICTIONARY_SCREEN.screenName)
         mParam1 = arguments?.getString(ARG_PARAM1)
         mParam2 = arguments?.getString(ARG_PARAM2)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +67,11 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
             }
         })
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.vocabulary))
     }
 
     private fun initAdapter(view: View) {
@@ -94,8 +113,8 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
         private val ARG_PARAM1 = "param1"
         private val ARG_PARAM2 = "param2"
 
-        fun newInstance(title: String): VocabularyFragment {
-            val fragment = VocabularyFragment(title)
+        fun newInstance(): VocabularyFragment {
+            val fragment = VocabularyFragment()
             return fragment
         }
 

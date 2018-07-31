@@ -2,6 +2,7 @@ package com.leoart.koreanphrasebook.ui.favourite
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -21,7 +22,6 @@ import com.leoart.koreanphrasebook.ui.ViewModelFactory
  */
 class FavouriteFragment : BaseFragment() {
 
-    private var mainView: MainView? = null
     private var adapter: FavouriteAdapter? = null
 
     private lateinit var model: FavouriteViewModel
@@ -58,14 +58,17 @@ class FavouriteFragment : BaseFragment() {
         return view
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        (context as MainView).setTitle(getString(R.string.menu_favourite))
+    }
+
     companion object {
 
-        fun newInstance(title: String, mainView: MainView?): FavouriteFragment {
+        fun newInstance(): FavouriteFragment {
             val fragment = FavouriteFragment()
             val args = Bundle()
             fragment.arguments = args
-            fragment.mainView = mainView
-            fragment.title = title
             return fragment
         }
 

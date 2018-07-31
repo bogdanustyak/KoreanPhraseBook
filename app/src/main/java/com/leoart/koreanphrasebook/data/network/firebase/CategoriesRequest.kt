@@ -21,7 +21,7 @@ class CategoriesRequest : FireBaseRequest() {
             val key = "category" + count
             val childUpdates = HashMap<String, Any>()
             childUpdates.put("$CATEGORIES/$chapter/$key", it.name)
-            mDataBaseRef.updateChildren(childUpdates)
+            dataBaseRef.updateChildren(childUpdates)
             count++
         }
     }
@@ -29,7 +29,7 @@ class CategoriesRequest : FireBaseRequest() {
     fun getAllCategoriesOfChapter(chapter: Chapter): Observable<List<Category>> {
         val chapterName = chapter.key
         return Observable.create({ subscriber ->
-            mDataBase.reference?.child("$CATEGORIES/$chapterName")?.addListenerForSingleValueEvent(object : ValueEventListener {
+            dataBase.reference?.child("$CATEGORIES/$chapterName")?.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
                     subscriber.onComplete()
@@ -40,11 +40,9 @@ class CategoriesRequest : FireBaseRequest() {
                     val categoryList = ArrayList<Category>()
                     for (item in dataSnapshot.children) {
                         item.key?.let {
-                            Log.d("test", item.value.toString())
                             val categoryPhrase = item
                                     .value
                                     as HashMap<String, String>
-                            Log.d("tes", categoryPhrase.toString())
                             val category = Category(it, categoryPhrase)
                             categoryList.add(category)
                         }
@@ -54,38 +52,11 @@ class CategoriesRequest : FireBaseRequest() {
                 }
             })
         })
-//        return Observable.create({ subscriber ->
-//
-//
-//            val categoriesRef = mDataBase.reference.child("categories")
-//            val categories = mutableListOf<Category>()
-//
-//            for (category in chapter.categories.keys) {
-//                val categoryRef = categoriesRef?.child(category)
-//
-//                categoryRef
-//                        ?.addListenerForSingleValueEvent(object : ValueEventListener {
-//                            override fun onCancelled(p0: DatabaseError?) {
-//                                throw UnsupportedOperationException("not implemented")
-//                            }
-//
-//                            override fun onDataChange(dataSnapshot: DataSnapshot?) {
-//                                if (dataSnapshot != null) {
-//                                    val cat = dataSnapshot.getValue(Category::class.java)
-//                                    categories.add(cat)
-//                                    subscriber.onNext(categories)
-//                                    subscriber.onCompleted()
-//                                }
-//                            }
-//
-//                        })
-//            }
-//        })
     }
 
     fun getAllCategories(): Observable<List<Category>> {
         return Observable.create({ subscriber ->
-            mDataBase.reference.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
+            dataBase.reference.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
                     subscriber.onComplete()

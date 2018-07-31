@@ -13,23 +13,22 @@ import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainActivity
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhrasesAdapter.OnPhrasesAdapterInteractionListener
 
 /**
  * Created by bogdan on 6/18/17.
  */
-class PhraseListFragment(title: String) : BaseFragment(title), OnPhrasesAdapterInteractionListener {
+class PhraseListFragment : BaseFragment(), OnPhrasesAdapterInteractionListener {
 
     var category = ""
     private lateinit var model: PhraseViewModel
-
     private var adapter: PhrasesAdapter? = null
-    //    var phrasePresenter: PhrasesPresenter? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.activity_phrase, container, false)
-
         val rvPhrases = view.findViewById<RecyclerView>(R.id.rv_phrases)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvPhrases.layoutManager = layoutManager
@@ -51,6 +50,11 @@ class PhraseListFragment(title: String) : BaseFragment(title), OnPhrasesAdapterI
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        setTitle()
+    }
+
     override fun onFavouriteClicked(position: Int) {
         adapter?.getPhraseByPosition(position)?.let {
             model.onFavouriteClicked(it)
@@ -60,8 +64,9 @@ class PhraseListFragment(title: String) : BaseFragment(title), OnPhrasesAdapterI
     companion object {
 
         fun newInstance(title: String, category: String): PhraseListFragment {
-            val fragment = PhraseListFragment(title)
+            val fragment = PhraseListFragment()
             val args = Bundle()
+            args.putString(MainActivity.TITLE, title)
             fragment.arguments = args
             fragment.category = category
             return fragment

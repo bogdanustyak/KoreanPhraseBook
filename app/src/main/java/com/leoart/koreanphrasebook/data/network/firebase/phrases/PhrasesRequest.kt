@@ -17,18 +17,18 @@ class PhrasesRequest : FireBaseRequest() {
 
     fun writePhrases(category: String, phrases: List<Phrase>) {
         phrases.forEach {
-            val key = mDataBaseRef.child("$CATEGORY_PHRASES/$category").push().key
+            val key = dataBaseRef.child("$CATEGORY_PHRASES/$category").push().key
             val childUpdates = HashMap<String, Any>()
             childUpdates.put("$CATEGORY_PHRASES/$category/$key", it.toMap())
 
-            mDataBaseRef.updateChildren(childUpdates)
+            dataBaseRef.updateChildren(childUpdates)
         }
     }
 
 
     fun getPhrases(categoryName: String): Observable<List<Phrase>> {
         return Observable.create({ subscriber ->
-            mDataBase.reference?.child("$CATEGORY_PHRASES/$categoryName")?.addListenerForSingleValueEvent(object : ValueEventListener {
+            dataBase.reference?.child("$CATEGORY_PHRASES/$categoryName")?.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
                     subscriber.onComplete()

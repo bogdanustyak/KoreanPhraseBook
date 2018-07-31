@@ -9,26 +9,37 @@ import android.support.v7.widget.RecyclerView
 import android.text.InputType
 import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.widget.RxSearchView
+import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
+import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
+import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.network.firebase.search.DictType
 import com.leoart.koreanphrasebook.data.repository.search.SearchRepository
+import com.leoart.koreanphrasebook.ui.BaseActivity
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
+import dagger.android.AndroidInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_search.*
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : BaseActivity() {
 
     private lateinit var adapter: SearchResultsAdapter
     private val compositeDisposable = CompositeDisposable()
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        AndroidInjection.inject(this)
+        analyticsManager.onOpenScreen(ScreenNavigator.SEARCH_SCREEN.screenName)
         initUI()
         handleIntent(intent)
     }
