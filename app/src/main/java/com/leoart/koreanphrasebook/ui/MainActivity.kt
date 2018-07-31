@@ -4,13 +4,12 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
@@ -24,13 +23,12 @@ import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
 import dagger.android.AndroidInjection
-import dagger.android.DaggerActivity_MembersInjector
 import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView {
 
-    private var bottomMenu: BottomMenu? = null
+    //    private var bottomMenu: BottomMenu? = null
     var auth: Auth? = null
 
     @Inject
@@ -53,25 +51,22 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
         //        CategoryParser(baseContext).writeToFirebaseDB()
         //        val data = PhrasesParser(baseContext, "phrases.txt").parse()
         //        PhrasesRequest().writePhrases("category33", data)
-
-        this.bottomMenu = BottomMenu(
-                findViewById<ImageView>(R.id.iv_dict),
-                findViewById<ImageView>(R.id.iv_favorite),
-                findViewById<ImageView>(R.id.iv_chapters),
-                findViewById<ImageView>(R.id.iv_dialogs),
-                findViewById<ImageView>(R.id.iv_info),
-                this
-        )
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        bottomNav.selectedItemId = R.id.action_chapters
+        bottomNav.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.action_dict -> dictSelected()
+                R.id.action_favourite -> favouriteSelected()
+                R.id.action_chapters -> chaptersSelected()
+                R.id.action_dialogs -> dialogsSelected()
+                R.id.action_info -> infoSelected()
+            }
+            true
+        }
         if (NetworkChecker(this).isNetworkAvailable) {
             chaptersSelected()
         } else {
             showNoNetworkFragment()
-        }
-        supportFragmentManager.addOnBackStackChangedListener {
-            val fragment = supportFragmentManager.findFragmentById(R.id.main_content)
-            if (fragment != null && fragment is BaseFragment) {
-                this.title = fragment.title
-            }
         }
     }
 
@@ -125,7 +120,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
 
     override fun dictSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(VocabularyFragment.newInstance(getString(R.string.menu_dict)))
+            this.replace(VocabularyFragment.newInstance(), false)
         } else {
             showNoNetworkFragment()
         }
@@ -133,7 +128,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
 
     override fun favouriteSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(FavouriteFragment.newInstance(getString(R.string.menu_favourite), this))
+            this.replace(FavouriteFragment.newInstance(), false)
         } else {
             showNoNetworkFragment()
         }
@@ -146,7 +141,7 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
 
     override fun chaptersSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(ChapterFragment.newInstance(getString(R.string.menu_chapters), this))
+            this.replace(ChapterFragment.newInstance(this), false)
         } else {
             showNoNetworkFragment()
         }
@@ -154,32 +149,30 @@ class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainVie
 
     override fun dialogsSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(DialogsFragment.newInstance(getString(R.string.menu_dialogs), this))
+            this.replace(DialogsFragment.newInstance(this), false)
         } else {
             showNoNetworkFragment()
         }
     }
 
     override fun infoSelected() {
-        this.replace(InfoFragment.newInstance(getString(R.string.menu_info), this))
+        this.replace(InfoFragment.newInstance(this), false)
     }
 
-    override fun replace(fragment: BaseFragment) {
-        title = fragment.title
-        supportFragmentManager.beginTransaction()
+    override fun replace(fragment: BaseFragment, addToBackStack: Boolean) {
+        val transaction = supportFragmentManager.beginTransaction()
                 .replace(R.id.main_content, fragment)
-                .commit()
+        if (addToBackStack) {
+            transaction.addToBackStack(fragment.javaClass.name)
+        }
+        transaction.commit()
     }
 
-    override fun add(fragment: BaseFragment) {
-        this.add(fragment, fragment.title)
+    override fun setTitle(title: String) {
+        supportActionBar?.title = title
     }
 
-    override fun add(fragment: BaseFragment, title: String) {
-        this.title = title
-        supportFragmentManager.beginTransaction()
-                .add(R.id.main_content, fragment, title)
-                .addToBackStack(title)
-                .commit()
+    companion object {
+        const val TITLE = "title"
     }
 }

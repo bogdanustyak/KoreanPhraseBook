@@ -10,31 +10,37 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
-import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainActivity
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhraseListFragment
 import com.leoart.koreanphrasebook.ui.models.Category
 import com.leoart.koreanphrasebook.ui.models.Chapter
 import dagger.android.support.AndroidSupportInjection
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by bogdan on 6/18/17.
  */
-class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, CategoriesAdapter.CategoryInteractionListener {
+class CategoriesFragment : BaseFragment(), CategoriesView, CategoriesAdapter.CategoryInteractionListener {
 
     private var chapter: Chapter? = null
     private var adapter: CategoriesAdapter? = null
     private var mainView: MainView? = null
+    @Inject
     lateinit var analyticsManager: AnalyticsManager
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -53,12 +59,15 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        setTitle()
+    }
+
     override fun onCategoryClick(category: Category) {
-        mainView?.let {
-            it.add(PhraseListFragment.newInstance(category.name["word"] ?: "", category.id))
-            category.name["word"]?.let {
-                analyticsManager.openChapterCategory(it)
-            }
+        mainView?.replace(PhraseListFragment.newInstance(category.name["word"] ?: "", category.id))
+        category.name["word"]?.let {
+            analyticsManager.openChapterCategory(it)
         }
     }
 
@@ -79,8 +88,9 @@ class CategoriesFragment(title: String) : BaseFragment(title), CategoriesView, C
     companion object {
 
         fun newInstance(title: String, chapter: Chapter, mainView: MainView?): CategoriesFragment {
-            val fragment = CategoriesFragment(title)
+            val fragment = CategoriesFragment()
             val args = Bundle()
+            args.putString(MainActivity.TITLE, title)
             fragment.chapter = chapter
             fragment.mainView = mainView
             fragment.arguments = args

@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
@@ -32,21 +31,6 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
     @Inject
     lateinit var analyticsManager: AnalyticsManager
 
-    companion object {
-
-        fun newInstance(title: String, mainView: MainView): InfoFragment {
-            val fragment = InfoFragment()
-            fragment.title = title
-            fragment.mainView = mainView
-            return fragment
-        }
-    }
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_info, container, false)
@@ -60,6 +44,12 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
         rvInfo.adapter = adapter
         analyticsManager.onOpenScreen(ScreenNavigator.INFO_SCREEN.screenName)
         return view
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        (context as MainView).setTitle(getString(R.string.menu_info))
+        AndroidSupportInjection.inject(this)
     }
 
     private fun infoItems(): List<InfoItem>? {
@@ -85,12 +75,12 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
     }
 
     private fun openNotesScreen() {
-        analyticsManager?.onWriteNote()
+        analyticsManager.onWriteNote()
         startActivity(Intent(context, NotesActivity::class.java))
     }
 
     private fun share() {
-        analyticsManager?.onShare()
+        analyticsManager.onShare()
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND
         sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text))
@@ -100,11 +90,10 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
         } catch (ex: android.content.ActivityNotFoundException) {
             Toast.makeText(this@InfoFragment.context, getString(R.string.share_error), Toast.LENGTH_SHORT).show()
         }
-
     }
 
     private fun sendEmail() {
-        analyticsManager?.onSendEmail()
+        analyticsManager.onSendEmail()
         val mailIntent = Intent(Intent.ACTION_SEND)
         mailIntent.type = "message/rfc822"
         mailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.dev_mail)))
@@ -118,11 +107,19 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
     }
 
     private fun about() {
-        analyticsManager?.onAbout()
+        analyticsManager.onAbout()
         val alertDialog = AlertDialog.Builder(this@InfoFragment.context, R.style.AboutDialogTheme).create()
         alertDialog.setTitle(getString(R.string.about))
         alertDialog.setMessage(getString(R.string.about_info))
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", { dialog, which -> dialog.dismiss() })
         alertDialog.show()
+    }
+
+    companion object {
+        fun newInstance(mainView: MainView): InfoFragment {
+            val fragment = InfoFragment()
+            fragment.mainView = mainView
+            return fragment
+        }
     }
 }

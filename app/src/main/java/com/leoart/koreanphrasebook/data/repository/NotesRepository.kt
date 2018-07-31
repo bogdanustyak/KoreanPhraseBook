@@ -14,7 +14,7 @@ class NotesRepository(val context: Context) {
     fun fetchNotes(): Flowable<List<Note>> {
         return getDataFromDB()
                 .flatMap {
-                    return@flatMap Flowable.just(mapNotes(it))
+                    Flowable.just(mapNotes(it))
                 }
     }
 

@@ -21,7 +21,7 @@ import com.leoart.koreanphrasebook.ui.dialogs.dialog.DialogFragment
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
-class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
+class DialogsFragment : BaseFragment(), DialogsView,
         DialogsRecyclerAdapter.DialogsListInteractionListener {
 
     private var mainView: MainView? = null
@@ -63,17 +63,22 @@ class DialogsFragment(title: String) : BaseFragment(title), DialogsView,
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.dialogs))
+    }
+
     override fun onDialogClick(dialog: DialogResponse) {
         this.mainView?.let {
-            it.add(DialogFragment.newInstance(dialog.name, dialog))
             analyticsManager.openDialog(dialog.name)
+            it.replace(DialogFragment.newInstance(dialog.name, dialog))
         }
     }
 
     companion object {
 
-        fun newInstance(title: String, mainView: MainView): DialogsFragment {
-            val fragment = DialogsFragment(title)
+        fun newInstance(mainView: MainView): DialogsFragment {
+            val fragment = DialogsFragment()
             val args = Bundle()
             fragment.arguments = args
             fragment.mainView = mainView

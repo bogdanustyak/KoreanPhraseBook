@@ -32,12 +32,12 @@ interface CachedRepository<ITEM> {
      *
      * @return observable list of items
      */
-    fun requestFromNetwork(): Observable<List<ITEM>>
+    fun requestFromNetwork()
 
     /**
      * save data to local storage
      *
      * @return observable list of saved items
      */
-    fun saveIntoDB(items: List<ITEM>): Observable<List<ITEM>>
+    fun saveIntoDB(items: List<ITEM>)
 }

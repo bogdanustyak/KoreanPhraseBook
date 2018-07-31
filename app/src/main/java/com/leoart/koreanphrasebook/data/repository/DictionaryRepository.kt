@@ -18,17 +18,14 @@ import io.reactivex.schedulers.Schedulers
  */
 class DictionaryRepository(val context: Context) {
 
-    fun getDictionary(): Single<Dictionary> {
+    fun getDictionary(): Flowable<Dictionary> {
         Log.d(DialogsRepository.TAG, "getDialogs")
         return getDataFromDB()
-                .flatMap { dictionary ->
-                    if (dictionary.data().isNotEmpty()) {
-                        return@flatMap Flowable.just(dictionary)
-                    } else {
-                        return@flatMap requestFromNetwork()
-                                .toFlowable(BackpressureStrategy.LATEST)
+                .doOnNext {
+                    if(it.data().isEmpty()){
+                        requestFromNetwork()
                     }
-                }.firstOrError()
+                }
     }
 
     fun getDataFromDB(): Flowable<Dictionary> {
@@ -62,30 +59,29 @@ class DictionaryRepository(val context: Context) {
         return Flowable.just(dictionary)
     }
 
-    fun requestFromNetwork(): Observable<Dictionary> {
-        return DictionaryRequest().getDictionary()
-                .flatMap {
+    fun requestFromNetwork() {
+        DictionaryRequest().getDictionary()
+                .subscribeOn(Schedulers.io())
+                .subscribe {
                     saveIntoDB(it)
                 }
     }
 
-    fun saveIntoDB(dict: Dictionary): Observable<Dictionary> {
-        return Observable.create { emitter ->
-            val dictionary: ArrayList<EDictionary> = ArrayList()
-            dict.data().forEach {
-                val key = it.key
-                val value = it.value
-                value.forEach {
-                    dictionary.add(EDictionary(key, it["word"] ?: "", it["translation"] ?: ""))
-                }
-            }
-
-            emitter.onNext(dict)
-            localDB().subscribe { db ->
-                db.dictionaryDao().insertAll(*dictionary.toTypedArray())
+    fun saveIntoDB(dict: Dictionary) {
+        val dictionary: ArrayList<EDictionary> = ArrayList()
+        dict.data().forEach {
+            val key = it.key
+            val value = it.value
+            value.forEach {
+                dictionary.add(EDictionary(key, it["word"] ?: "", it["translation"] ?: ""))
             }
         }
+
+        localDB().subscribe { db ->
+            db.dictionaryDao().insertAll(*dictionary.toTypedArray())
+        }
     }
+
 
     fun localDB(): Observable<AppDataBase> {
         return Observable.just(AppDataBase.getInstance(context))

@@ -1,6 +1,5 @@
 package com.leoart.koreanphrasebook.ui.vocabulary
 
-import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -18,6 +17,7 @@ import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.ui.BaseFragment
+import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import dagger.android.AndroidInjection
@@ -25,9 +25,7 @@ import dagger.android.support.AndroidSupportInjection
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager
 import javax.inject.Inject
 
-
-@SuppressLint("ValidFragment")
-class VocabularyFragment(title: String) : BaseFragment(title) {
+class VocabularyFragment : BaseFragment() {
 
     private var mParam1: String? = null
     private var mParam2: String? = null
@@ -69,6 +67,11 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.vocabulary))
+    }
+
     private fun initAdapter(view: View) {
         recyclerViewVocabulary = view.findViewById<RecyclerView>(R.id.rv_vocabulary)
         recyclerViewVocabulary?.layoutManager = stickyHeaderLayoutManager
@@ -100,8 +103,8 @@ class VocabularyFragment(title: String) : BaseFragment(title) {
         private val ARG_PARAM1 = "param1"
         private val ARG_PARAM2 = "param2"
 
-        fun newInstance(title: String): VocabularyFragment {
-            val fragment = VocabularyFragment(title)
+        fun newInstance(): VocabularyFragment {
+            val fragment = VocabularyFragment()
             return fragment
         }
     }

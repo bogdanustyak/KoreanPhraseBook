@@ -1,6 +1,7 @@
 package com.leoart.koreanphrasebook.ui.chapters
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
@@ -16,6 +17,7 @@ import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
+import com.leoart.koreanphrasebook.ui.alphabet.AlphabetActivity
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesFragment
 import com.leoart.koreanphrasebook.ui.models.Chapter
 import dagger.android.support.AndroidSupportInjection
@@ -53,12 +55,20 @@ class ChapterFragment : BaseFragment(), ChaptersView,
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        (context as MainView).setTitle(getString(R.string.chapters))
+    }
+
     override fun onChapterClick(chapter: Chapter) {
-        mainView?.let {
-            it.add(
-                    CategoriesFragment.newInstance(chapter.name, chapter, mainView)
-            )
-            analyticsManager.openChapter(chapter.name)
+        if (chapter.name == getString(R.string.alphabet_chapter_name)) {
+            startActivity(Intent(context, AlphabetActivity::class.java))
+        } else {
+            mainView?.let {
+                it.replace(
+                        CategoriesFragment.newInstance(chapter.name, chapter, mainView)
+                )
+            }
         }
     }
 
@@ -70,12 +80,11 @@ class ChapterFragment : BaseFragment(), ChaptersView,
 
     companion object {
 
-        fun newInstance(title: String, mainView: MainView?): ChapterFragment {
+        fun newInstance(mainView: MainView?): ChapterFragment {
             val fragment = ChapterFragment()
             val args = Bundle()
             fragment.arguments = args
             fragment.mainView = mainView
-            fragment.title = title
             return fragment
         }
     }
