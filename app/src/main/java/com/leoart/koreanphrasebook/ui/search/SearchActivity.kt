@@ -16,6 +16,7 @@ import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.network.firebase.search.DictType
 import com.leoart.koreanphrasebook.data.repository.search.SearchRepository
+import com.leoart.koreanphrasebook.ui.BaseActivity
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
 import dagger.android.AndroidInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,7 +28,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : BaseActivity() {
 
     private lateinit var adapter: SearchResultsAdapter
     private val compositeDisposable = CompositeDisposable()

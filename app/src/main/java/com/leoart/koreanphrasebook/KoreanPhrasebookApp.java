@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.app.Fragment;
 
-import com.leoart.koreanphrasebook.data.analytics.AnalyticsComponent;
+import com.leoart.koreanphrasebook.data.analytics.ApplicationComponent;
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsModule;
-import com.leoart.koreanphrasebook.data.analytics.DaggerAnalyticsComponent;
+import com.leoart.koreanphrasebook.data.analytics.DaggerApplicationComponent;
 import com.leoart.koreanphrasebook.di.AppModule;
 
 import javax.inject.Inject;
@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
-import dagger.android.HasFragmentInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -23,14 +22,11 @@ import io.realm.RealmConfiguration;
  * Created by bogdan on 6/18/17.
  */
 
-public class KoreanPhrasebookApp extends MultiDexApplication implements HasActivityInjector, HasSupportFragmentInjector {
+public class KoreanPhrasebookApp extends MultiDexApplication implements HasActivityInjector {
 
-    private AnalyticsComponent analyticsComponent;
+    private ApplicationComponent applicationComponent;
     @Inject
     DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
-
-    @Inject
-    DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
 
     @Override
     public void onCreate() {
@@ -41,26 +37,21 @@ public class KoreanPhrasebookApp extends MultiDexApplication implements HasActiv
                 .build();
         Realm.setDefaultConfiguration(config);
 
-        analyticsComponent = DaggerAnalyticsComponent
+        applicationComponent = DaggerApplicationComponent
                 .builder()
                 .appModule(new AppModule(this))
                 .analyticsModule(new AnalyticsModule())
                 .build();
-        analyticsComponent.inject(this);
+        applicationComponent.inject(this);
     }
 
-    public AnalyticsComponent getAnalyticsComponent() {
-        return analyticsComponent;
+    public ApplicationComponent getApplicationComponent() {
+        return applicationComponent;
     }
 
     @Override
     public AndroidInjector<Activity> activityInjector() {
         return dispatchingAndroidInjector;
-    }
-
-    @Override
-    public AndroidInjector<Fragment> supportFragmentInjector() {
-        return fragmentDispatchingAndroidInjector;
     }
 
 }

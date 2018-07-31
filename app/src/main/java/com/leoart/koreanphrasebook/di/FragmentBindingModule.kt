@@ -1,6 +1,5 @@
 package com.leoart.koreanphrasebook.di
 
-import android.app.DialogFragment
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
@@ -10,7 +9,8 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
-abstract class FragmnetBindingModule {
+abstract class FragmentBindingModule {
+
     @ContributesAndroidInjector
     abstract fun vocabularyFragment(): VocabularyFragment
 

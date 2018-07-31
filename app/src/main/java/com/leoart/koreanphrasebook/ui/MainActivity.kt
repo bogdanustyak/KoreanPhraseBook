@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -26,9 +25,8 @@ import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), BottomMenu.BottomMenuListener, MainView {
+class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
 
-    //    private var bottomMenu: BottomMenu? = null
     var auth: Auth? = null
 
     @Inject
