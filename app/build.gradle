@@ -20,6 +20,10 @@ android {
 
         vectorDrawables.useSupportLibrary = true
     }
+    lintOptions {
+        abortOnError false
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -77,7 +81,7 @@ dependencies {
     implementation "com.google.firebase:firebase-database:$firebase"
     implementation "com.google.firebase:firebase-auth:16.0.2"
 
-    implementation'com.google.android.gms:play-services-analytics:16.0.1'
+    implementation 'com.google.android.gms:play-services-analytics:16.0.1'
 
     implementation 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
 
