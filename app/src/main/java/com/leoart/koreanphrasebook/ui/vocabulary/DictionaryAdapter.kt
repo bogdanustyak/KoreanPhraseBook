@@ -59,9 +59,9 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
     override fun onCreateItemViewHolder(parent: ViewGroup?, itemType: Int): DictViewHolder {
         val inflater = LayoutInflater.from(parent!!.context)
         val vh = DictViewHolder(inflater.inflate(R.layout.dict_item, parent, false))
-        vh.icFavourite.setOnClickListener {
-            favoriteClickLisener?.onFavoriteCLick(vh.adapterPosition)
-        }
+//        vh.icFavourite.setOnClickListener {
+//            favoriteClickLisener?.onFavoriteCLick(vh.adapterPosition)
+//        }
         return vh
     }
 
@@ -81,7 +81,7 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
                         val text = item["word"] + " - " + item["translation"]
                         (viewHolder as DictViewHolder)
                                 .text.text = text
-                        viewHolder.icFavourite.setImageResource(getFavoriteResource(item["favourite"]))
+//                        viewHolder.icFavourite.setImageResource(getFavoriteResource(item["favourite"]))
                     }
                 }
             }
@@ -124,7 +124,7 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
 
     class DictViewHolder internal constructor(itemView: View) : SectioningAdapter.ItemViewHolder(itemView) {
         var text = itemView.findViewById<TextView>(R.id.text)
-        var icFavourite = itemView.findViewById<ImageView>(R.id.ivFavourite)
+//        var icFavourite = itemView.findViewById<ImageView>(R.id.ivFavourite)
     }
 
     fun setFavoriteClickListener(favoriteClickLisener: VocabularyFragment.Companion.OnFavoriteClickListener) {
