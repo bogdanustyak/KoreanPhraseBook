@@ -82,7 +82,7 @@ class VocabularyFragment : BaseFragment() {
             override fun onFavoriteCLick(position: Int) {
                 val word = adapter.getDictionaryByPosition(position)
                 word?.let {
-                    model.onFavouriteClicked(it)
+//                    model.onFavouriteClicked(it)
                 }
             }
         })

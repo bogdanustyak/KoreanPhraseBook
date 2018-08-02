@@ -20,19 +20,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/ivFavourite"
-        android:layout_width="@dimen/vocabulary_favorite"
-        android:layout_height="@dimen/vocabulary_favorite"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_weight=".10"
-        android:padding="2dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/favourite"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--<ImageView-->
+        <!--android:id="@+id/ivFavourite"-->
+        <!--android:layout_width="@dimen/vocabulary_favorite"-->
+        <!--android:layout_height="@dimen/vocabulary_favorite"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:layout_weight=".10"-->
+        <!--android:padding="2dp"-->
+        <!--android:scaleType="centerInside"-->
+        <!--android:src="@drawable/favourite"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--android:visibility="gone"/>-->
 
 </android.support.constraint.ConstraintLayout>
