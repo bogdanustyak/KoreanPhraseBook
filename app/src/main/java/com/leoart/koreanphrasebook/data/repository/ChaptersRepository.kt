@@ -5,10 +5,7 @@ import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
 import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import com.leoart.koreanphrasebook.ui.models.Chapter
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Observable
+import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -54,9 +51,9 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
                 }
     }
 
-    override fun isEmpty(): Flowable<Boolean> {
+    override fun isEmpty(): Single<Boolean> {
         return AppDataBase.getInstance(context).chaptersDao().count().flatMap {
-            Flowable.just(it == 0)
+            Single.just(it == 0)
         }
     }
 

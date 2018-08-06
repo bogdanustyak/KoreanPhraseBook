@@ -3,10 +3,7 @@ package com.leoart.koreanphrasebook.data.repository
 import android.content.Context
 import com.leoart.koreanphrasebook.data.network.firebase.AlphabetRequest
 import com.leoart.koreanphrasebook.data.repository.models.ELetter
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Observable
+import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 
 class AlphabetRepository(private val context: Context) : CachedRepository<ELetter>, RefreshableRepository {
@@ -44,9 +41,9 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
                 .subscribeOn(Schedulers.io())
     }
 
-    override fun isEmpty(): Flowable<Boolean> {
+    override fun isEmpty(): Single<Boolean> {
         return AppDataBase.getInstance(context).letterDao().count().flatMap {
-            Flowable.just(it == 0)
+            Single.just(it == 0)
         }
     }
 

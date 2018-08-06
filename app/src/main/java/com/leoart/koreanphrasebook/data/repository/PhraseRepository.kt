@@ -5,10 +5,7 @@ import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Observable
+import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 
 class PhraseRepository(val context: Context) : RefreshableRepository{
@@ -64,9 +61,9 @@ class PhraseRepository(val context: Context) : RefreshableRepository{
                 .subscribeOn(Schedulers.io())
     }
 
-    override fun isEmpty(): Flowable<Boolean> {
+    override fun isEmpty(): Single<Boolean> {
         return AppDataBase.getInstance(context).phraseDao().count().flatMap {
-            Flowable.just(it == 0)
+            Single.just(it == 0)
         }
     }
 

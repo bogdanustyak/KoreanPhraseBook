@@ -50,9 +50,9 @@ class DictionaryRepository(val context: Context) : RefreshableRepository{
                 }
     }
 
-    override fun isEmpty(): Flowable<Boolean> {
+    override fun isEmpty(): Single<Boolean> {
         return AppDataBase.getInstance(context).dictionaryDao().count().flatMap {
-            Flowable.just(it == 0)
+            Single.just(it == 0)
         }
     }
 

@@ -4,6 +4,7 @@ import android.arch.persistence.room.*
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import io.reactivex.Flowable
 import io.reactivex.Maybe
+import io.reactivex.Single
 
 
 /**
@@ -37,5 +38,5 @@ interface DictionaryDao {
     fun delete(dict: EDictionary)
 
     @Query("SELECT count(*) FROM dictionary")
-    fun count() : Flowable<Int>
+    fun count() : Single<Int>
 }

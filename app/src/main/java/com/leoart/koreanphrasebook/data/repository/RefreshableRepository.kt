@@ -1,7 +1,7 @@
 package com.leoart.koreanphrasebook.data.repository
 
 import io.reactivex.Completable
-import io.reactivex.Flowable
+import io.reactivex.Single
 
 interface RefreshableRepository {
 
@@ -11,7 +11,7 @@ interface RefreshableRepository {
      *
      * @return flowable boolean flag
      */
-    fun isEmpty() : Flowable<Boolean>
+    fun isEmpty() : Single<Boolean>
 
     /**
      * get data from remote source and save it on local db

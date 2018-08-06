@@ -6,10 +6,7 @@ import com.leoart.koreanphrasebook.data.network.firebase.DialogsRequest
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.data.repository.models.EDialog
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Observable
+import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -59,9 +56,9 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
         }
     }
 
-    override fun isEmpty(): Flowable<Boolean> {
+    override fun isEmpty(): Single<Boolean> {
         return AppDataBase.getInstance(context).dialogDao().count().flatMap {
-            Flowable.just(it == 0)
+            Single.just(it == 0)
         }
     }
 

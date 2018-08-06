@@ -4,6 +4,7 @@ import android.arch.persistence.room.*
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import io.reactivex.Flowable
 import io.reactivex.Maybe
+import io.reactivex.Single
 
 /**
  * DictionaryDao
@@ -39,5 +40,5 @@ interface PhraseDao {
     fun delete(dict: EPhrase)
 
     @Query("SELECT count(*) FROM phrase")
-    fun count() : Flowable<Int>
+    fun count() : Single<Int>
 }

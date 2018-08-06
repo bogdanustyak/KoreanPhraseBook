@@ -5,6 +5,8 @@ import android.content.Intent
 import android.util.Log
 import com.leoart.koreanphrasebook.data.repository.*
 import io.reactivex.Flowable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subscribers.DisposableSubscriber
 
@@ -58,22 +60,18 @@ class DataRefreshIntentService : IntentService("DataRefreshIntentService") {
     }
 
     private fun checkDB(){
-        val checkChain = Flowable.just(false)
-        repositories.forEach { checkChain.mergeWith(it.isEmpty()) }
-        checkChain.subscribeOn(Schedulers.io())
-                .subscribeWith(object : DisposableSubscriber<Boolean>(){
-                    override fun onComplete() {
+        val checks = repositories.map { it.isEmpty() }
+        Single.merge(checks).toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if(it.find { it == true } != null){
+                        sendResultForDBCheck(true)
+                    }else{
                         sendResultForDBCheck(false)
                     }
-                    override fun onNext(t: Boolean?) {
-                        if(t == true){
-                            sendResultForDBCheck(true)
-                            dispose()
-                        }
-                    }
-                    override fun onError(t: Throwable?) {
-                        Log.e("refresh", t?.message)
-                    }
+                }, {
+                    sendRefreshError()
                 })
     }
 

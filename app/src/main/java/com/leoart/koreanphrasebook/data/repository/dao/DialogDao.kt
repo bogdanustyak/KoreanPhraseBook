@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query
 import com.leoart.koreanphrasebook.data.repository.models.EDialog
 import io.reactivex.Flowable
 import io.reactivex.Maybe
+import io.reactivex.Single
 
 
 /**
@@ -31,5 +32,5 @@ interface DialogDao {
     fun delete(dialog: EDialog)
 
     @Query("SELECT count(*) FROM dialog")
-    fun count() : Flowable<Int>
+    fun count() : Single<Int>
 }
