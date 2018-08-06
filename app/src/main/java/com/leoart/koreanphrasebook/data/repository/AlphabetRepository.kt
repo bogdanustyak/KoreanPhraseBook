@@ -9,7 +9,8 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
-class AlphabetRepository(private val context: Context) : CachedRepository<ELetter> {
+class AlphabetRepository(private val context: Context) : CachedRepository<ELetter>, RefreshableRepository {
+
 
     override fun getItems(): Flowable<List<ELetter>> {
         return getDataFromDB()
@@ -41,5 +42,22 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
     private fun localDB(): Observable<AppDataBase> {
         return Observable.just(AppDataBase.getInstance(context))
                 .subscribeOn(Schedulers.io())
+    }
+
+    override fun isEmpty(): Flowable<Boolean> {
+        return AppDataBase.getInstance(context).letterDao().count().flatMap {
+            Flowable.just(it == 0)
+        }
+    }
+
+    override fun refreshData(): Completable {
+        return Completable.create { emitter ->
+            AlphabetRequest().fetchAlphabet()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe {
+                        saveIntoDB(it)
+                        emitter.onComplete()
+                    }
+        }
     }
 }

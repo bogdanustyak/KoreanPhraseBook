@@ -42,6 +42,7 @@
         <activity android:name=".ui.notes.EditNoteActivity"/>
         <activity android:name=".ui.notes.NotesActivity"/>
         <activity android:name=".ui.alphabet.AlphabetActivity"/>
+        <service android:name=".ui.refresh_data.DataRefreshIntentService"/>
     </application>
 
 </manifest>

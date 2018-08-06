@@ -15,4 +15,7 @@ interface LetterDao {
 
     @Insert
     fun insertAll(vararg letters : ELetter)
+
+    @Query("SELECT count(*) FROM letter")
+    fun count() : Flowable<Int>
 }

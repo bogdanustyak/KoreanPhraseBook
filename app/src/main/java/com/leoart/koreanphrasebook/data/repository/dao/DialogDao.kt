@@ -29,4 +29,7 @@ interface DialogDao {
 
     @Delete
     fun delete(dialog: EDialog)
+
+    @Query("SELECT count(*) FROM dialog")
+    fun count() : Flowable<Int>
 }

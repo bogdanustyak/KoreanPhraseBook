@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
  *
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
-class DictionaryRepository(val context: Context) {
+class DictionaryRepository(val context: Context) : RefreshableRepository{
 
     fun getDictionary(): Flowable<Dictionary> {
         Log.d(DialogsRepository.TAG, "getDictionary")
@@ -48,6 +48,23 @@ class DictionaryRepository(val context: Context) {
                 .flatMap {
                     mapDict(it)
                 }
+    }
+
+    override fun isEmpty(): Flowable<Boolean> {
+        return AppDataBase.getInstance(context).dictionaryDao().count().flatMap {
+            Flowable.just(it == 0)
+        }
+    }
+
+    override fun refreshData(): Completable {
+        return Completable.create { emitter ->
+            DictionaryRequest().getDictionary()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe {
+                        saveIntoDB(it)
+                        emitter.onComplete()
+                    }
+        }
     }
 
     private fun mapDict(dict: List<EDictionary>): Flowable<Dictionary> {

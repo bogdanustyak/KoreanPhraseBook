@@ -37,4 +37,7 @@ interface PhraseDao {
 
     @Delete
     fun delete(dict: EPhrase)
+
+    @Query("SELECT count(*) FROM phrase")
+    fun count() : Flowable<Int>
 }

@@ -1,10 +1,12 @@
 package com.leoart.koreanphrasebook.ui
 
 import android.app.SearchManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -17,12 +19,17 @@ import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
 import com.leoart.koreanphrasebook.ui.favourite.FavouriteFragment
 import com.leoart.koreanphrasebook.ui.info.InfoFragment
+import com.leoart.koreanphrasebook.ui.refresh_data.DataRefreshIntentService
 import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
-import dagger.android.AndroidInjection
 import javax.inject.Inject
+import dagger.android.AndroidInjection
+import org.jetbrains.anko.contentView
+import android.content.IntentFilter
+
+
 
 
 class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
@@ -38,8 +45,17 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
 
         AndroidInjection.inject(this)
         analyticsManager.openChapterCategory("main screen")
+        checkPersistedData()
+        registerRefreshReceiver()
         initUI()
         auth = FRAuth()
+    }
+
+    private fun registerRefreshReceiver() {
+        val filter = IntentFilter(DataRefreshIntentService.ACTION_RESP)
+        filter.addCategory(Intent.CATEGORY_DEFAULT)
+        val receiver = RefreshBroadcastReceiver()
+        registerReceiver(receiver, filter)
     }
 
     private fun initUI() {
@@ -168,6 +184,40 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
 
     override fun setTitle(title: String) {
         supportActionBar?.title = title
+    }
+
+    private fun checkPersistedData() {
+        val checkIntent = Intent(this, DataRefreshIntentService::class.java)
+        checkIntent.putExtra(DataRefreshIntentService.ACTION_TYPE, DataRefreshIntentService.CHECK_IF_DB_IS_EMPTY)
+        startService(checkIntent)
+    }
+
+    inner class RefreshBroadcastReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent) {
+            when(intent.getStringExtra(DataRefreshIntentService.ACTION_TYPE)){
+                DataRefreshIntentService.CHECK_IF_DB_IS_EMPTY -> receiveIfEmpty(intent)
+                DataRefreshIntentService.REFRESH_DB -> receiveRefreshed()
+                DataRefreshIntentService.REFRESH_DB_ERROR -> showError()
+            }
+        }
+
+        private fun showError() {
+
+        }
+
+        private fun receiveRefreshed() {
+
+        }
+
+        private fun receiveIfEmpty(intent: Intent) {
+            val isEmpty = intent.getBooleanExtra(DataRefreshIntentService.IS_EMPTY, false)
+            if(isEmpty){
+                Snackbar.make(findViewById(android.R.id.content), "db is empty", Snackbar.LENGTH_LONG).show()
+            }else{
+                Snackbar.make(findViewById(android.R.id.content), "db is filled", Snackbar.LENGTH_LONG).show()
+            }
+        }
     }
 
     companion object {

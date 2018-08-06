@@ -29,4 +29,7 @@ interface ChapterDao {
 
     @Delete
     fun delete(chapter: EChapter)
+
+    @Query("SELECT count(*) FROM chapter")
+    fun count() : Flowable<Int>
 }

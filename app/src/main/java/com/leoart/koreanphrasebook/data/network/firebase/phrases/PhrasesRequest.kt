@@ -7,6 +7,7 @@ import com.leoart.koreanphrasebook.data.network.firebase.FireBaseRequest
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
 import io.reactivex.Observable
+import java.util.*
 
 /**
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
@@ -25,29 +26,35 @@ class PhrasesRequest : FireBaseRequest() {
         }
     }
 
-
-    fun getPhrases(categoryName: String): Observable<List<Phrase>> {
-        return Observable.create({ subscriber ->
-            dataBase.reference?.child("$CATEGORY_PHRASES/$categoryName")?.addListenerForSingleValueEvent(object : ValueEventListener {
+    fun getPhrases(): Observable<List<EPhrase>> {
+        return Observable.create { subscriber ->
+            dataBase.reference.child(CATEGORY_PHRASES).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
                     subscriber.onComplete()
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val phrases = ArrayList<Phrase>()
+                    val phrases = ArrayList<EPhrase>()
                     for (item in dataSnapshot.children) {
-                        item.key?.let {
-                            val phrase = item.getValue(Phrase::class.java) as Phrase
-                            phrase.key = it
-                            phrases.add(phrase)
-                        }
+                        phrases.addAll(parseCategoryPhrases(item))
                     }
                     subscriber.onNext(phrases)
                     subscriber.onComplete()
-
                 }
             })
-        })
+        }
+    }
+
+    private fun parseCategoryPhrases(dataSnapshot: DataSnapshot) : List<EPhrase>{
+        val phrases = mutableListOf<EPhrase>()
+        dataSnapshot.key?.let { category ->
+            dataSnapshot.children.forEach {
+                val phrase = it.getValue(Phrase::class.java) as Phrase
+                phrase.key = UUID.randomUUID().toString()
+                phrases.add(EPhrase(phrase.word, phrase.translation, phrase.transcription, phrase.isFavourite, category))
+            }
+        }
+        return phrases
     }
 }

@@ -11,17 +11,14 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
-class PhraseRepository(val context: Context) {
+class PhraseRepository(val context: Context) : RefreshableRepository{
 
     fun getPhrases(categoryName: String): Flowable<List<EPhrase>> {
         Log.d(DialogsRepository.TAG, "getDictionary")
         return getDataFromDB(categoryName)
-                .flatMap { phrases ->
-                    if (phrases.isNotEmpty()) {
-                        return@flatMap Flowable.just(phrases)
-                    } else {
-                        return@flatMap requestFromNetwork(categoryName)
-                                .toFlowable(BackpressureStrategy.LATEST)
+                .doOnNext {
+                    if(it.isEmpty()){
+                        requestFromNetwork()
                     }
                 }
     }
@@ -45,33 +42,35 @@ class PhraseRepository(val context: Context) {
         return AppDataBase.getInstance(context).phraseDao().getByCategory(categoryName)
     }
 
-    private fun requestFromNetwork(categoryName: String): Observable<List<EPhrase>> {
-        return PhrasesRequest().getPhrases(categoryName)
-                .flatMap {
-                    saveIntoDB(it, categoryName)
+    private fun requestFromNetwork() : Completable {
+        return Completable.create { emitter ->
+                    PhrasesRequest().getPhrases()
+                            .subscribeOn(Schedulers.io())
+                            .subscribe {
+                                saveIntoDB(it)
+                                emitter.onComplete()
+                            }
                 }
     }
 
-    private fun saveIntoDB(list: List<Phrase>, categoryName: String): Observable<List<EPhrase>> {
-        return Observable.create { emitter ->
-            val ePhrases = mapToRoomEntity(list, categoryName)
-            emitter.onNext(ePhrases)
+    private fun saveIntoDB(list: List<EPhrase>) {
             localDB().subscribe { db ->
-                db.phraseDao().insertAll(*ePhrases.toTypedArray())
+                db.phraseDao().insertAll(*list.toTypedArray())
             }
-        }
-    }
-
-    private fun mapToRoomEntity(list: List<Phrase>, categoryName: String): List<EPhrase> {
-        val ePhrases = ArrayList<EPhrase>()
-        list.forEach {
-            ePhrases.add(EPhrase(it.word, it.translation, it.transcription, it.isFavourite, categoryName))
-        }
-        return ePhrases
     }
 
     fun localDB(): Observable<AppDataBase> {
         return Observable.just(AppDataBase.getInstance(context))
                 .subscribeOn(Schedulers.io())
+    }
+
+    override fun isEmpty(): Flowable<Boolean> {
+        return AppDataBase.getInstance(context).phraseDao().count().flatMap {
+            Flowable.just(it == 0)
+        }
+    }
+
+    override fun refreshData(): Completable {
+        return requestFromNetwork()
     }
 }

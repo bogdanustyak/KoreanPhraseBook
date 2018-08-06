@@ -6,6 +6,7 @@ import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
 import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import com.leoart.koreanphrasebook.ui.models.Chapter
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -15,7 +16,8 @@ import io.reactivex.schedulers.Schedulers
  *
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
-class ChaptersRepository(private val context: Context) : CachedRepository<Chapter> {
+class ChaptersRepository(private val context: Context) : CachedRepository<Chapter>, RefreshableRepository {
+
 
     override fun getItems(): Flowable<List<Chapter>> {
         Log.d(DialogsRepository.TAG, "getDialogs")
@@ -50,6 +52,23 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
                 .subscribe{
                     saveIntoDB(it)
                 }
+    }
+
+    override fun isEmpty(): Flowable<Boolean> {
+        return AppDataBase.getInstance(context).chaptersDao().count().flatMap {
+            Flowable.just(it == 0)
+        }
+    }
+
+    override fun refreshData(): Completable {
+        return Completable.create { emitter ->
+            ChaptersRequest().getAllChapters()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe{
+                        saveIntoDB(it)
+                        emitter.onComplete()
+                    }
+        }
     }
 
     override fun saveIntoDB(chapters: List<Chapter>) {

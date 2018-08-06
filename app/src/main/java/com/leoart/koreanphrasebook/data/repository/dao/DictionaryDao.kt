@@ -35,4 +35,7 @@ interface DictionaryDao {
 
     @Delete
     fun delete(dict: EDictionary)
+
+    @Query("SELECT count(*) FROM dictionary")
+    fun count() : Flowable<Int>
 }
