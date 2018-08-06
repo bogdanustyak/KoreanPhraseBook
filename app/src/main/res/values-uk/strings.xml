@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Корейський розмовник</string>
-    <string name="categoris">Категорії</string>
-    <string name="phrases">Фрази</string>
-    <string name="dialogs">Діалоги</string>
-    <string name="chapters">Розділи</string>
-    <string name="vocabulary">Словник</string>
-</resources>

@@ -33,7 +33,7 @@
         android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintTop_toBottomOf="@+id/korean_letter"
         tools:text="a" />
 

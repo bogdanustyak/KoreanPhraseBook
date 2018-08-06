@@ -20,9 +20,6 @@ android {
 
         vectorDrawables.useSupportLibrary = true
     }
-    lintOptions {
-        abortOnError false
-    }
 
     buildTypes {
         release {

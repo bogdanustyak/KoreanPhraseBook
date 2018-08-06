@@ -9,9 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leoart.koreanphrasebook.R;
-import com.leoart.koreanphrasebook.data.repository.models.EDictionary;
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase;
-import com.leoart.koreanphrasebook.ui.models.Phrase;
 
 import java.util.List;
 
@@ -80,9 +78,9 @@ public class PhrasesAdapter extends RecyclerView.Adapter<PhrasesAdapter.PhraseVi
 
     private int getFavoriteResource(boolean isFavourite) {
         if (isFavourite) {
-            return R.drawable.ic_favorite_selected;
+            return R.drawable.favorite_material_checked;
         } else {
-            return R.drawable.ic_favorite_unselected;
+            return R.drawable.favorite_material;
         }
     }
 
