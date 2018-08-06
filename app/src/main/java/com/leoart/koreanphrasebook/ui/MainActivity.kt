@@ -27,10 +27,15 @@ import com.leoart.koreanphrasebook.utils.SoftKeyboard
 import javax.inject.Inject
 import dagger.android.AndroidInjection
 import android.content.IntentFilter
+import android.os.Handler
+import android.support.constraint.ConstraintLayout
+import android.view.View
 import android.widget.Toast
+import com.leoart.koreanphrasebook.ui.refresh_data.DataRefreshClickListener
+import com.leoart.koreanphrasebook.ui.refresh_data.DataRefreshDialog
 
 
-class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
+class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, DataRefreshClickListener {
 
     var auth: Auth? = null
 
@@ -190,6 +195,17 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         startService(checkIntent)
     }
 
+    override fun onSync() {
+        showLoading()
+        val refreshIntent = Intent(this@MainActivity, DataRefreshIntentService::class.java)
+        refreshIntent.putExtra(DataRefreshIntentService.ACTION_TYPE, DataRefreshIntentService.REFRESH_DB)
+        startService(refreshIntent)
+    }
+
+    private fun showLoading() {
+        findViewById<ConstraintLayout>(R.id.data_loader).visibility = View.VISIBLE
+    }
+
     inner class RefreshBroadcastReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
@@ -205,23 +221,16 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         }
 
         private fun receiveRefreshed() {
-            Toast.makeText(this@MainActivity, "refreshed", Toast.LENGTH_SHORT).show()
+            Handler().postDelayed({
+                findViewById<ConstraintLayout>(R.id.data_loader).visibility = View.GONE
+            }, 2000)
         }
 
         private fun receiveIfEmpty(intent: Intent) {
             val isEmpty = intent.getBooleanExtra(DataRefreshIntentService.IS_EMPTY, false)
             if(isEmpty){
-                val snackbar = Snackbar
-                        .make(findViewById(android.R.id.content), "db is empty", Snackbar.LENGTH_LONG)
-                snackbar.setAction("Refresh") {
-                    val refreshIntent = Intent(this@MainActivity, DataRefreshIntentService::class.java)
-                    refreshIntent.putExtra(DataRefreshIntentService.ACTION_TYPE, DataRefreshIntentService.REFRESH_DB)
-                    startService(refreshIntent)
-                }
-//                snackbar.setAction("Dismiss") {
-//                    snackbar.dismiss()
-//                }
-                snackbar.show()
+                val dialog = DataRefreshDialog.newInstance(this@MainActivity)
+                dialog.show(supportFragmentManager, "Data refresh")
             }
         }
     }
