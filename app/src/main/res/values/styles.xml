@@ -8,7 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:actionMenuTextColor">@android:color/white</item>
-        <item name="android:colorControlNormal">@android:color/white</item>
     </style>
 
     <style name="BottomMenuTextView" parent="@android:style/TextAppearance.Widget.TextView">
