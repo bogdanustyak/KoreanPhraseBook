@@ -27,7 +27,7 @@ class PhrasesRequest : FireBaseRequest() {
     }
 
     fun getPhrases(): Observable<List<EPhrase>> {
-        return Observable.create { subscriber ->
+        return Observable.create ({ subscriber ->
             dataBase.reference.child(CATEGORY_PHRASES).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
@@ -43,7 +43,7 @@ class PhrasesRequest : FireBaseRequest() {
                     subscriber.onComplete()
                 }
             })
-        }
+        })
     }
 
     private fun parseCategoryPhrases(dataSnapshot: DataSnapshot) : List<EPhrase>{
@@ -51,8 +51,10 @@ class PhrasesRequest : FireBaseRequest() {
         dataSnapshot.key?.let { category ->
             dataSnapshot.children.forEach {
                 val phrase = it.getValue(Phrase::class.java) as Phrase
-                phrase.key = UUID.randomUUID().toString()
-                phrases.add(EPhrase(phrase.word, phrase.translation, phrase.transcription, phrase.isFavourite, category))
+                phrases.add(EPhrase(UUID.randomUUID().toString(),
+                        phrase.word, phrase.translation,
+                        phrase.transcription, phrase.isFavourite,
+                        category))
             }
         }
         return phrases

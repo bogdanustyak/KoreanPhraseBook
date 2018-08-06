@@ -19,4 +19,7 @@ interface LetterDao {
 
     @Query("SELECT count(*) FROM letter")
     fun count() : Single<Int>
+
+    @Query("DELETE FROM letter")
+    fun deleteAll()
 }

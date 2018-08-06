@@ -41,8 +41,9 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
     override fun requestFromNetwork() {
         Log.d(TAG, "requestFromNetwork")
         DialogsRequest().getAllDialogNames()
-                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .subscribe {
+                    clearDB()
                     saveIntoDB(it)
                 }
     }
@@ -62,11 +63,16 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
         }
     }
 
+    private fun clearDB(){
+        AppDataBase.getInstance(context).dialogDao().deleteAll()
+    }
+
     override fun refreshData(): Completable {
         return Completable.create { emitter ->
             DialogsRequest().getAllDialogNames()
-                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
                     .subscribe {
+                        clearDB()
                         saveIntoDB(it)
                         emitter.onComplete()
                     }

@@ -39,4 +39,7 @@ interface DictionaryDao {
 
     @Query("SELECT count(*) FROM dictionary")
     fun count() : Single<Int>
+
+    @Query("DELETE FROM dictionary")
+    fun deleteAll()
 }

@@ -8,7 +8,6 @@ import io.reactivex.schedulers.Schedulers
 
 class AlphabetRepository(private val context: Context) : CachedRepository<ELetter>, RefreshableRepository {
 
-
     override fun getItems(): Flowable<List<ELetter>> {
         return getDataFromDB()
                 .doOnNext{
@@ -24,8 +23,9 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
 
     override fun requestFromNetwork() {
         AlphabetRequest().fetchAlphabet()
-                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .subscribe {
+                    clearDB()
                     saveIntoDB(it)
                 }
     }
@@ -34,6 +34,10 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
         localDB().subscribe {
             it.letterDao().insertAll(*items.toTypedArray())
         }
+    }
+
+    private fun clearDB(){
+        AppDataBase.getInstance(context).letterDao().deleteAll()
     }
 
     private fun localDB(): Observable<AppDataBase> {
@@ -50,8 +54,9 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
     override fun refreshData(): Completable {
         return Completable.create { emitter ->
             AlphabetRequest().fetchAlphabet()
-                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
                     .subscribe {
+                        clearDB()
                         saveIntoDB(it)
                         emitter.onComplete()
                     }

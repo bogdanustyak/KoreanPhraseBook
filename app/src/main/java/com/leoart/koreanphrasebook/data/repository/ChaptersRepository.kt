@@ -45,8 +45,9 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
 
     override fun requestFromNetwork() {
         ChaptersRequest().getAllChapters()
-                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .subscribe{
+                    clearDB()
                     saveIntoDB(it)
                 }
     }
@@ -57,19 +58,24 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
         }
     }
 
+    private fun clearDB(){
+        AppDataBase.getInstance(context).chaptersDao().deleteAll()
+    }
+
     override fun refreshData(): Completable {
         return Completable.create { emitter ->
             ChaptersRequest().getAllChapters()
-                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
                     .subscribe{
+                        clearDB()
                         saveIntoDB(it)
                         emitter.onComplete()
                     }
         }
     }
 
-    override fun saveIntoDB(chapters: List<Chapter>) {
-        val eChapters = chapters.map {
+    override fun saveIntoDB(items: List<Chapter>) {
+        val eChapters = items.map {
             EChapter(it.key, it.name, it.icon)
         }.toTypedArray()
         localDB().subscribe {

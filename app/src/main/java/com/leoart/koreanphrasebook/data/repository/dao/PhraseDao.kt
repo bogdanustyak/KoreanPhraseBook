@@ -41,4 +41,7 @@ interface PhraseDao {
 
     @Query("SELECT count(*) FROM phrase")
     fun count() : Single<Int>
+
+    @Query("DELETE FROM phrase")
+    fun deleteAll()
 }

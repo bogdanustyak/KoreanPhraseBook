@@ -4,6 +4,7 @@ import android.app.IntentService
 import android.content.Intent
 import android.util.Log
 import com.leoart.koreanphrasebook.data.repository.*
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -31,11 +32,9 @@ class DataRefreshIntentService : IntentService("DataRefreshIntentService") {
     }
 
     private fun refreshDB() {
-        val refreshChain = repositories.first().refreshData()
-        for(i in 1..repositories.size){
-            refreshChain.andThen(repositories[i].refreshData())
-        }
-        refreshChain.subscribeOn(Schedulers.io())
+        val refreshChain = repositories.map { it.refreshData() }
+        Completable.merge(refreshChain)
+                .subscribeOn(Schedulers.io())
                 .subscribe({
                     sendResultForRefresh()
                 }, {
@@ -49,6 +48,7 @@ class DataRefreshIntentService : IntentService("DataRefreshIntentService") {
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT)
         broadcastIntent.putExtra(ACTION_TYPE, REFRESH_DB_ERROR)
         sendBroadcast(broadcastIntent)
+        stopSelf()
     }
 
     private fun sendResultForRefresh() {
@@ -57,6 +57,7 @@ class DataRefreshIntentService : IntentService("DataRefreshIntentService") {
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT)
         broadcastIntent.putExtra(ACTION_TYPE, REFRESH_DB)
         sendBroadcast(broadcastIntent)
+        stopSelf()
     }
 
     private fun checkDB(){
@@ -82,6 +83,7 @@ class DataRefreshIntentService : IntentService("DataRefreshIntentService") {
         broadcastIntent.putExtra(ACTION_TYPE, CHECK_IF_DB_IS_EMPTY)
         broadcastIntent.putExtra(IS_EMPTY, isEmpty)
         sendBroadcast(broadcastIntent)
+        stopSelf()
     }
 
     companion object {

@@ -56,11 +56,16 @@ class DictionaryRepository(val context: Context) : RefreshableRepository{
         }
     }
 
+    private fun clearDB(){
+        AppDataBase.getInstance(context).dictionaryDao().deleteAll()
+    }
+
     override fun refreshData(): Completable {
         return Completable.create { emitter ->
             DictionaryRequest().getDictionary()
-                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
                     .subscribe {
+                        clearDB()
                         saveIntoDB(it)
                         emitter.onComplete()
                     }
@@ -99,8 +104,9 @@ class DictionaryRepository(val context: Context) : RefreshableRepository{
 
     fun requestFromNetwork() {
         DictionaryRequest().getDictionary()
-                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .subscribe {
+                    clearDB()
                     saveIntoDB(it)
                 }
     }

@@ -26,10 +26,8 @@ import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
 import javax.inject.Inject
 import dagger.android.AndroidInjection
-import org.jetbrains.anko.contentView
 import android.content.IntentFilter
-
-
+import android.widget.Toast
 
 
 class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
@@ -207,15 +205,23 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         }
 
         private fun receiveRefreshed() {
-
+            Toast.makeText(this@MainActivity, "refreshed", Toast.LENGTH_SHORT).show()
         }
 
         private fun receiveIfEmpty(intent: Intent) {
             val isEmpty = intent.getBooleanExtra(DataRefreshIntentService.IS_EMPTY, false)
             if(isEmpty){
-                Snackbar.make(findViewById(android.R.id.content), "db is empty", Snackbar.LENGTH_LONG).show()
-            }else{
-                Snackbar.make(findViewById(android.R.id.content), "db is filled", Snackbar.LENGTH_LONG).show()
+                val snackbar = Snackbar
+                        .make(findViewById(android.R.id.content), "db is empty", Snackbar.LENGTH_LONG)
+                snackbar.setAction("Refresh") {
+                    val refreshIntent = Intent(this@MainActivity, DataRefreshIntentService::class.java)
+                    refreshIntent.putExtra(DataRefreshIntentService.ACTION_TYPE, DataRefreshIntentService.REFRESH_DB)
+                    startService(refreshIntent)
+                }
+//                snackbar.setAction("Dismiss") {
+//                    snackbar.dismiss()
+//                }
+                snackbar.show()
             }
         }
     }

@@ -33,4 +33,7 @@ interface DialogDao {
 
     @Query("SELECT count(*) FROM dialog")
     fun count() : Single<Int>
+
+    @Query("DELETE FROM dialog")
+    fun deleteAll()
 }

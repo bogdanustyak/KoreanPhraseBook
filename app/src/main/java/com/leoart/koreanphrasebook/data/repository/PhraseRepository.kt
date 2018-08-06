@@ -39,14 +39,12 @@ class PhraseRepository(val context: Context) : RefreshableRepository{
         return AppDataBase.getInstance(context).phraseDao().getByCategory(categoryName)
     }
 
-    private fun requestFromNetwork() : Completable {
-        return Completable.create { emitter ->
-                    PhrasesRequest().getPhrases()
-                            .subscribeOn(Schedulers.io())
-                            .subscribe {
-                                saveIntoDB(it)
-                                emitter.onComplete()
-                            }
+    private fun requestFromNetwork() {
+        PhrasesRequest().getPhrases()
+                .observeOn(Schedulers.io())
+                .subscribe {
+                    clearDB()
+                    saveIntoDB(it)
                 }
     }
 
@@ -67,7 +65,19 @@ class PhraseRepository(val context: Context) : RefreshableRepository{
         }
     }
 
+    private fun clearDB(){
+        AppDataBase.getInstance(context).phraseDao().deleteAll()
+    }
+
     override fun refreshData(): Completable {
-        return requestFromNetwork()
+        return Completable.create { emitter ->
+            PhrasesRequest().getPhrases()
+                    .observeOn(Schedulers.io())
+                    .subscribe {
+                        clearDB()
+                        saveIntoDB(it)
+                        emitter.onComplete()
+                    }
+        }
     }
 }

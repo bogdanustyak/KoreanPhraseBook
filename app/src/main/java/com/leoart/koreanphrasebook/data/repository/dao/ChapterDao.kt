@@ -33,4 +33,7 @@ interface ChapterDao {
 
     @Query("SELECT count(*) FROM chapter")
     fun count() : Single<Int>
+
+    @Query("DELETE FROM chapter")
+    fun deleteAll()
 }
