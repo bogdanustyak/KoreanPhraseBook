@@ -37,7 +37,6 @@ class DataRefreshIntentService : IntentService("DataRefreshIntentService") {
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     sendResultForRefresh()
-                    Log.d("ASD", "Refresh send")
                 }, {
                     sendRefreshError()
                 })
@@ -67,12 +66,10 @@ class DataRefreshIntentService : IntentService("DataRefreshIntentService") {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    if (it.contains(true)) {
+                    if (it.find { it == true } != null) {
                         sendResultForDBCheck(true)
-                        Log.d("ASD", "is empty true")
                     } else {
                         sendResultForDBCheck(false)
-                        Log.d("ASD", "is empty flase")
                     }
                 }, {
                     sendRefreshError()
