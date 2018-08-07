@@ -8,13 +8,13 @@ import com.leoart.koreanphrasebook.ui.models.Phrase
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 
-class PhraseRepository(val context: Context) : RefreshableRepository{
+class PhraseRepository(val context: Context) : RefreshableRepository {
 
     fun getPhrases(categoryName: String): Flowable<List<EPhrase>> {
         Log.d(DialogsRepository.TAG, "getDictionary")
         return getDataFromDB(categoryName)
                 .doOnNext {
-                    if(it.isEmpty()){
+                    if (it.isEmpty()) {
                         requestFromNetwork()
                     }
                 }
@@ -49,9 +49,9 @@ class PhraseRepository(val context: Context) : RefreshableRepository{
     }
 
     private fun saveIntoDB(list: List<EPhrase>) {
-            localDB().subscribe { db ->
-                db.phraseDao().insertAll(*list.toTypedArray())
-            }
+        localDB().subscribe { db ->
+            db.phraseDao().insertAll(*list.toTypedArray())
+        }
     }
 
     fun localDB(): Observable<AppDataBase> {
@@ -60,12 +60,15 @@ class PhraseRepository(val context: Context) : RefreshableRepository{
     }
 
     override fun isEmpty(): Single<Boolean> {
-        return AppDataBase.getInstance(context).phraseDao().count().flatMap {
-            Single.just(it == 0)
-        }
+        return AppDataBase.getInstance(context)
+                .phraseDao()
+                .count()
+                .map {
+                    it == 0
+                }
     }
 
-    private fun clearDB(){
+    private fun clearDB() {
         AppDataBase.getInstance(context).phraseDao().deleteAll()
     }
 

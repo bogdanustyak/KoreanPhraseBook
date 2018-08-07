@@ -13,7 +13,7 @@ import io.reactivex.subscribers.DisposableSubscriber
 
 class DataRefreshIntentService : IntentService("DataRefreshIntentService") {
 
-    private val repositories = mutableListOf<RefreshableRepository>()
+    private val repositories = ArrayList<RefreshableRepository>()
 
     override fun onCreate() {
         super.onCreate()
@@ -25,7 +25,7 @@ class DataRefreshIntentService : IntentService("DataRefreshIntentService") {
     }
 
     override fun onHandleIntent(intent: Intent?) {
-        when(intent?.getStringExtra(ACTION_TYPE)){
+        when (intent?.getStringExtra(ACTION_TYPE)) {
             CHECK_IF_DB_IS_EMPTY -> checkDB()
             REFRESH_DB -> refreshDB()
         }
@@ -37,6 +37,7 @@ class DataRefreshIntentService : IntentService("DataRefreshIntentService") {
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     sendResultForRefresh()
+                    Log.d("ASD", "Refresh send")
                 }, {
                     sendRefreshError()
                 })
@@ -60,23 +61,25 @@ class DataRefreshIntentService : IntentService("DataRefreshIntentService") {
         stopSelf()
     }
 
-    private fun checkDB(){
+    private fun checkDB() {
         val checks = repositories.map { it.isEmpty() }
         Single.merge(checks).toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    if(it.find { it == true } != null){
+                    if (it.contains(true)) {
                         sendResultForDBCheck(true)
-                    }else{
+                        Log.d("ASD", "is empty true")
+                    } else {
                         sendResultForDBCheck(false)
+                        Log.d("ASD", "is empty flase")
                     }
                 }, {
                     sendRefreshError()
                 })
     }
 
-    private fun sendResultForDBCheck(isEmpty : Boolean){
+    private fun sendResultForDBCheck(isEmpty: Boolean) {
         val broadcastIntent = Intent()
         broadcastIntent.action = ACTION_RESP
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT)

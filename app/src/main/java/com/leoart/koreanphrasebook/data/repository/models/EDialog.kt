@@ -13,4 +13,6 @@ data class EDialog(
         @PrimaryKey
         val uid: String,
         @ColumnInfo(name = "dialogTitle")
-        val dialogTitle: String)
+        val dialogTitle: String){
+
+}

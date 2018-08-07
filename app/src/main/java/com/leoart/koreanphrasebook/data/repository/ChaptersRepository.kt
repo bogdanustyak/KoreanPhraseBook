@@ -15,12 +15,11 @@ import io.reactivex.schedulers.Schedulers
  */
 class ChaptersRepository(private val context: Context) : CachedRepository<Chapter>, RefreshableRepository {
 
-
     override fun getItems(): Flowable<List<Chapter>> {
         Log.d(DialogsRepository.TAG, "getDialogs")
         return getDataFromDB()
                 .doOnNext {
-                    if(it.isEmpty()){
+                    if (it.isEmpty()) {
                         requestFromNetwork()
                     }
                 }
@@ -46,9 +45,10 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
     override fun requestFromNetwork() {
         ChaptersRequest().getAllChapters()
                 .observeOn(Schedulers.io())
-                .subscribe{
+                .subscribe {
                     clearDB()
                     saveIntoDB(it)
+                    Log.d("ASD", "clear in request")
                 }
     }
 
@@ -58,7 +58,7 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
         }
     }
 
-    private fun clearDB(){
+    private fun clearDB() {
         AppDataBase.getInstance(context).chaptersDao().deleteAll()
     }
 
@@ -66,10 +66,11 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
         return Completable.create { emitter ->
             ChaptersRequest().getAllChapters()
                     .observeOn(Schedulers.io())
-                    .subscribe{
+                    .subscribe {
                         clearDB()
                         saveIntoDB(it)
                         emitter.onComplete()
+                        Log.d("ASD", "clear refresh")
                     }
         }
     }

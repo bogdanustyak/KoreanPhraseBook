@@ -11,10 +11,13 @@ import android.arch.persistence.room.PrimaryKey
  */
 @Entity(tableName = "chapter")
 data class EChapter(
-        @PrimaryKey
+        @ColumnInfo(name = "key")
         val uid: String,
         @ColumnInfo(name = "name")
         val name: String,
         @ColumnInfo(name = "icon")
         val icon: String
-)
+) {
+        @PrimaryKey(autoGenerate = true)
+        var id: Long? = null
+}

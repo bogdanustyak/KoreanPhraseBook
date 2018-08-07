@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -29,15 +28,15 @@ import dagger.android.AndroidInjection
 import android.content.IntentFilter
 import android.os.Handler
 import android.support.constraint.ConstraintLayout
+import android.util.Log
 import android.view.View
-import android.widget.Toast
 import com.leoart.koreanphrasebook.ui.refresh_data.DataRefreshClickListener
-import com.leoart.koreanphrasebook.ui.refresh_data.DataRefreshDialog
 
 
 class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, DataRefreshClickListener {
 
     var auth: Auth? = null
+    private val receiver = RefreshBroadcastReceiver()
 
     @Inject
     lateinit var analyticsManager: AnalyticsManager
@@ -57,7 +56,6 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, Da
     private fun registerRefreshReceiver() {
         val filter = IntentFilter(DataRefreshIntentService.ACTION_RESP)
         filter.addCategory(Intent.CATEGORY_DEFAULT)
-        val receiver = RefreshBroadcastReceiver()
         registerReceiver(receiver, filter)
     }
 
@@ -80,9 +78,7 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, Da
             }
             true
         }
-        if (NetworkChecker(this).isNetworkAvailable) {
-            chaptersSelected()
-        } else {
+        if (!NetworkChecker(this).isNetworkAvailable) {
             showNoNetworkFragment()
         }
     }
@@ -164,6 +160,14 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, Da
         }
     }
 
+    fun openSyncData() {
+        if (NetworkChecker(this).isNetworkAvailable) {
+            this.replace(com.leoart.koreanphrasebook.ui.refresh_data.DataRefreshFragment.newInstance(this), false)
+        } else {
+            showNoNetworkFragment()
+        }
+    }
+
     override fun dialogsSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
             this.replace(DialogsFragment.newInstance(this), false)
@@ -202,6 +206,10 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, Da
         startService(refreshIntent)
     }
 
+    override fun onDismiss() {
+        chaptersSelected()
+    }
+
     private fun showLoading() {
         findViewById<ConstraintLayout>(R.id.data_loader).visibility = View.VISIBLE
     }
@@ -209,7 +217,8 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, Da
     inner class RefreshBroadcastReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
-            when(intent.getStringExtra(DataRefreshIntentService.ACTION_TYPE)){
+            Log.d("ASD", intent.getStringExtra(DataRefreshIntentService.ACTION_TYPE))
+            when (intent.getStringExtra(DataRefreshIntentService.ACTION_TYPE)) {
                 DataRefreshIntentService.CHECK_IF_DB_IS_EMPTY -> receiveIfEmpty(intent)
                 DataRefreshIntentService.REFRESH_DB -> receiveRefreshed()
                 DataRefreshIntentService.REFRESH_DB_ERROR -> showError()
@@ -217,22 +226,30 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, Da
         }
 
         private fun showError() {
-
+            chaptersSelected()
         }
 
         private fun receiveRefreshed() {
-            Handler().postDelayed({
+            Handler().run {
                 findViewById<ConstraintLayout>(R.id.data_loader).visibility = View.GONE
-            }, 2000)
+            }
+            chaptersSelected()
         }
 
         private fun receiveIfEmpty(intent: Intent) {
             val isEmpty = intent.getBooleanExtra(DataRefreshIntentService.IS_EMPTY, false)
-            if(isEmpty){
-                val dialog = DataRefreshDialog.newInstance(this@MainActivity)
-                dialog.show(supportFragmentManager, "Data refresh")
+            if (isEmpty) {
+                openSyncData()
+            } else {
+                chaptersSelected()
             }
         }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
     }
 
     companion object {
