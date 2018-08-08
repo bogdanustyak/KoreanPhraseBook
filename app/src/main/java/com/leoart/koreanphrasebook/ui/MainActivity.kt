@@ -1,5 +1,7 @@
 package com.leoart.koreanphrasebook.ui
 
+import android.app.Fragment
+import android.app.FragmentManager
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -119,6 +121,7 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
     override fun dictSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
             this.replace(VocabularyFragment.newInstance(), false)
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         } else {
             showNoNetworkFragment()
         }
@@ -127,6 +130,7 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
     override fun favouriteSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
             this.replace(FavouriteFragment.newInstance(), false)
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         } else {
             showNoNetworkFragment()
         }
@@ -140,6 +144,7 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
     override fun chaptersSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
             this.replace(ChapterFragment.newInstance(this), false)
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         } else {
             showNoNetworkFragment()
         }
@@ -148,6 +153,7 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
     override fun dialogsSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
             this.replace(DialogsFragment.newInstance(this), false)
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         } else {
             showNoNetworkFragment()
         }
@@ -155,13 +161,14 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
 
     override fun infoSelected() {
         this.replace(InfoFragment.newInstance(this), false)
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     override fun replace(fragment: BaseFragment, addToBackStack: Boolean) {
         val transaction = supportFragmentManager.beginTransaction()
                 .replace(R.id.main_content, fragment)
         if (addToBackStack) {
-            transaction.addToBackStack(fragment.javaClass.name)
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
         transaction.commit()
     }
