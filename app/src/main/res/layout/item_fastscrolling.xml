@@ -7,4 +7,5 @@
     android:clickable="true"
     android:gravity="center_vertical"
     android:paddingEnd="16dp"
-    android:paddingStart="16dp" />
+    android:paddingStart="16dp"
+    android:focusable="true" />

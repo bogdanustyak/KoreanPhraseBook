@@ -11,8 +11,7 @@
         android:id="@+id/tv_author_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Hello" />
+        android:layout_marginStart="24dp" />
 
     <RelativeLayout
         android:id="@+id/relView1"
@@ -32,9 +31,9 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:enabled="false"
+            android:focusable="true"
             android:paddingEnd="0dp"
             android:paddingStart="12dp"
-            android:text="Hello"
             android:textColor="@color/colorPrimary"
             android:textIsSelectable="true"
             android:textSize="14sp" />

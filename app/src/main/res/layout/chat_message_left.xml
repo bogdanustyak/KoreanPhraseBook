@@ -7,12 +7,12 @@
         android:id="@+id/tv_author_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Author:"/>
+        android:text="@string/author"/>
 
     <TextView
         android:id="@+id/tv_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Message:"/>
+        android:text="@string/message"/>
 
 </LinearLayout>

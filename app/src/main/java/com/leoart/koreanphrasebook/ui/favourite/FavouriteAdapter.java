@@ -101,7 +101,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.Favo
                     listener.onFavouriteClick(getAdapterPosition());
                 }
             });
-            ivFavourite.setImageResource(R.drawable.ic_favorite_selected);
+            ivFavourite.setImageResource(R.drawable.favorite_material_checked);
         }
     }
 }

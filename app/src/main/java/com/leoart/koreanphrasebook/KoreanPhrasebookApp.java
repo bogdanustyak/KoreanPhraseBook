@@ -3,6 +3,7 @@ package com.leoart.koreanphrasebook;
 import android.app.Activity;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsModule;
 import com.leoart.koreanphrasebook.data.analytics.ApplicationComponent;
@@ -34,6 +35,7 @@ public class KoreanPhrasebookApp extends MultiDexApplication implements HasActiv
     @Override
     public void onCreate() {
         super.onCreate();
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         applicationComponent = DaggerApplicationComponent
                 .builder()
                 .appModule(new AppModule(this))

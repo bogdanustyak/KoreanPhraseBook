@@ -47,10 +47,12 @@
     <string name="note_title_hint">Заголовок</string>
     <string name="note_body_hint">Текст нотатки</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="refresh_data">Для використання повного функціоналу додатку рекомендуємо синхронізувати дані</string>
     <string name="sync_data">Синхронізувати</string>
     <string name="data_dismiss_sync">Пропустити</string>
+    <string name="author">Author:</string>
+    <string name="message">Message:</string>
+    <string name="internet_exception_title">Ойй!</string>
+    <string name="internet_exception_text">Немає інтернету або доступних даних</string>
 
 </resources>
