@@ -5,6 +5,7 @@ import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
+import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 
@@ -73,14 +74,12 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
     }
 
     override fun refreshData(): Completable {
-        return Completable.create { emitter ->
-            PhrasesRequest().getPhrases()
-                    .observeOn(Schedulers.io())
-                    .subscribe {
-                        clearDB()
-                        saveIntoDB(it)
-                        emitter.onComplete()
-                    }
-        }
+        return PhrasesRequest().getPhrases()
+                .observeOn(Schedulers.io())
+                .doOnNext {
+                    clearDB()
+                    saveIntoDB(it)
+                }
+                .toCompletable()
     }
 }

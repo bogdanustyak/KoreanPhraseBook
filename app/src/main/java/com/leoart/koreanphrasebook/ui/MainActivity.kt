@@ -1,7 +1,6 @@
 package com.leoart.koreanphrasebook.ui
 
 import android.app.SearchManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -18,25 +17,17 @@ import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
 import com.leoart.koreanphrasebook.ui.favourite.FavouriteFragment
 import com.leoart.koreanphrasebook.ui.info.InfoFragment
-import com.leoart.koreanphrasebook.ui.refresh_data.DataRefreshIntentService
 import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
 import javax.inject.Inject
 import dagger.android.AndroidInjection
-import android.content.IntentFilter
-import android.os.Handler
-import android.support.constraint.ConstraintLayout
-import android.util.Log
-import android.view.View
-import com.leoart.koreanphrasebook.ui.refresh_data.DataRefreshClickListener
 
 
-class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, DataRefreshClickListener {
+class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
 
     var auth: Auth? = null
-    private val receiver = RefreshBroadcastReceiver()
 
     @Inject
     lateinit var analyticsManager: AnalyticsManager
@@ -47,16 +38,8 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, Da
 
         AndroidInjection.inject(this)
         analyticsManager.openChapterCategory("main screen")
-        checkPersistedData()
-        registerRefreshReceiver()
         initUI()
         auth = FRAuth()
-    }
-
-    private fun registerRefreshReceiver() {
-        val filter = IntentFilter(DataRefreshIntentService.ACTION_RESP)
-        filter.addCategory(Intent.CATEGORY_DEFAULT)
-        registerReceiver(receiver, filter)
     }
 
     private fun initUI() {
@@ -78,7 +61,9 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, Da
             }
             true
         }
-        if (!NetworkChecker(this).isNetworkAvailable) {
+        if (NetworkChecker(this).isNetworkAvailable) {
+            chaptersSelected()
+        } else {
             showNoNetworkFragment()
         }
     }
@@ -160,14 +145,6 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, Da
         }
     }
 
-    fun openSyncData() {
-        if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(com.leoart.koreanphrasebook.ui.refresh_data.DataRefreshFragment.newInstance(this), false)
-        } else {
-            showNoNetworkFragment()
-        }
-    }
-
     override fun dialogsSelected() {
         if (NetworkChecker(this).isNetworkAvailable) {
             this.replace(DialogsFragment.newInstance(this), false)
@@ -191,65 +168,6 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView, Da
 
     override fun setTitle(title: String) {
         supportActionBar?.title = title
-    }
-
-    private fun checkPersistedData() {
-        val checkIntent = Intent(this, DataRefreshIntentService::class.java)
-        checkIntent.putExtra(DataRefreshIntentService.ACTION_TYPE, DataRefreshIntentService.CHECK_IF_DB_IS_EMPTY)
-        startService(checkIntent)
-    }
-
-    override fun onSync() {
-        showLoading()
-        val refreshIntent = Intent(this@MainActivity, DataRefreshIntentService::class.java)
-        refreshIntent.putExtra(DataRefreshIntentService.ACTION_TYPE, DataRefreshIntentService.REFRESH_DB)
-        startService(refreshIntent)
-    }
-
-    override fun onDismiss() {
-        chaptersSelected()
-    }
-
-    private fun showLoading() {
-        findViewById<ConstraintLayout>(R.id.data_loader).visibility = View.VISIBLE
-    }
-
-    inner class RefreshBroadcastReceiver : BroadcastReceiver() {
-
-        override fun onReceive(context: Context, intent: Intent) {
-            Log.d("ASD", intent.getStringExtra(DataRefreshIntentService.ACTION_TYPE))
-            when (intent.getStringExtra(DataRefreshIntentService.ACTION_TYPE)) {
-                DataRefreshIntentService.CHECK_IF_DB_IS_EMPTY -> receiveIfEmpty(intent)
-                DataRefreshIntentService.REFRESH_DB -> receiveRefreshed()
-                DataRefreshIntentService.REFRESH_DB_ERROR -> showError()
-            }
-        }
-
-        private fun showError() {
-            chaptersSelected()
-        }
-
-        private fun receiveRefreshed() {
-            Handler().run {
-                findViewById<ConstraintLayout>(R.id.data_loader).visibility = View.GONE
-            }
-            chaptersSelected()
-        }
-
-        private fun receiveIfEmpty(intent: Intent) {
-            val isEmpty = intent.getBooleanExtra(DataRefreshIntentService.IS_EMPTY, false)
-            if (isEmpty) {
-                openSyncData()
-            } else {
-                chaptersSelected()
-            }
-        }
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(receiver)
     }
 
     companion object {

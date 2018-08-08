@@ -5,6 +5,7 @@ import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
 import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import com.leoart.koreanphrasebook.ui.models.Chapter
+import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 
@@ -63,16 +64,13 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
     }
 
     override fun refreshData(): Completable {
-        return Completable.create { emitter ->
-            ChaptersRequest().getAllChapters()
-                    .observeOn(Schedulers.io())
-                    .subscribe {
-                        clearDB()
-                        saveIntoDB(it)
-                        emitter.onComplete()
-                        Log.d("ASD", "clear refresh")
-                    }
-        }
+        return ChaptersRequest().getAllChapters()
+                .observeOn(Schedulers.io())
+                .doOnNext {
+                    clearDB()
+                    saveIntoDB(it)
+                }
+                .toCompletable()
     }
 
     override fun saveIntoDB(items: List<Chapter>) {

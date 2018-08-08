@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".ui.splash.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +42,7 @@
         <activity android:name=".ui.notes.EditNoteActivity"/>
         <activity android:name=".ui.notes.NotesActivity"/>
         <activity android:name=".ui.alphabet.AlphabetActivity"/>
-        <service android:name=".ui.refresh_data.DataRefreshIntentService"/>
+        <activity android:name=".ui.sync.SyncActivity"/>
     </application>
 
 </manifest>

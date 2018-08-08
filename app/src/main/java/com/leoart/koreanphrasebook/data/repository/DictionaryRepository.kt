@@ -2,13 +2,15 @@ package com.leoart.koreanphrasebook.data.repository
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.DictionaryRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import com.leoart.koreanphrasebook.utils.toCompletable
 
 /**
  * DictionaryRepository
@@ -64,16 +66,15 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
     }
 
     override fun refreshData(): Completable {
-        return Completable.create { emitter ->
-            DictionaryRequest().getDictionary()
-                    .observeOn(Schedulers.io())
-                    .subscribe {
-                        clearDB()
-                        saveIntoDB(it)
-                        emitter.onComplete()
-                    }
-        }
+        return DictionaryRequest().getDictionary()
+                .observeOn(Schedulers.io())
+                .doOnNext {
+                    clearDB()
+                    saveIntoDB(it)
+                }
+                .toCompletable()
     }
+
 
     private fun mapDict(dict: List<EDictionary>): Flowable<Dictionary> {
         if (dict.isEmpty()) return Flowable.just(Dictionary())
@@ -135,3 +136,4 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
                 .subscribeOn(Schedulers.io())
     }
 }
+

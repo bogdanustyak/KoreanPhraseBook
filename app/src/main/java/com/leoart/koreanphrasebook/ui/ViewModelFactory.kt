@@ -14,6 +14,9 @@ import com.leoart.koreanphrasebook.data.repository.NotesRepository
 import com.leoart.koreanphrasebook.ui.alphabet.AlphabetViewModel
 import com.leoart.koreanphrasebook.ui.notes.EditNoteViewModel
 import com.leoart.koreanphrasebook.ui.notes.NotesViewModel
+import com.leoart.koreanphrasebook.ui.splash.SplashViewModel
+import com.leoart.koreanphrasebook.ui.splash.SyncDataRepository
+import com.leoart.koreanphrasebook.ui.sync.SyncViewModel
 import com.leoart.koreanphrasebook.ui.vocabulary.DictionaryViewModel
 
 /**
@@ -41,6 +44,12 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
             }
             modelClass.isAssignableFrom(PhraseViewModel::class.java) -> {
                 PhraseViewModel(PhraseRepository(context)) as T
+            }
+            modelClass.isAssignableFrom(SplashViewModel::class.java) -> {
+                SplashViewModel(SyncDataRepository(context)) as T
+            }
+            modelClass.isAssignableFrom(SyncViewModel::class.java) -> {
+                SyncViewModel(SyncDataRepository(context)) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")
         }

@@ -3,6 +3,7 @@ package com.leoart.koreanphrasebook.data.repository
 import android.content.Context
 import com.leoart.koreanphrasebook.data.network.firebase.AlphabetRequest
 import com.leoart.koreanphrasebook.data.repository.models.ELetter
+import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 
@@ -10,8 +11,8 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
 
     override fun getItems(): Flowable<List<ELetter>> {
         return getDataFromDB()
-                .doOnNext{
-                    if(it.isEmpty()) {
+                .doOnNext {
+                    if (it.isEmpty()) {
                         requestFromNetwork()
                     }
                 }
@@ -36,7 +37,7 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
         }
     }
 
-    private fun clearDB(){
+    private fun clearDB() {
         AppDataBase.getInstance(context).letterDao().deleteAll()
     }
 
@@ -52,14 +53,13 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
     }
 
     override fun refreshData(): Completable {
-        return Completable.create { emitter ->
-            AlphabetRequest().fetchAlphabet()
-                    .observeOn(Schedulers.io())
-                    .subscribe {
-                        clearDB()
-                        saveIntoDB(it)
-                        emitter.onComplete()
-                    }
-        }
+        return AlphabetRequest().fetchAlphabet()
+                .observeOn(Schedulers.io())
+                .doOnNext {
+                    clearDB()
+                    saveIntoDB(it)
+                }
+                .toCompletable()
     }
+
 }

@@ -6,6 +6,7 @@ import com.leoart.koreanphrasebook.data.network.firebase.DialogsRequest
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.data.repository.models.EDialog
+import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
 
@@ -24,7 +25,7 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
         Log.d(TAG, "getDialogs")
         return getDataFromDB()
                 .doOnNext {
-                    if(it.isEmpty()){
+                    if (it.isEmpty()) {
                         requestFromNetwork()
                     }
                 }
@@ -63,20 +64,18 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
         }
     }
 
-    private fun clearDB(){
+    private fun clearDB() {
         AppDataBase.getInstance(context).dialogDao().deleteAll()
     }
 
     override fun refreshData(): Completable {
-        return Completable.create { emitter ->
-            DialogsRequest().getAllDialogNames()
-                    .observeOn(Schedulers.io())
-                    .subscribe {
-                        clearDB()
-                        saveIntoDB(it)
-                        emitter.onComplete()
-                    }
-        }
+        return DialogsRequest().getAllDialogNames()
+                .observeOn(Schedulers.io())
+                .doOnNext {
+                    clearDB()
+                    saveIntoDB(it)
+                }
+                .toCompletable()
     }
 
     fun getAllDialogReplics(dialogID: String): Observable<List<Replic>> {
