@@ -19,7 +19,7 @@ import com.leoart.koreanphrasebook.data.repository.models.*
     EDictionary::class,
     EPhrase::class,
     ENote::class,
-    ELetter::class], version = 6)
+    ELetter::class], version = 7)
 
 abstract class AppDataBase : RoomDatabase() {
     abstract fun dialogDao(): DialogDao

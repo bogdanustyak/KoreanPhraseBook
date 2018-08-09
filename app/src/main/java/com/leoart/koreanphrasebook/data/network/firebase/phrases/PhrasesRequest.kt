@@ -4,7 +4,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.leoart.koreanphrasebook.data.network.firebase.FireBaseRequest
-import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
 import io.reactivex.Observable
 import java.util.*
@@ -26,8 +25,8 @@ class PhrasesRequest : FireBaseRequest() {
         }
     }
 
-    fun getPhrases(): Observable<List<EPhrase>> {
-        return Observable.create ({ subscriber ->
+    fun getPhrases(): Observable<List<Phrase>> {
+        return Observable.create({ subscriber ->
             dataBase.reference.child(CATEGORY_PHRASES).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
@@ -35,28 +34,20 @@ class PhrasesRequest : FireBaseRequest() {
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val phrases = ArrayList<EPhrase>()
+                    val phrases = ArrayList<Phrase>()
                     for (item in dataSnapshot.children) {
-                        phrases.addAll(parseCategoryPhrases(item))
+                        item.key?.let { category ->
+                            item.children.forEach {
+                                val phrase = it.getValue(Phrase::class.java) as Phrase
+                                phrase.key = category
+                                phrases.add(phrase)
+                            }
+                        }
                     }
                     subscriber.onNext(phrases)
                     subscriber.onComplete()
                 }
             })
         })
-    }
-
-    private fun parseCategoryPhrases(dataSnapshot: DataSnapshot) : List<EPhrase>{
-        val phrases = mutableListOf<EPhrase>()
-        dataSnapshot.key?.let { category ->
-            dataSnapshot.children.forEach {
-                val phrase = it.getValue(Phrase::class.java) as Phrase
-                phrases.add(EPhrase(UUID.randomUUID().toString(),
-                        phrase.word, phrase.translation,
-                        phrase.transcription, phrase.isFavourite,
-                        category))
-            }
-        }
-        return phrases
     }
 }

@@ -7,7 +7,9 @@ import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
+import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 class PhraseRepository(val context: Context) : RefreshableRepository {
 
@@ -45,8 +47,16 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                 .observeOn(Schedulers.io())
                 .subscribe {
                     clearDB()
-                    saveIntoDB(it)
+                    saveIntoDB(mapToRoomEntity(it))
                 }
+    }
+
+    private fun mapToRoomEntity(list: List<Phrase>): List<EPhrase> {
+        val ePhrases = ArrayList<EPhrase>()
+        list.forEach {
+            ePhrases.add(EPhrase(it.word, it.translation, it.transcription, it.isFavourite, it.key))
+        }
+        return ePhrases
     }
 
     private fun saveIntoDB(list: List<EPhrase>) {
@@ -78,7 +88,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                 .observeOn(Schedulers.io())
                 .doOnNext {
                     clearDB()
-                    saveIntoDB(it)
+                    saveIntoDB(mapToRoomEntity(it))
                 }
                 .toCompletable()
     }

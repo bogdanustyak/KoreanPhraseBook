@@ -6,9 +6,6 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity(tableName = "phrase")
 class EPhrase(
-        @PrimaryKey
-        @ColumnInfo(name = "uid")
-        val uid : String,
         @ColumnInfo(name = "word")
         val word: String,
         @ColumnInfo(name = "translation")
@@ -19,4 +16,7 @@ class EPhrase(
         var isFavourite: Boolean = false,
         @ColumnInfo(name = "category")
         val category: String
-)
+) {
+    @PrimaryKey(autoGenerate = true)
+    var uid: Long? = null
+}
