@@ -46,8 +46,10 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
         PhrasesRequest().getPhrases()
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    clearDB()
-                    saveIntoDB(mapToRoomEntity(it))
+                    if (it.isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(mapToRoomEntity(it))
+                    }
                 }
     }
 
@@ -87,8 +89,10 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
         return PhrasesRequest().getPhrases()
                 .observeOn(Schedulers.io())
                 .doOnNext {
-                    clearDB()
-                    saveIntoDB(mapToRoomEntity(it))
+                    if (it.isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(mapToRoomEntity(it))
+                    }
                 }
                 .toCompletable()
     }

@@ -47,9 +47,10 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
         ChaptersRequest().getAllChapters()
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    clearDB()
-                    saveIntoDB(it)
-                    Log.d("ASD", "clear in request")
+                    if (it.isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(it)
+                    }
                 }
     }
 
@@ -67,8 +68,10 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
         return ChaptersRequest().getAllChapters()
                 .observeOn(Schedulers.io())
                 .doOnNext {
-                    clearDB()
-                    saveIntoDB(it)
+                    if (it.isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(it)
+                    }
                 }
                 .toCompletable()
     }

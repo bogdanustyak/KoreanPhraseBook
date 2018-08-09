@@ -1,16 +1,20 @@
 package com.leoart.koreanphrasebook.ui.sync
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.Toast
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseActivity
 import com.leoart.koreanphrasebook.ui.MainActivity
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
-import io.reactivex.schedulers.Schedulers
+import com.leoart.koreanphrasebook.utils.resource.Resource
+import com.leoart.koreanphrasebook.utils.resource.Status
 import kotlinx.android.synthetic.main.data_refresh_fragment.*
+
 
 class SyncActivity : BaseActivity() {
 
@@ -34,15 +38,24 @@ class SyncActivity : BaseActivity() {
             showLoading()
             dismissButton.isClickable = false
             syncButton.isClickable = false
-            model.refreshData().observeOn(Schedulers.io())
-                    .subscribe({
-                        hideLoading()
+            model.getSyncInfo().observe(this, Observer<Resource<Boolean>> { data ->
+                when (data?.status) {
+                    Status.LOADING -> {
+                        showLoading()
+                    }
+                    Status.SUCCESS -> {
                         openMainScreen()
-                    }, {
                         hideLoading()
+                    }
+                    Status.ERROR -> {
                         openMainScreen()
-                        it.printStackTrace()
-                    })
+                        hideLoading()
+                        Toast.makeText(this, R.string.request_error_message, Toast.LENGTH_LONG).show()
+                    }
+                    else -> {
+                    }
+                }
+            })
         }
     }
 

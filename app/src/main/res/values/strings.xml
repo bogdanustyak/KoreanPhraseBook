@@ -54,5 +54,6 @@
     <string name="message">Message:</string>
     <string name="internet_exception_title">Ойй!</string>
     <string name="internet_exception_text">Немає інтернету або доступних даних</string>
+    <string name="request_error_message">Помилка завантаження даних</string>
 
 </resources>

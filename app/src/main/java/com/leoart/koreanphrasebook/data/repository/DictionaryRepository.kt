@@ -69,8 +69,10 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
         return DictionaryRequest().getDictionary()
                 .observeOn(Schedulers.io())
                 .doOnNext {
-                    clearDB()
-                    saveIntoDB(it)
+                    if (it.data().isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(it)
+                    }
                 }
                 .toCompletable()
     }
@@ -110,8 +112,10 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
         DictionaryRequest().getDictionary()
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    clearDB()
-                    saveIntoDB(it)
+                    if (it.data().isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(it)
+                    }
                 }
     }
 

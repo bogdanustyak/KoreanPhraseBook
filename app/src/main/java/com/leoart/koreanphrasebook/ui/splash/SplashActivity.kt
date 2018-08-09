@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.splash
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
@@ -9,8 +10,6 @@ import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.MainActivity
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.leoart.koreanphrasebook.ui.sync.SyncActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 class SplashActivity : AppCompatActivity() {
 
@@ -26,15 +25,15 @@ class SplashActivity : AppCompatActivity() {
                 this,
                 ViewModelFactory(applicationContext)
         ).get(SplashViewModel::class.java)
-        model.openNextScreen()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    onSuccessDataRefresh(it)
-                }, {
-                    onError()
-                    it.printStackTrace()
-                })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        model.getSyncInfo().observe(this, Observer<Boolean> {
+            it?.let {
+                onSuccessDataRefresh(it)
+            }
+        })
     }
 
     override fun onPause() {

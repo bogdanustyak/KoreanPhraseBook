@@ -26,8 +26,10 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
         AlphabetRequest().fetchAlphabet()
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    clearDB()
-                    saveIntoDB(it)
+                    if (it.isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(it)
+                    }
                 }
     }
 
@@ -56,8 +58,10 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
         return AlphabetRequest().fetchAlphabet()
                 .observeOn(Schedulers.io())
                 .doOnNext {
-                    clearDB()
-                    saveIntoDB(it)
+                    if (it.isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(it)
+                    }
                 }
                 .toCompletable()
     }

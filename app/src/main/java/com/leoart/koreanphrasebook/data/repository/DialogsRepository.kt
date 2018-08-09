@@ -44,8 +44,10 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
         DialogsRequest().getAllDialogNames()
                 .observeOn(Schedulers.io())
                 .subscribe {
-                    clearDB()
-                    saveIntoDB(it)
+                    if (it.isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(it)
+                    }
                 }
     }
 
@@ -72,8 +74,10 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
         return DialogsRequest().getAllDialogNames()
                 .observeOn(Schedulers.io())
                 .doOnNext {
-                    clearDB()
-                    saveIntoDB(it)
+                    if (it.isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(it)
+                    }
                 }
                 .toCompletable()
     }

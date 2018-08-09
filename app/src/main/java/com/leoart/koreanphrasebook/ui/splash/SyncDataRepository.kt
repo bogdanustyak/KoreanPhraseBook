@@ -1,9 +1,14 @@
 package com.leoart.koreanphrasebook.ui.splash
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.data.repository.*
+import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class SyncDataRepository(context: Context) {
@@ -39,14 +44,5 @@ class SyncDataRepository(context: Context) {
         val refreshChain = repositories.map { it.refreshData() }
         return Completable.merge(refreshChain)
     }
-
-    private fun sendRefreshError() {
-        // todo
-    }
-
-    private fun sendResultForRefresh() {
-
-    }
-
 
 }
