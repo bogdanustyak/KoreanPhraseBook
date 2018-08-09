@@ -10,6 +10,7 @@ import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.MainActivity
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.leoart.koreanphrasebook.ui.sync.SyncActivity
+import com.leoart.koreanphrasebook.utils.NetworkChecker
 
 class SplashActivity : AppCompatActivity() {
 
@@ -46,7 +47,7 @@ class SplashActivity : AppCompatActivity() {
     private fun onSuccessDataRefresh(shouldOpenMain: Boolean) {
         handler = WeakHandler()
         runnable = Runnable {
-            if (shouldOpenMain) {
+            if (shouldOpenMain || !NetworkChecker(this).isNetworkAvailable) {
                 openMainScreen()
             } else {
                 openSyncScreen()
