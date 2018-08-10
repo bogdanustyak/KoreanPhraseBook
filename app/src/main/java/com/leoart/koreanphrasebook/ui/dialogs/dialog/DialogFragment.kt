@@ -14,6 +14,8 @@ import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogRe
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainActivity
+import com.leoart.koreanphrasebook.utils.NetworkChecker
+import kotlinx.android.synthetic.main.activity_categories.*
 import java.util.*
 
 @SuppressLint("ValidFragment")
@@ -53,7 +55,14 @@ class DialogFragment : BaseFragment(), DialogMessagesView {
     }
 
     override fun showReplics(replics: List<Replic>) {
-        adapter.updateReplics(replics)
+        activity?.let {
+            if (replics.isEmpty() && !NetworkChecker(it.applicationContext).isNetworkAvailable) {
+                viewStub.layoutResource = R.layout.no_internet
+                viewStub.inflate()
+            } else {
+                adapter.updateReplics(replics)
+            }
+        }
     }
 
     companion object {

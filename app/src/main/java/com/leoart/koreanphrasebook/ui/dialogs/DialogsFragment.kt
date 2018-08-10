@@ -17,7 +17,9 @@ import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
+import com.leoart.koreanphrasebook.ui.NoNetworkFragment
 import com.leoart.koreanphrasebook.ui.dialogs.dialog.DialogFragment
+import com.leoart.koreanphrasebook.utils.NetworkChecker
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -36,8 +38,14 @@ class DialogsFragment : BaseFragment(), DialogsView,
     }
 
     override fun showDialogs(chapters: List<DialogResponse>?) {
-        chapters?.let {
-            adapter?.setDialogs(it)
+        activity?.let {
+            chapters?.let { itChapters ->
+                if (itChapters.isEmpty() && !NetworkChecker(it.applicationContext).isNetworkAvailable) {
+                    mainView?.replace(NoNetworkFragment.newInstance(), false)
+                } else {
+                    adapter?.setDialogs(chapters)
+                }
+            }
         }
     }
 

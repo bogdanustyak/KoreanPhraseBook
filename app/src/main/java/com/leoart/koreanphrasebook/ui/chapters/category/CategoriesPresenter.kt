@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.chapters.category
 
+import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.CategoriesRequest
 import com.leoart.koreanphrasebook.ui.models.Chapter
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,6 +17,10 @@ class CategoriesPresenter(val view: CategoriesView?) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ categories ->
                     view?.showCategories(categories)
+                    Log.d("ASd","success")
+                }, {
+                    Log.d("ASd","er")
+                    it.printStackTrace()
                 })
     }
 

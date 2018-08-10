@@ -3,6 +3,7 @@ package com.leoart.koreanphrasebook.ui
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
+import com.leoart.koreanphrasebook.data.network.firebase.CategoriesRequest
 import com.leoart.koreanphrasebook.data.repository.AlphabetRepository
 import com.leoart.koreanphrasebook.data.repository.DictionaryRepository
 
@@ -12,6 +13,8 @@ import com.leoart.koreanphrasebook.ui.chapters.phrase.PhraseViewModel
 import com.leoart.koreanphrasebook.ui.favourite.FavouriteViewModel
 import com.leoart.koreanphrasebook.data.repository.NotesRepository
 import com.leoart.koreanphrasebook.ui.alphabet.AlphabetViewModel
+import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesRepository
+import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesViewModel
 import com.leoart.koreanphrasebook.ui.notes.EditNoteViewModel
 import com.leoart.koreanphrasebook.ui.notes.NotesViewModel
 import com.leoart.koreanphrasebook.ui.splash.SplashViewModel
@@ -50,6 +53,9 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
             }
             modelClass.isAssignableFrom(SyncViewModel::class.java) -> {
                 SyncViewModel(SyncDataRepository(context)) as T
+            }
+            modelClass.isAssignableFrom(CategoriesViewModel::class.java) -> {
+                CategoriesViewModel(CategoriesRepository(context)) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")
         }

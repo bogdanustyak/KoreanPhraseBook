@@ -61,11 +61,7 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
             }
             true
         }
-        if (NetworkChecker(this).isNetworkAvailable) {
-            chaptersSelected()
-        } else {
-            showNoNetworkFragment()
-        }
+        chaptersSelected()
     }
 
     private fun showNoNetworkFragment() {
@@ -117,40 +113,19 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
     }
 
     override fun dictSelected() {
-        if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(VocabularyFragment.newInstance(), false)
-        } else {
-            showNoNetworkFragment()
-        }
+        this.replace(VocabularyFragment.newInstance(), false)
     }
 
     override fun favouriteSelected() {
-        if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(FavouriteFragment.newInstance(), false)
-        } else {
-            showNoNetworkFragment()
-        }
-//        if (userSignedIn) {
-//
-//        } else {
-//            this.replace(AuthFragment.newInstance(getString(R.string.auth), this))
-//        }
+        this.replace(FavouriteFragment.newInstance(), false)
     }
 
     override fun chaptersSelected() {
-        if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(ChapterFragment.newInstance(this), false)
-        } else {
-            showNoNetworkFragment()
-        }
+        this.replace(ChapterFragment.newInstance(this), false)
     }
 
     override fun dialogsSelected() {
-        if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(DialogsFragment.newInstance(this), false)
-        } else {
-            showNoNetworkFragment()
-        }
+        this.replace(DialogsFragment.newInstance(this), false)
     }
 
     override fun infoSelected() {

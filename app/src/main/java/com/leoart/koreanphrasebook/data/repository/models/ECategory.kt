@@ -4,15 +4,12 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 
-/**
- *  Dialog Entity
- * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
- */
-@Entity(tableName = "dialog")
-data class EDialog(
+@Entity(tableName = "category")
+data class ECategory(
+        @ColumnInfo(name = "ikey")
         val key: String,
-        @ColumnInfo(name = "dialogTitle")
-        val dialogTitle: String) {
+        @ColumnInfo(name = "word")
+        val category: String) {
     @PrimaryKey(autoGenerate = true)
     var uid: Long? = null
 }

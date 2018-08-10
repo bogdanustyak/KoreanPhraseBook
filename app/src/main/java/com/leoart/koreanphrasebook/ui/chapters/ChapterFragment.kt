@@ -17,9 +17,11 @@ import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
+import com.leoart.koreanphrasebook.ui.NoNetworkFragment
 import com.leoart.koreanphrasebook.ui.alphabet.AlphabetActivity
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesFragment
 import com.leoart.koreanphrasebook.ui.models.Chapter
+import com.leoart.koreanphrasebook.utils.NetworkChecker
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -73,8 +75,14 @@ class ChapterFragment : BaseFragment(), ChaptersView,
     }
 
     override fun showChapters(chapters: List<Chapter>?) {
-        chapters?.let {
-            adapter?.setChapters(it)
+        activity?.let {
+            chapters?.let { itChapters ->
+                if (itChapters.isEmpty() && !NetworkChecker(it.applicationContext).isNetworkAvailable) {
+                    mainView?.replace(NoNetworkFragment.newInstance(), false)
+                } else {
+                    adapter?.setChapters(chapters)
+                }
+            }
         }
     }
 

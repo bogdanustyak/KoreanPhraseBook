@@ -89,7 +89,7 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
     private fun mapDialogs(dialogs: List<EDialog>): Flowable<List<DialogResponse>> {
         return Flowable.fromArray(dialogs.map {
             DialogResponse(
-                    it.uid,
+                    it.key,
                     it.dialogTitle
             )
         })

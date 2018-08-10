@@ -56,7 +56,7 @@ class CategoriesRequest : FireBaseRequest() {
 
     fun getAllCategories(): Observable<List<Category>> {
         return Observable.create({ subscriber ->
-            dataBase.reference.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
+            dataBase.reference.child(CATEGORIES).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
                     subscriber.onComplete()
@@ -65,9 +65,12 @@ class CategoriesRequest : FireBaseRequest() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val categoryList = ArrayList<Category>()
                     for (item in dataSnapshot.children) {
-                        val category = item.value as Category
-                        //category.id = item.key
-                        categoryList.add(category)
+                        item.key?.let {
+                            val list = item.value as HashMap<String, HashMap<String, String>>
+                            list.forEach { s, hashMap ->
+                                categoryList.add(Category(it,hashMap))
+                            }
+                        }
                     }
                     subscriber.onNext(categoryList)
                     subscriber.onComplete()
