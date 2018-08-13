@@ -47,9 +47,6 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         analyticsManager.openChapterCategory("main screen")
         initUI()
         auth = FRAuth()
-        syncDataList?.let {
-            it.forEach { Log.d("ASD", it.name + " " + it.isSyncNeeded) }
-        }
     }
 
     private fun initUI() {

@@ -66,13 +66,7 @@ class DialogFragment : BaseFragment() {
             if (!TextUtils.isEmpty(it.uid)) {
                 model.getDialog(it.uid).observe(this, Observer<List<EReplic>> {
                     it?.let { list ->
-                        activity?.let {
-                            if (list.isEmpty() && !NetworkChecker(it.applicationContext).isNetworkAvailable) {
-                                mainView?.replace(NoNetworkFragment.newInstance(), false)
-                            } else {
-                                adapter.updateReplics(list)
-                            }
-                        }
+                        adapter.updateReplics(list)
                     }
                 })
             }
