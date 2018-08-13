@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -45,7 +46,6 @@ class SyncActivity : BaseActivity() {
                     }
                     Status.SUCCESS -> {
                         openMainScreen()
-                        hideLoading()
                     }
                     Status.ERROR -> {
                         openMainScreen()
@@ -60,15 +60,16 @@ class SyncActivity : BaseActivity() {
     }
 
     private fun showLoading() {
-        findViewById<FrameLayout>(R.id.progressLayout).visibility = View.VISIBLE
+        findViewById<ConstraintLayout>(R.id.progressLayout).visibility = View.VISIBLE
     }
 
     private fun hideLoading() {
-        findViewById<FrameLayout>(R.id.progressLayout).visibility = View.INVISIBLE
+        findViewById<ConstraintLayout>(R.id.progressLayout).visibility = View.INVISIBLE
     }
 
     private fun openMainScreen() {
         val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
         startActivity(intent)
         finish()
     }
