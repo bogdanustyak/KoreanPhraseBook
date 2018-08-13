@@ -129,22 +129,22 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         if (!isNetworkAvailable() && syncDataList != null && syncDataList!!.contains(SyncModel(EDictionary::class.java.simpleName, true))) {
             showNoNetworkFragment()
         } else {
-            this.replace(VocabularyFragment.newInstance(), false)
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            this.replace(VocabularyFragment.newInstance(), false)
         }
     }
 
     override fun favouriteSelected() {
-        this.replace(FavouriteFragment.newInstance(), false)
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        this.replace(FavouriteFragment.newInstance(), false)
     }
 
     override fun chaptersSelected() {
         if (!isNetworkAvailable() && syncDataList != null && syncDataList!!.contains(SyncModel(EChapter::class.java.simpleName, true))) {
             showNoNetworkFragment()
         } else {
-            this.replace(ChapterFragment.newInstance(this), false)
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            this.replace(ChapterFragment.newInstance(this), false)
         }
     }
 
@@ -152,14 +152,14 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         if (!isNetworkAvailable() && syncDataList != null && syncDataList!!.contains(SyncModel(EDialog::class.java.simpleName, true))) {
             showNoNetworkFragment()
         } else {
-            this.replace(DialogsFragment.newInstance(this), false)
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            this.replace(DialogsFragment.newInstance(this), false)
         }
     }
 
     override fun infoSelected() {
-        this.replace(InfoFragment.newInstance(this), false)
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        this.replace(InfoFragment.newInstance(this), false)
     }
 
     override fun replace(fragment: BaseFragment, addToBackStack: Boolean) {
