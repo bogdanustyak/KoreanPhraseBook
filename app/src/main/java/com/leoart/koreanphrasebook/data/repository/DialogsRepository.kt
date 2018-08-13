@@ -83,7 +83,7 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
     }
 
     fun getAllDialogReplics(dialogID: String): Observable<List<Replic>> {
-        return DialogsRequest().getAllDialogReplics(dialogID)
+        return DialogsRequest().getDialogReplics(dialogID)
     }
 
     private fun mapDialogs(dialogs: List<EDialog>): Flowable<List<DialogResponse>> {

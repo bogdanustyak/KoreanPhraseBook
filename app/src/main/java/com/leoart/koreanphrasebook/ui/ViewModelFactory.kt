@@ -15,6 +15,8 @@ import com.leoart.koreanphrasebook.data.repository.NotesRepository
 import com.leoart.koreanphrasebook.ui.alphabet.AlphabetViewModel
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesRepository
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesViewModel
+import com.leoart.koreanphrasebook.ui.dialogs.dialog.DialogViewModel
+import com.leoart.koreanphrasebook.ui.dialogs.dialog.DiealogRepository
 import com.leoart.koreanphrasebook.ui.notes.EditNoteViewModel
 import com.leoart.koreanphrasebook.ui.notes.NotesViewModel
 import com.leoart.koreanphrasebook.ui.splash.SplashViewModel
@@ -56,6 +58,9 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
             }
             modelClass.isAssignableFrom(CategoriesViewModel::class.java) -> {
                 CategoriesViewModel(CategoriesRepository(context)) as T
+            }
+            modelClass.isAssignableFrom(DialogViewModel::class.java) ->{
+                DialogViewModel(DiealogRepository(context)) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")
         }

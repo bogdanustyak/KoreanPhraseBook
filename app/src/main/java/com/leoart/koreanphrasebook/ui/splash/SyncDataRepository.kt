@@ -8,6 +8,7 @@ import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.data.repository.*
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesRepository
+import com.leoart.koreanphrasebook.ui.dialogs.dialog.DiealogRepository
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -24,6 +25,7 @@ class SyncDataRepository(context: Context) {
         repositories.add(DictionaryRepository(context))
         repositories.add(PhraseRepository(context))
         repositories.add(CategoriesRepository(context))
+        repositories.add(DiealogRepository(context))
     }
 
     fun isSyncNeeded(): Single<Boolean> {
@@ -36,7 +38,6 @@ class SyncDataRepository(context: Context) {
                             singleEmitter.onSuccess(false)
                         } else {
                             singleEmitter.onSuccess(true)
-                            Log.d("ASD","  das "+ it.toString())
                         }
                     }, {
                         singleEmitter.onError(it)

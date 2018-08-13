@@ -10,9 +10,11 @@ import android.arch.persistence.room.PrimaryKey
  */
 @Entity (tableName = "replic")
 data class EReplic(
-        @PrimaryKey
         val uid: String,
         val korean: String,
         val ukrainian: String,
         val number: Int
-)
+){
+        @PrimaryKey(autoGenerate = true)
+        var id: Long? = null
+}

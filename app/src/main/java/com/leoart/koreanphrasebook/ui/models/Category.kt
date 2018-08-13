@@ -4,4 +4,4 @@ import java.util.*
 /**
  * Created by bogdan on 11/5/16.
  */
-class Category(val id: String, val name : HashMap<String, String>)
+class Category(val id: String, val name : HashMap<String, String>,val inId: String)

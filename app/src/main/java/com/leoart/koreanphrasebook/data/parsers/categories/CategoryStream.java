@@ -40,7 +40,9 @@ public class CategoryStream extends DataStream implements TextFileParser<List<Ca
                 && (translation = br.readLine()) != null
                 ) {
             Phrase phrase = new Phrase(word, translation, transcription, 0, false);
-            Category category = new Category("category" + count++, phrase.toMap());
+
+            //TODO remove third empty parameter from category (not needed for writing into database
+            Category category = new Category("category" + count++, phrase.toMap(),"");
             categories.add(category);
         }
 

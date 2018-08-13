@@ -9,7 +9,9 @@ data class ECategory(
         @ColumnInfo(name = "ikey")
         val key: String,
         @ColumnInfo(name = "word")
-        val category: String) {
+        val category: String,
+        @ColumnInfo(name = "category")
+        val inId: String) {
     @PrimaryKey(autoGenerate = true)
     var uid: Long? = null
 }

@@ -71,6 +71,7 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
                 .doOnNext {
                     if (it.data().isNotEmpty()) {
                         clearDB()
+
                         saveIntoDB(it)
                     }
                 }

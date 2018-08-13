@@ -26,33 +26,36 @@ class CategoriesRequest : FireBaseRequest() {
         }
     }
 
-    fun getAllCategoriesOfChapter(chapter: Chapter): Observable<List<Category>> {
-        val chapterName = chapter.key
-        return Observable.create({ subscriber ->
-            dataBase.reference?.child("$CATEGORIES/$chapterName")?.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
-                    subscriber.onError(Throwable("data was not found"))
-                    subscriber.onComplete()
-                }
-
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                    val categoryList = ArrayList<Category>()
-                    for (item in dataSnapshot.children) {
-                        item.key?.let {
-                            val categoryPhrase = item
-                                    .value
-                                    as HashMap<String, String>
-                            val category = Category(it, categoryPhrase)
-                            categoryList.add(category)
-                        }
-                    }
-                    subscriber.onNext(categoryList)
-                    subscriber.onComplete()
-                }
-            })
-        })
-    }
+    /**
+     * deprecated but might be reused soon
+     */
+//    fun getAllCategoriesOfChapter(chapter: Chapter): Observable<List<Category>> {
+//        val chapterName = chapter.key
+//        return Observable.create({ subscriber ->
+//            dataBase.reference?.child("$CATEGORIES/$chapterName")?.addListenerForSingleValueEvent(object : ValueEventListener {
+//                override fun onCancelled(p0: DatabaseError) {
+//                    subscriber.onError(Throwable("data was not found"))
+//                    subscriber.onComplete()
+//                }
+//
+//                override fun onDataChange(dataSnapshot: DataSnapshot) {
+//
+//                    val categoryList = ArrayList<Category>()
+//                    for (item in dataSnapshot.children) {
+//                        item.key?.let {
+//                            val categoryPhrase = item
+//                                    .value
+//                                    as HashMap<String, String>
+//                            val category = Category(it, categoryPhrase)
+//                            categoryList.add(category)
+//                        }
+//                    }
+//                    subscriber.onNext(categoryList)
+//                    subscriber.onComplete()
+//                }
+//            })
+//        })
+//    }
 
     fun getAllCategories(): Observable<List<Category>> {
         return Observable.create({ subscriber ->
@@ -66,9 +69,10 @@ class CategoriesRequest : FireBaseRequest() {
                     val categoryList = ArrayList<Category>()
                     for (item in dataSnapshot.children) {
                         item.key?.let {
+                            Log.d("ASD", item.toString())
                             val list = item.value as HashMap<String, HashMap<String, String>>
                             list.forEach { s, hashMap ->
-                                categoryList.add(Category(it,hashMap))
+                                categoryList.add(Category(it, hashMap, s))
                             }
                         }
                     }

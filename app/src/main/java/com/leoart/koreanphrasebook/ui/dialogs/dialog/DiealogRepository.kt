@@ -1,25 +1,26 @@
-package com.leoart.koreanphrasebook.ui.chapters.category
+package com.leoart.koreanphrasebook.ui.dialogs.dialog
 
 import android.content.Context
 import android.util.Log
-import com.leoart.koreanphrasebook.data.network.firebase.CategoriesRequest
-import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
+import com.leoart.koreanphrasebook.data.network.firebase.DialogsRequest
+import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.data.repository.AppDataBase
 import com.leoart.koreanphrasebook.data.repository.DialogsRepository
 import com.leoart.koreanphrasebook.data.repository.RefreshableRepository
-import com.leoart.koreanphrasebook.data.repository.models.ECategory
-import com.leoart.koreanphrasebook.data.repository.models.EPhrase
-import com.leoart.koreanphrasebook.ui.models.Category
+import com.leoart.koreanphrasebook.data.repository.models.EReplic
 import com.leoart.koreanphrasebook.utils.toCompletable
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import java.util.ArrayList
+import java.util.*
 
-class CategoriesRepository(val context: Context) : RefreshableRepository {
+class DiealogRepository(val context: Context) : RefreshableRepository {
 
-    fun getCategories(chapterName: String): Flowable<List<ECategory>> {
+    fun getDialog(categoryName: String): Flowable<List<EReplic>> {
         Log.d(DialogsRepository.TAG, "getDictionary")
-        return getDataFromDB(chapterName)
+        return getDataFromDB(categoryName)
                 .doOnNext {
                     if (it.isEmpty()) {
                         requestFromNetwork()
@@ -27,12 +28,12 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
                 }
     }
 
-    private fun getDataFromDB(categoryName: String): Flowable<List<ECategory>> {
-        return AppDataBase.getInstance(context).categoryDao().findBy(categoryName)
+    private fun getDataFromDB(categoryName: String): Flowable<List<EReplic>> {
+        return AppDataBase.getInstance(context).replicsDao().getByUid(categoryName)
     }
 
     private fun requestFromNetwork() {
-        CategoriesRequest().getAllCategories()
+        DialogsRequest().getAllDialogsReplics()
                 .observeOn(Schedulers.io())
                 .subscribe {
                     if (it.isNotEmpty()) {
@@ -42,19 +43,17 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
                 }
     }
 
-    private fun mapToRoomEntity(list: List<Category>): List<ECategory> {
-        val eCategory = ArrayList<ECategory>()
+    private fun mapToRoomEntity(list: List<Replic>): List<EReplic> {
+        val eReplic = ArrayList<EReplic>()
         list.forEach {
-            it.name["word"]?.let { word ->
-                eCategory.add(ECategory(it.id, word, it.inId))
-            }
+            eReplic.add(EReplic(it.uid, it.korean, it.ukrainian, it.number))
         }
-        return eCategory
+        return eReplic
     }
 
-    private fun saveIntoDB(list: List<ECategory>) {
+    private fun saveIntoDB(list: List<EReplic>) {
         localDB().subscribe { db ->
-            db.categoryDao().insertAll(*list.toTypedArray())
+            db.replicsDao().insertAll(*list.toTypedArray())
         }
     }
 
@@ -65,7 +64,7 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
 
     override fun isEmpty(): Single<Boolean> {
         return AppDataBase.getInstance(context)
-                .categoryDao()
+                .phraseDao()
                 .count()
                 .map {
                     it == 0
@@ -73,18 +72,20 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
     }
 
     private fun clearDB() {
-        AppDataBase.getInstance(context).categoryDao().deleteAll()
+        AppDataBase.getInstance(context).phraseDao().deleteAll()
     }
 
     override fun refreshData(): Completable {
-        return CategoriesRequest().getAllCategories()
+        return DialogsRequest().getAllDialogsReplics()
                 .observeOn(Schedulers.io())
                 .doOnNext {
                     if (it.isNotEmpty()) {
                         clearDB()
+                        if(it.isEmpty())
                         saveIntoDB(mapToRoomEntity(it))
                     }
                 }
                 .toCompletable()
+
     }
 }
