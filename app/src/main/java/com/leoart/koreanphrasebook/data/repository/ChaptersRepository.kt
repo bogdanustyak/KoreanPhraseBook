@@ -4,7 +4,9 @@ import android.content.Context
 import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
 import com.leoart.koreanphrasebook.data.repository.models.EChapter
+import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Chapter
+import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
@@ -54,9 +56,9 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
                 }
     }
 
-    override fun isEmpty(): Single<Boolean> {
+    override fun isEmpty(): Single<SyncModel> {
         return AppDataBase.getInstance(context).chaptersDao().count().flatMap {
-            Single.just(it == 0)
+            Single.just(SyncModel(EChapter::class.java.simpleName,it == 0))
         }
     }
 

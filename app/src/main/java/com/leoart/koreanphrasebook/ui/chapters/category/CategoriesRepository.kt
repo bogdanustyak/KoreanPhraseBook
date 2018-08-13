@@ -3,13 +3,13 @@ package com.leoart.koreanphrasebook.ui.chapters.category
 import android.content.Context
 import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.CategoriesRequest
-import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
 import com.leoart.koreanphrasebook.data.repository.AppDataBase
 import com.leoart.koreanphrasebook.data.repository.DialogsRepository
 import com.leoart.koreanphrasebook.data.repository.RefreshableRepository
 import com.leoart.koreanphrasebook.data.repository.models.ECategory
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Category
+import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
@@ -64,12 +64,12 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
                 .subscribeOn(Schedulers.io())
     }
 
-    override fun isEmpty(): Single<Boolean> {
+    override fun isEmpty(): Single<SyncModel> {
         return AppDataBase.getInstance(context)
                 .categoryDao()
                 .count()
                 .map {
-                    it == 0
+                    SyncModel(ECategory::class.java.simpleName,it == 0)
                 }
     }
 

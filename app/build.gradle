@@ -118,8 +118,11 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+
     //Crash analytics
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+    implementation 'com.google.code.gson:gson:2.8.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

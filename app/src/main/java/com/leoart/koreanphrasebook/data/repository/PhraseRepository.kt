@@ -5,6 +5,7 @@ import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
+import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
@@ -78,12 +79,12 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                 .subscribeOn(Schedulers.io())
     }
 
-    override fun isEmpty(): Single<Boolean> {
+    override fun isEmpty(): Single<SyncModel> {
         return AppDataBase.getInstance(context)
                 .phraseDao()
                 .count()
                 .map {
-                    it == 0
+                    SyncModel(EPhrase::class.java.simpleName,it == 0)
                 }
     }
 

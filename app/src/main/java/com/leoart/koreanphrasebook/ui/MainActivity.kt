@@ -1,6 +1,5 @@
 package com.leoart.koreanphrasebook.ui
 
-import android.app.Fragment
 import android.app.FragmentManager
 import android.app.SearchManager
 import android.content.Context
@@ -9,30 +8,36 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
+import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
+import com.leoart.koreanphrasebook.data.repository.models.EChapter
+import com.leoart.koreanphrasebook.data.repository.models.EDialog
+import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
 import com.leoart.koreanphrasebook.ui.favourite.FavouriteFragment
 import com.leoart.koreanphrasebook.ui.info.InfoFragment
 import com.leoart.koreanphrasebook.ui.search.SearchActivity
+import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
-import javax.inject.Inject
 import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 
 class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
 
     var auth: Auth? = null
-
     @Inject
     lateinit var analyticsManager: AnalyticsManager
+    val syncDataList = DataInfoRepository.getInstance().getData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +47,9 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         analyticsManager.openChapterCategory("main screen")
         initUI()
         auth = FRAuth()
+        syncDataList?.let {
+            it.forEach { Log.d("ASD", it.name + " " + it.isSyncNeeded) }
+        }
     }
 
     private fun initUI() {
@@ -67,7 +75,8 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
     }
 
     private fun showNoNetworkFragment() {
-        this.replace(NoNetworkFragment.newInstance())
+        this.replace(NoNetworkFragment.newInstance(), false)
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -114,9 +123,18 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         startActivity(intent)
     }
 
+
+    override fun isNetworkAvailable(): Boolean {
+        return NetworkChecker(this).isNetworkAvailable
+    }
+
     override fun dictSelected() {
-        this.replace(VocabularyFragment.newInstance(), false)
-        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        if (!isNetworkAvailable() && syncDataList != null && syncDataList!!.contains(SyncModel(EDictionary::class.java.simpleName, true))) {
+            showNoNetworkFragment()
+        } else {
+            this.replace(VocabularyFragment.newInstance(), false)
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
     }
 
     override fun favouriteSelected() {
@@ -125,13 +143,21 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
     }
 
     override fun chaptersSelected() {
-        this.replace(ChapterFragment.newInstance(this), false)
-        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        if (!isNetworkAvailable() && syncDataList != null && syncDataList!!.contains(SyncModel(EChapter::class.java.simpleName, true))) {
+            showNoNetworkFragment()
+        } else {
+            this.replace(ChapterFragment.newInstance(this), false)
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
     }
 
     override fun dialogsSelected() {
-        this.replace(DialogsFragment.newInstance(this), false)
-        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        if (!isNetworkAvailable() && syncDataList != null && syncDataList!!.contains(SyncModel(EDialog::class.java.simpleName, true))) {
+            showNoNetworkFragment()
+        } else {
+            this.replace(DialogsFragment.newInstance(this), false)
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
     }
 
     override fun infoSelected() {

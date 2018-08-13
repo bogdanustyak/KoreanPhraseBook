@@ -5,6 +5,8 @@ import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.DictionaryRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
+import com.leoart.koreanphrasebook.data.repository.models.EPhrase
+import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -52,12 +54,12 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
                 }
     }
 
-    override fun isEmpty(): Single<Boolean> {
+    override fun isEmpty(): Single<SyncModel> {
         return AppDataBase.getInstance(context)
                 .dictionaryDao()
                 .count()
                 .map {
-                    it == 0
+                    SyncModel(EDictionary::class.java.simpleName,it == 0)
                 }
     }
 
@@ -71,7 +73,6 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
                 .doOnNext {
                     if (it.data().isNotEmpty()) {
                         clearDB()
-
                         saveIntoDB(it)
                     }
                 }

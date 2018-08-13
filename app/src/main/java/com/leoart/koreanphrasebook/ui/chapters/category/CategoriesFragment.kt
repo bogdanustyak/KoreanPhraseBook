@@ -15,10 +15,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
+import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
 import com.leoart.koreanphrasebook.data.repository.models.ECategory
+import com.leoart.koreanphrasebook.data.repository.models.EPhrase
+import com.leoart.koreanphrasebook.data.repository.models.EReplic
 import com.leoart.koreanphrasebook.ui.*
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhraseListFragment
 import com.leoart.koreanphrasebook.ui.models.Chapter
+import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_categories.*
@@ -32,7 +36,7 @@ class CategoriesFragment : BaseFragment(), CategoriesAdapter.CategoryInteraction
 
     private var chapter: Chapter? = null
     private var adapter: CategoriesAdapter? = null
-    private var mainView: MainView? = null
+    private lateinit var mainView: MainView
     @Inject
     lateinit var analyticsManager: AnalyticsManager
     private lateinit var model: CategoriesViewModel
@@ -64,7 +68,7 @@ class CategoriesFragment : BaseFragment(), CategoriesAdapter.CategoryInteraction
         this.chapter?.let {
             model.getCategories(it.key).observe(this, Observer<List<ECategory>> {
                 it?.let {
-                    checkConnection(it)
+                    adapter?.setCategories(it)
                 }
             })
         }
@@ -76,22 +80,15 @@ class CategoriesFragment : BaseFragment(), CategoriesAdapter.CategoryInteraction
         setTitle()
     }
 
-    private fun checkConnection(list: List<ECategory>) {
-        activity?.let {
-            if (list.isEmpty() && !NetworkChecker(it.applicationContext).isNetworkAvailable) {
-                mainView?.replace(NoNetworkFragment.newInstance(), false)
-                Log.d("ASD", "no con fragment")
-            } else {
-                adapter?.setCategories(list)
-                Log.d("ASD", "show cat fragment")
-            }
-        }
-    }
-
     override fun onCategoryClick(category: ECategory) {
-        mainView?.replace(PhraseListFragment.newInstance(category.category ?: "", category.inId))
-        category.category.let {
-            analyticsManager.openChapterCategory(it)
+        val syncInfo = DataInfoRepository.getInstance().getData()
+        if (!mainView.isNetworkAvailable() && syncInfo != null && syncInfo.contains(SyncModel(EPhrase::class.java.simpleName, true))) {
+            mainView.replace(NoNetworkFragment.newInstance())
+        } else {
+            mainView.replace(PhraseListFragment.newInstance(category.category ?: "", category.inId))
+            category.category.let {
+                analyticsManager.openChapterCategory(it)
+            }
         }
     }
 
@@ -107,7 +104,7 @@ class CategoriesFragment : BaseFragment(), CategoriesAdapter.CategoryInteraction
 
     companion object {
 
-        fun newInstance(title: String, chapter: Chapter, mainView: MainView?): CategoriesFragment {
+        fun newInstance(title: String, chapter: Chapter, mainView: MainView): CategoriesFragment {
             val fragment = CategoriesFragment()
             val args = Bundle()
             args.putString(MainActivity.TITLE, title)

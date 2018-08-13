@@ -7,7 +7,9 @@ import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.data.repository.AppDataBase
 import com.leoart.koreanphrasebook.data.repository.DialogsRepository
 import com.leoart.koreanphrasebook.data.repository.RefreshableRepository
+import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.data.repository.models.EReplic
+import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -62,12 +64,12 @@ class DiealogRepository(val context: Context) : RefreshableRepository {
                 .subscribeOn(Schedulers.io())
     }
 
-    override fun isEmpty(): Single<Boolean> {
+    override fun isEmpty(): Single<SyncModel> {
         return AppDataBase.getInstance(context)
                 .phraseDao()
                 .count()
                 .map {
-                    it == 0
+                    SyncModel(EReplic::class.java.simpleName,it == 0)
                 }
     }
 

@@ -67,11 +67,7 @@ class VocabularyFragment : BaseFragment() {
         initAdapter(view)
         model.geDictionary().observe(this, Observer<Dictionary> {
             it?.let {
-                if (it.data().isEmpty() && !NetworkChecker(context).isNetworkAvailable) {
-                    mainView?.replace(NoNetworkFragment.newInstance(), false)
-                } else {
                     setDataInAdapter(it, view)
-                }
             }
 
         })
