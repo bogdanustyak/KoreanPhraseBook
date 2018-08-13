@@ -10,6 +10,7 @@ import com.leoart.koreanphrasebook.data.repository.RefreshableRepository
 import com.leoart.koreanphrasebook.data.repository.models.ECategory
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Category
+import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
@@ -21,7 +22,7 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
         Log.d(DialogsRepository.TAG, "getDictionary")
         return getDataFromDB(chapterName)
                 .doOnNext {
-                    if (it.isEmpty()) {
+                    if (it.isEmpty() && NetworkChecker(context).isNetworkAvailable) {
                         requestFromNetwork()
                     }
                 }

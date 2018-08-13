@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -15,10 +16,7 @@ import android.view.ViewGroup
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.repository.models.ECategory
-import com.leoart.koreanphrasebook.ui.BaseFragment
-import com.leoart.koreanphrasebook.ui.MainActivity
-import com.leoart.koreanphrasebook.ui.MainView
-import com.leoart.koreanphrasebook.ui.ViewModelFactory
+import com.leoart.koreanphrasebook.ui.*
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhraseListFragment
 import com.leoart.koreanphrasebook.ui.models.Chapter
 import com.leoart.koreanphrasebook.utils.NetworkChecker
@@ -81,10 +79,11 @@ class CategoriesFragment : BaseFragment(), CategoriesAdapter.CategoryInteraction
     private fun checkConnection(list: List<ECategory>) {
         activity?.let {
             if (list.isEmpty() && !NetworkChecker(it.applicationContext).isNetworkAvailable) {
-                viewStub.layoutResource = R.layout.no_internet
-                viewStub.inflate()
+                mainView?.replace(NoNetworkFragment.newInstance(), false)
+                Log.d("ASD", "no con fragment")
             } else {
                 adapter?.setCategories(list)
+                Log.d("ASD", "show cat fragment")
             }
         }
     }

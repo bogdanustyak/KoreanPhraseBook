@@ -1,5 +1,7 @@
 package com.leoart.koreanphrasebook.ui
 
+import android.app.Fragment
+import android.app.FragmentManager
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -114,22 +116,27 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
 
     override fun dictSelected() {
         this.replace(VocabularyFragment.newInstance(), false)
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     override fun favouriteSelected() {
         this.replace(FavouriteFragment.newInstance(), false)
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     override fun chaptersSelected() {
         this.replace(ChapterFragment.newInstance(this), false)
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     override fun dialogsSelected() {
         this.replace(DialogsFragment.newInstance(this), false)
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     override fun infoSelected() {
         this.replace(InfoFragment.newInstance(this), false)
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     override fun replace(fragment: BaseFragment, addToBackStack: Boolean) {

@@ -5,6 +5,7 @@ import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
+import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
 import io.reactivex.Observable
@@ -17,7 +18,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
         Log.d(DialogsRepository.TAG, "getDictionary")
         return getDataFromDB(categoryName)
                 .doOnNext {
-                    if (it.isEmpty()) {
+                    if (it.isEmpty() && NetworkChecker(context).isNetworkAvailable) {
                         requestFromNetwork()
                     }
                 }
@@ -63,6 +64,11 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
 
     private fun saveIntoDB(list: List<EPhrase>) {
         localDB().subscribe { db ->
+            db.phraseDao()
+                    .count()
+                    .map {
+                        it == 0
+                    }
             db.phraseDao().insertAll(*list.toTypedArray())
         }
     }

@@ -3,6 +3,7 @@ package com.leoart.koreanphrasebook.ui.dialogs.dialog
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.database.Observable
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
@@ -17,9 +18,7 @@ import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogRe
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.data.repository.models.ECategory
 import com.leoart.koreanphrasebook.data.repository.models.EReplic
-import com.leoart.koreanphrasebook.ui.BaseFragment
-import com.leoart.koreanphrasebook.ui.MainActivity
-import com.leoart.koreanphrasebook.ui.ViewModelFactory
+import com.leoart.koreanphrasebook.ui.*
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesViewModel
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import kotlinx.android.synthetic.main.activity_categories.*
@@ -34,6 +33,7 @@ class DialogFragment : BaseFragment() {
     var dialog: DialogResponse? = null
     private val adapter = DialogMessagesRecyclerAdapter(ArrayList())
     private lateinit var model: DialogViewModel
+    private var mainView: MainView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -44,6 +44,11 @@ class DialogFragment : BaseFragment() {
         ).get(DialogViewModel::class.java)
         initUI(view)
         return view
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        mainView = (context as MainView)
     }
 
     override fun onResume() {
@@ -63,8 +68,7 @@ class DialogFragment : BaseFragment() {
                     it?.let { list ->
                         activity?.let {
                             if (list.isEmpty() && !NetworkChecker(it.applicationContext).isNetworkAvailable) {
-                                viewStub.layoutResource = R.layout.no_internet
-                                viewStub.inflate()
+                                mainView?.replace(NoNetworkFragment.newInstance(), false)
                             } else {
                                 adapter.updateReplics(list)
                             }
