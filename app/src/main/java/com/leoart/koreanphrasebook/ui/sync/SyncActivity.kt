@@ -6,7 +6,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.Toast
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseActivity
@@ -20,6 +22,9 @@ import kotlinx.android.synthetic.main.data_refresh_fragment.*
 class SyncActivity : BaseActivity() {
 
     private lateinit var model: SyncViewModel
+    private var progressView: ConstraintLayout? = null
+    private var dismissButton: ImageView? = null
+    private var syncButton: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,13 +37,18 @@ class SyncActivity : BaseActivity() {
     }
 
     private fun initUI() {
-        dismissButton.setOnClickListener {
+        progressView = findViewById(R.id.progressLayout)
+
+        dismissButton = findViewById(R.id.dismissButton)
+        dismissButton?.setOnClickListener {
             openMainScreen()
         }
-        syncButton.setOnClickListener {
+
+        syncButton = findViewById(R.id.syncButton)
+        syncButton?.setOnClickListener {
             showLoading()
-            dismissButton.isClickable = false
-            syncButton.isClickable = false
+            dismissButton?.isClickable = false
+            syncButton?.isClickable = false
             model.getSyncInfo().observe(this, Observer<Resource<Boolean>> { data ->
                 when (data?.status) {
                     Status.LOADING -> {
@@ -60,11 +70,11 @@ class SyncActivity : BaseActivity() {
     }
 
     private fun showLoading() {
-        findViewById<ConstraintLayout>(R.id.progressLayout).visibility = View.VISIBLE
+        progressView?.visibility = View.VISIBLE
     }
 
     private fun hideLoading() {
-        findViewById<ConstraintLayout>(R.id.progressLayout).visibility = View.INVISIBLE
+        progressView?.visibility = View.INVISIBLE
     }
 
     private fun openMainScreen() {
