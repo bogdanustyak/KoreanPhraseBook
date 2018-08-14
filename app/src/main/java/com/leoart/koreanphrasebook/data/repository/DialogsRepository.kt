@@ -5,6 +5,7 @@ import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.DialogsRequest
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
+import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import com.leoart.koreanphrasebook.data.repository.models.EDialog
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
@@ -57,14 +58,22 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
         val eDialogs = items.map {
             EDialog(it.uid, it.name)
         }.toTypedArray()
-        localDB().subscribe {
-            it.dialogDao().insertAll(*eDialogs)
-        }
+        isEmpty().observeOn(Schedulers.io())
+                .subscribe({
+                    if (it.isSyncNeeded) {
+                        localDB().subscribe { db ->
+                            db.dialogDao().insertAll(*eDialogs)
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EDialog::class.java.simpleName, false))
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     override fun isEmpty(): Single<SyncModel> {
         return AppDataBase.getInstance(context).dialogDao().count().flatMap {
-            Single.just(SyncModel(EDialog::class.java.simpleName,it == 0))
+            Single.just(SyncModel(EDialog::class.java.simpleName, it == 0))
         }
     }
 

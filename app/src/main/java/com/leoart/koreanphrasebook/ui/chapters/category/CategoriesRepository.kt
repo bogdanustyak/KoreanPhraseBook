@@ -4,17 +4,20 @@ import android.content.Context
 import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.CategoriesRequest
 import com.leoart.koreanphrasebook.data.repository.AppDataBase
+import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
 import com.leoart.koreanphrasebook.data.repository.DialogsRepository
 import com.leoart.koreanphrasebook.data.repository.RefreshableRepository
 import com.leoart.koreanphrasebook.data.repository.models.ECategory
-import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Category
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.toCompletable
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import java.util.ArrayList
+import java.util.*
 
 class CategoriesRepository(val context: Context) : RefreshableRepository {
 
@@ -54,9 +57,17 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
     }
 
     private fun saveIntoDB(list: List<ECategory>) {
-        localDB().subscribe { db ->
-            db.categoryDao().insertAll(*list.toTypedArray())
-        }
+        isEmpty().observeOn(Schedulers.io())
+                .subscribe({
+                    if (it.isSyncNeeded) {
+                        localDB().subscribe { db ->
+                            db.categoryDao().insertAll(*list.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ECategory::class.java.simpleName, false))
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     fun localDB(): Observable<AppDataBase> {
@@ -69,7 +80,7 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
                 .categoryDao()
                 .count()
                 .map {
-                    SyncModel(ECategory::class.java.simpleName,it == 0)
+                    SyncModel(ECategory::class.java.simpleName, it == 0)
                 }
     }
 

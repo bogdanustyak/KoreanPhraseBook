@@ -59,7 +59,7 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
                 .dictionaryDao()
                 .count()
                 .map {
-                    SyncModel(EDictionary::class.java.simpleName,it == 0)
+                    SyncModel(EDictionary::class.java.simpleName, it == 0)
                 }
     }
 
@@ -131,10 +131,17 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
                         ?: "", it["favourite"] ?: "false"))
             }
         }
-
-        localDB().subscribe { db ->
-            db.dictionaryDao().insertAll(*dictionary.toTypedArray())
-        }
+        isEmpty().observeOn(Schedulers.io())
+                .subscribe({
+                    if (it.isSyncNeeded) {
+                        localDB().subscribe { db ->
+                            db.dictionaryDao().insertAll(*dictionary.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EDictionary::class.java.simpleName, false))
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     fun localDB(): Observable<AppDataBase> {

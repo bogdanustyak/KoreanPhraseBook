@@ -65,12 +65,15 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
 
     private fun saveIntoDB(list: List<EPhrase>) {
         localDB().subscribe { db ->
-            db.phraseDao()
-                    .count()
-                    .map {
-                        it == 0
-                    }
-            db.phraseDao().insertAll(*list.toTypedArray())
+            isEmpty().observeOn(Schedulers.io())
+                    .subscribe({
+                        if (it.isSyncNeeded) {
+                            db.phraseDao().insertAll(*list.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EPhrase::class.java.simpleName, false))
+                        }
+                    }, {
+                        it.printStackTrace()
+                    })
         }
     }
 
@@ -84,7 +87,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                 .phraseDao()
                 .count()
                 .map {
-                    SyncModel(EPhrase::class.java.simpleName,it == 0)
+                    SyncModel(EPhrase::class.java.simpleName, it == 0)
                 }
     }
 

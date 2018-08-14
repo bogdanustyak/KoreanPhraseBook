@@ -2,12 +2,18 @@ package com.leoart.koreanphrasebook.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.SyncInfo
 import android.text.TextUtils
+import android.widget.ArrayAdapter
 import com.google.gson.Gson
 
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 
 class DataInfoRepository : SharedPrefStorage {
+
+    private var data: List<SyncModel>? = null
+
+    private lateinit var preferences: SharedPreferences
 
     override fun getData(): List<SyncModel>? {
         data?.let {
@@ -26,9 +32,15 @@ class DataInfoRepository : SharedPrefStorage {
         preferences.edit().putString(DATA, Gson().toJson(data)).apply()
     }
 
-    private var data: List<SyncModel>? = null
+    override fun updateSyncInfo(item: SyncModel) {
+        val list = getData()
+        val index = (list as ArrayList).indexOfFirst { it.name == item.name }
+        if (index != -1) {
+            (list as ArrayList)[index] = item
+            updateData(list)
+        }
+    }
 
-    private lateinit var preferences: SharedPreferences
 
     override fun initialize(context: Context) {
         preferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)

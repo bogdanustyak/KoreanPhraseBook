@@ -1,7 +1,6 @@
 package com.leoart.koreanphrasebook.ui.splash
 
 import android.content.Context
-import android.util.Log
 import com.leoart.koreanphrasebook.data.repository.*
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesRepository
 import com.leoart.koreanphrasebook.ui.dialogs.dialog.DiealogRepository
@@ -25,7 +24,6 @@ class SyncDataRepository(context: Context) {
 
     fun isSyncNeeded(): Single<Boolean> {
         val checks = repositories.map { it.isEmpty() }
-
         return Single.create<Boolean> { singleEmitter ->
             Single.merge(checks).toList()
                     .observeOn(Schedulers.io())

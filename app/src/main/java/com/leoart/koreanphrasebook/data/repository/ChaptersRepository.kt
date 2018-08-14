@@ -3,6 +3,7 @@ package com.leoart.koreanphrasebook.data.repository
 import android.content.Context
 import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
+import com.leoart.koreanphrasebook.data.repository.models.ECategory
 import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Chapter
@@ -82,9 +83,18 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
         val eChapters = items.map {
             EChapter(it.key, it.name, it.icon)
         }.toTypedArray()
-        localDB().subscribe {
-            it.chaptersDao().insertAll(*eChapters)
-        }
+
+        isEmpty().observeOn(Schedulers.io())
+                .subscribe({
+                    if (it.isSyncNeeded) {
+                        localDB().subscribe {
+                            it.chaptersDao().insertAll(*eChapters)
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EChapter::class.java.simpleName, false))
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     fun localDB(): Observable<AppDataBase> {

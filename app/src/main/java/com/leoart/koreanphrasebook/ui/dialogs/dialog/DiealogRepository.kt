@@ -5,8 +5,10 @@ import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.DialogsRequest
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.data.repository.AppDataBase
+import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
 import com.leoart.koreanphrasebook.data.repository.DialogsRepository
 import com.leoart.koreanphrasebook.data.repository.RefreshableRepository
+import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.data.repository.models.EReplic
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
@@ -54,9 +56,17 @@ class DiealogRepository(val context: Context) : RefreshableRepository {
     }
 
     private fun saveIntoDB(list: List<EReplic>) {
-        localDB().subscribe { db ->
-            db.replicsDao().insertAll(*list.toTypedArray())
-        }
+        isEmpty().observeOn(Schedulers.io())
+                .subscribe({
+                    if (it.isSyncNeeded) {
+                        localDB().subscribe { db ->
+                            db.replicsDao().insertAll(*list.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EReplic::class.java.simpleName, false))
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     fun localDB(): Observable<AppDataBase> {

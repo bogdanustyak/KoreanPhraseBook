@@ -3,6 +3,8 @@ package com.leoart.koreanphrasebook.data.repository
 import android.content.Context
 import com.leoart.koreanphrasebook.data.network.firebase.AlphabetRequest
 import com.leoart.koreanphrasebook.data.repository.models.ELetter
+import com.leoart.koreanphrasebook.data.repository.models.EPhrase
+import com.leoart.koreanphrasebook.data.repository.models.EReplic
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
@@ -35,9 +37,17 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
     }
 
     override fun saveIntoDB(items: List<ELetter>) {
-        localDB().subscribe {
-            it.letterDao().insertAll(*items.toTypedArray())
-        }
+        isEmpty().observeOn(Schedulers.io())
+                .subscribe({
+                    if (it.isSyncNeeded) {
+                        localDB().subscribe { db ->
+                            db.letterDao().insertAll(*items.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ELetter::class.java.simpleName, false))
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     private fun clearDB() {
