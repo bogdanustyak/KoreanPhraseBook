@@ -93,11 +93,9 @@ class DiealogRepository(val context: Context) : RefreshableRepository {
                 .doOnNext {
                     if (it.isNotEmpty()) {
                         clearDB()
-                        if(it.isEmpty())
                         saveIntoDB(mapToRoomEntity(it))
                     }
                 }
                 .toCompletable()
-
     }
 }

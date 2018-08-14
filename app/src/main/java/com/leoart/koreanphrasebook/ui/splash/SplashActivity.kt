@@ -5,12 +5,15 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 import com.badoo.mobile.util.WeakHandler
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.MainActivity
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.leoart.koreanphrasebook.ui.sync.SyncActivity
 import com.leoart.koreanphrasebook.utils.NetworkChecker
+import com.leoart.koreanphrasebook.utils.resource.Resource
+import com.leoart.koreanphrasebook.utils.resource.Status
 
 class SplashActivity : AppCompatActivity() {
 
@@ -30,9 +33,20 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        model.getSyncInfo().observe(this, Observer<Boolean> {
+        model.getSyncInfo().observe(this, Observer<Resource<Boolean>> {
             it?.let {
-                onSuccessDataRefresh(it)
+                when (it.status) {
+                    Status.LOADING -> {
+                    }
+                    Status.SUCCESS -> {
+                        it.data?.let {
+                            onSuccessDataRefresh(it)
+                        }
+                    }
+                    Status.ERROR -> {
+                        onError()
+                    }
+                }
             }
         })
     }
@@ -59,7 +73,7 @@ class SplashActivity : AppCompatActivity() {
     private fun onError() {
         handler = WeakHandler()
         runnable = Runnable {
-            openSyncScreen()
+            openMainScreen()
         }
         handler?.postDelayed(runnable, SPLASH_DELAY)
     }
