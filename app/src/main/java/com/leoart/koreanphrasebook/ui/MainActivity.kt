@@ -72,8 +72,8 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
     }
 
     private fun showNoNetworkFragment() {
-        this.replace(NoNetworkFragment.newInstance(), false)
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        this.replace(NoNetworkFragment.newInstance(), false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
