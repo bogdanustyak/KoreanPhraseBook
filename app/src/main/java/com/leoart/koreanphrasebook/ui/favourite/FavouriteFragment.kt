@@ -16,6 +16,9 @@ import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteModel
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
+import kotlinx.android.synthetic.main.activity_phrase.*
+import android.view.ViewStub
+
 
 /**
  * Created by bogdan on 6/18/17.
@@ -50,8 +53,12 @@ class FavouriteFragment : BaseFragment() {
         ).get(FavouriteViewModel::class.java)
         model.getData().observe(this, Observer<List<FavouriteModel>> {
             it?.let {
-                Log.d("TAG", it.toString())
-                adapter?.updatePhrases(it)
+                if (it.isEmpty()) {
+                    stubView.layoutResource = R.layout.no_favourite_screen
+                    stubView.inflate()
+                } else {
+                    adapter?.updatePhrases(it)
+                }
             }
         })
 

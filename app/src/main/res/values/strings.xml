@@ -56,5 +56,6 @@
     <string name="message">Message:</string>
     <string name="internet_exception_title">Ойй!</string>
     <string name="internet_exception_text">Немає інтернету або доступних даних</string>
+    <string name="no_favourite_selected">У вас ще немає вибраних фраз.</string>
 
 </resources>
