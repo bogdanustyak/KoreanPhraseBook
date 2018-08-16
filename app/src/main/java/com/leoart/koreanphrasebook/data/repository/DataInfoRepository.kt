@@ -34,7 +34,7 @@ class DataInfoRepository : SharedPrefStorage {
 
     override fun updateSyncInfo(item: SyncModel) {
         val list = getData()
-        (list as MutableList).find { it.name == item.name }?.isSyncNeeded = item.isSyncNeeded
+        list?.toMutableList()?.find { it.name == item.name }?.isSyncNeeded = item.isSyncNeeded
 
     }
 
