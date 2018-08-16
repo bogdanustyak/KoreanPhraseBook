@@ -3,14 +3,14 @@ package com.leoart.koreanphrasebook.data.repository
 import android.content.Context
 import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
-import com.leoart.koreanphrasebook.data.repository.models.ECategory
 import com.leoart.koreanphrasebook.data.repository.models.EChapter
-import com.leoart.koreanphrasebook.data.repository.models.ELetter
-import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Chapter
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.toCompletable
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -21,7 +21,7 @@ import io.reactivex.schedulers.Schedulers
 class ChaptersRepository(private val context: Context) : CachedRepository<Chapter>, RefreshableRepository {
 
     override fun getItems(): Flowable<List<Chapter>> {
-        Log.d(DialogsRepository.TAG, "getDialogs")
+        Log.d(TAG, "getDialogs")
         return getDataFromDB()
                 .doOnNext {
                     if (it.isEmpty()) {
@@ -91,6 +91,7 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
                             db.chaptersDao().insertAll(*eChapters)
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EChapter::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
                         return@flatMap syncResult
@@ -98,9 +99,7 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    if (it == true) {
-                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EChapter::class.java.simpleName, false))
-                    }
+                    Log.d(TAG,"data saved")
                 }, {
                     it.printStackTrace()
                 })
@@ -109,5 +108,9 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
     fun localDB(): Observable<AppDataBase> {
         return Observable.just(AppDataBase.getInstance(context))
                 .subscribeOn(Schedulers.io())
+    }
+
+    companion object {
+        val TAG = "ChaptersRepository"
     }
 }

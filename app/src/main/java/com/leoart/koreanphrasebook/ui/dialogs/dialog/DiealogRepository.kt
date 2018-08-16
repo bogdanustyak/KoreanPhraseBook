@@ -6,11 +6,7 @@ import com.leoart.koreanphrasebook.data.network.firebase.DialogsRequest
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
 import com.leoart.koreanphrasebook.data.repository.AppDataBase
 import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
-import com.leoart.koreanphrasebook.data.repository.DialogsRepository
 import com.leoart.koreanphrasebook.data.repository.RefreshableRepository
-import com.leoart.koreanphrasebook.data.repository.models.ECategory
-import com.leoart.koreanphrasebook.data.repository.models.EDictionary
-import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.data.repository.models.EReplic
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.toCompletable
@@ -24,7 +20,7 @@ import java.util.*
 class DiealogRepository(val context: Context) : RefreshableRepository {
 
     fun getDialog(categoryName: String): Flowable<List<EReplic>> {
-        Log.d(DialogsRepository.TAG, "getDictionary")
+        Log.d(TAG, "getDictionary")
         return getDataFromDB(categoryName)
                 .doOnNext {
                     if (it.isEmpty()) {
@@ -63,6 +59,7 @@ class DiealogRepository(val context: Context) : RefreshableRepository {
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
                             db.replicsDao().insertAll(*list.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EReplic::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
                         return@flatMap syncResult
@@ -70,9 +67,7 @@ class DiealogRepository(val context: Context) : RefreshableRepository {
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    if (it == true) {
-                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EReplic::class.java.simpleName, false))
-                    }
+                    Log.d(TAG, "data saved")
                 }, {
                     it.printStackTrace()
                 })
@@ -106,5 +101,9 @@ class DiealogRepository(val context: Context) : RefreshableRepository {
                     }
                 }
                 .toCompletable()
+    }
+
+    companion object {
+        val TAG = "DialogRepository"
     }
 }

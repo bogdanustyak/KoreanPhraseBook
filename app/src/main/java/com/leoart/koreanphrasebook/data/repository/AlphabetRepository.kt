@@ -1,6 +1,7 @@
 package com.leoart.koreanphrasebook.data.repository
 
 import android.content.Context
+import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.AlphabetRequest
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.leoart.koreanphrasebook.data.repository.models.ELetter
@@ -44,6 +45,7 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
                             db.letterDao().insertAll(*items.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ELetter::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
                         return@flatMap syncResult
@@ -51,9 +53,7 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    if (it == true) {
-                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ELetter::class.java.simpleName, false))
-                    }
+                    Log.d(TAG,"data saved")
                 }, {
                     it.printStackTrace()
                 })
@@ -86,4 +86,7 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
                 .toCompletable()
     }
 
+    companion object {
+        val TAG = "AlphabetRepository"
+    }
 }

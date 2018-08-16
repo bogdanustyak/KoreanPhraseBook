@@ -17,7 +17,7 @@ import java.util.*
 class PhraseRepository(val context: Context) : RefreshableRepository {
 
     fun getPhrases(categoryName: String): Flowable<List<EPhrase>> {
-        Log.d(DialogsRepository.TAG, "getDictionary")
+        Log.d(TAG, "getDictionary")
         return getDataFromDB(categoryName)
                 .doOnNext {
                     if (it.isEmpty() && NetworkChecker(context).isNetworkAvailable) {
@@ -71,6 +71,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
                             db.phraseDao().insertAll(*list.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EPhrase::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
                         return@flatMap syncResult
@@ -78,9 +79,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    if (it == true) {
-                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EPhrase::class.java.simpleName, false))
-                    }
+                    Log.d(TAG,"data saved")
                 }, {
                     it.printStackTrace()
                 })
@@ -114,5 +113,9 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                     }
                 }
                 .toCompletable()
+    }
+
+    companion object {
+        const val TAG = "PhraseRepository"
     }
 }

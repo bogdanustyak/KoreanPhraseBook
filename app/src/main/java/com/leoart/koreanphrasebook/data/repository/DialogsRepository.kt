@@ -65,6 +65,7 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
                             db.dialogDao().insertAll(*eDialogs)
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EDialog::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
                         return@flatMap syncResult
@@ -72,9 +73,7 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    if (it == true) {
-                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EDialog::class.java.simpleName, false))
-                    }
+                    Log.d(PhraseRepository.TAG,"data saved")
                 }, {
                     it.printStackTrace()
                 })

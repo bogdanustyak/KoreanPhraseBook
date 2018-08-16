@@ -3,9 +3,9 @@ package com.leoart.koreanphrasebook.ui.chapters.category
 import android.content.Context
 import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.CategoriesRequest
+import com.leoart.koreanphrasebook.data.repository.AlphabetRepository
 import com.leoart.koreanphrasebook.data.repository.AppDataBase
 import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
-import com.leoart.koreanphrasebook.data.repository.DialogsRepository
 import com.leoart.koreanphrasebook.data.repository.RefreshableRepository
 import com.leoart.koreanphrasebook.data.repository.models.ECategory
 import com.leoart.koreanphrasebook.ui.models.Category
@@ -22,7 +22,7 @@ import java.util.*
 class CategoriesRepository(val context: Context) : RefreshableRepository {
 
     fun getCategories(chapterName: String): Flowable<List<ECategory>> {
-        Log.d(DialogsRepository.TAG, "getDictionary")
+        Log.d(TAG, "getDictionary")
         return getDataFromDB(chapterName)
                 .doOnNext {
                     if (it.isEmpty() && NetworkChecker(context).isNetworkAvailable) {
@@ -63,6 +63,7 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
                             db.categoryDao().insertAll(*list.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ECategory::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
                         return@flatMap syncResult
@@ -70,9 +71,7 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    if (it == true) {
-                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ECategory::class.java.simpleName, false))
-                    }
+                    Log.d(AlphabetRepository.TAG,"data saved")
                 }, {
                     it.printStackTrace()
                 })
@@ -106,5 +105,9 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
                     }
                 }
                 .toCompletable()
+    }
+
+    companion object {
+        val TAG = "CategoriesRepository"
     }
 }

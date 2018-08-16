@@ -139,6 +139,7 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
                             db.dictionaryDao().insertAll(*dictionary.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EDictionary::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
                         return@flatMap syncResult
@@ -146,9 +147,7 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    if (it == true) {
-                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EDictionary::class.java.simpleName, false))
-                    }
+                    Log.d(TAG,"data saved")
                 }, {
                     it.printStackTrace()
                 })
@@ -157,6 +156,10 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
     fun localDB(): Observable<AppDataBase> {
         return Observable.just(AppDataBase.getInstance(context))
                 .subscribeOn(Schedulers.io())
+    }
+
+    companion object {
+        const val TAG = "DictionaryRepository"
     }
 }
 
