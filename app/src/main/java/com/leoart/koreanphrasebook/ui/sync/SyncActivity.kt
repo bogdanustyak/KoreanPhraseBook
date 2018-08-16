@@ -6,10 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.view.View
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.ui.BaseActivity
 import com.leoart.koreanphrasebook.ui.MainActivity
@@ -23,7 +20,7 @@ class SyncActivity : BaseActivity() {
 
     private lateinit var model: SyncViewModel
     private var progressView: ConstraintLayout? = null
-    private var dismissButton: ImageView? = null
+    private var dismissButton: TextView? = null
     private var syncButton: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
