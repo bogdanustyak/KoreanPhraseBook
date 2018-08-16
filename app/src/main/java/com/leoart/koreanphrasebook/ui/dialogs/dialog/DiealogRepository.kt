@@ -8,6 +8,7 @@ import com.leoart.koreanphrasebook.data.repository.AppDataBase
 import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
 import com.leoart.koreanphrasebook.data.repository.DialogsRepository
 import com.leoart.koreanphrasebook.data.repository.RefreshableRepository
+import com.leoart.koreanphrasebook.data.repository.models.ECategory
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.data.repository.models.EReplic
@@ -57,12 +58,20 @@ class DiealogRepository(val context: Context) : RefreshableRepository {
 
     private fun saveIntoDB(list: List<EReplic>) {
         isEmpty().observeOn(Schedulers.io())
-                .subscribe({
+                .flatMap {
+                    val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
-                        localDB().subscribe { db ->
+                        syncResult = localDB().flatMap { db ->
                             db.replicsDao().insertAll(*list.toTypedArray())
-                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EReplic::class.java.simpleName, false))
-                        }
+                            Observable.just(true)
+                        }.single(false)
+                        return@flatMap syncResult
+                    } else {
+                        return@flatMap Single.just(false)
+                    }
+                }.subscribe({
+                    if (it == true) {
+                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EReplic::class.java.simpleName, false))
                     }
                 }, {
                     it.printStackTrace()
@@ -79,7 +88,7 @@ class DiealogRepository(val context: Context) : RefreshableRepository {
                 .phraseDao()
                 .count()
                 .map {
-                    SyncModel(EReplic::class.java.simpleName,it == 0)
+                    SyncModel(EReplic::class.java.simpleName, it == 0)
                 }
     }
 

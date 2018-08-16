@@ -5,9 +5,9 @@ import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.DialogsRequest
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
-import com.leoart.koreanphrasebook.data.repository.models.EChapter
+import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteModel
+import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteType
 import com.leoart.koreanphrasebook.data.repository.models.EDialog
-import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
@@ -58,13 +58,22 @@ class DialogsRepository(private val context: Context) : CachedRepository<DialogR
         val eDialogs = items.map {
             EDialog(it.uid, it.name)
         }.toTypedArray()
+
         isEmpty().observeOn(Schedulers.io())
-                .subscribe({
+                .flatMap {
+                    val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
-                        localDB().subscribe { db ->
+                        syncResult = localDB().flatMap { db ->
                             db.dialogDao().insertAll(*eDialogs)
-                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EDialog::class.java.simpleName, false))
-                        }
+                            Observable.just(true)
+                        }.single(false)
+                        return@flatMap syncResult
+                    } else {
+                        return@flatMap Single.just(false)
+                    }
+                }.subscribe({
+                    if (it == true) {
+                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EDialog::class.java.simpleName, false))
                     }
                 }, {
                     it.printStackTrace()

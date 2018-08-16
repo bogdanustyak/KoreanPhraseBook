@@ -5,6 +5,7 @@ import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
 import com.leoart.koreanphrasebook.data.repository.models.ECategory
 import com.leoart.koreanphrasebook.data.repository.models.EChapter
+import com.leoart.koreanphrasebook.data.repository.models.ELetter
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Chapter
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
@@ -59,7 +60,7 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
 
     override fun isEmpty(): Single<SyncModel> {
         return AppDataBase.getInstance(context).chaptersDao().count().flatMap {
-            Single.just(SyncModel(EChapter::class.java.simpleName,it == 0))
+            Single.just(SyncModel(EChapter::class.java.simpleName, it == 0))
         }
     }
 
@@ -85,12 +86,20 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
         }.toTypedArray()
 
         isEmpty().observeOn(Schedulers.io())
-                .subscribe({
+                .flatMap {
+                    val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
-                        localDB().subscribe {
-                            it.chaptersDao().insertAll(*eChapters)
-                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EChapter::class.java.simpleName, false))
-                        }
+                        syncResult = localDB().flatMap { db ->
+                            db.chaptersDao().insertAll(*eChapters)
+                            Observable.just(true)
+                        }.single(false)
+                        return@flatMap syncResult
+                    } else {
+                        return@flatMap Single.just(false)
+                    }
+                }.subscribe({
+                    if (it == true) {
+                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EChapter::class.java.simpleName, false))
                     }
                 }, {
                     it.printStackTrace()

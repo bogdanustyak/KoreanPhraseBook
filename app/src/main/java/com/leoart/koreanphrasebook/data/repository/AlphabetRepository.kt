@@ -2,6 +2,7 @@ package com.leoart.koreanphrasebook.data.repository
 
 import android.content.Context
 import com.leoart.koreanphrasebook.data.network.firebase.AlphabetRequest
+import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.leoart.koreanphrasebook.data.repository.models.ELetter
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.data.repository.models.EReplic
@@ -38,12 +39,20 @@ class AlphabetRepository(private val context: Context) : CachedRepository<ELette
 
     override fun saveIntoDB(items: List<ELetter>) {
         isEmpty().observeOn(Schedulers.io())
-                .subscribe({
+                .flatMap {
+                    val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
-                        localDB().subscribe { db ->
+                        syncResult = localDB().flatMap { db ->
                             db.letterDao().insertAll(*items.toTypedArray())
-                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ELetter::class.java.simpleName, false))
-                        }
+                            Observable.just(true)
+                        }.single(false)
+                        return@flatMap syncResult
+                    } else {
+                        return@flatMap Single.just(false)
+                    }
+                }.subscribe({
+                    if (it == true) {
+                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ELetter::class.java.simpleName, false))
                     }
                 }, {
                     it.printStackTrace()

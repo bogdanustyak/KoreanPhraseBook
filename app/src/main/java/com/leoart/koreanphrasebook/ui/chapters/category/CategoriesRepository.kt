@@ -58,12 +58,20 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
 
     private fun saveIntoDB(list: List<ECategory>) {
         isEmpty().observeOn(Schedulers.io())
-                .subscribe({
+                .flatMap {
+                    val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
-                        localDB().subscribe { db ->
+                        syncResult = localDB().flatMap { db ->
                             db.categoryDao().insertAll(*list.toTypedArray())
-                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ECategory::class.java.simpleName, false))
-                        }
+                            Observable.just(true)
+                        }.single(false)
+                        return@flatMap syncResult
+                    } else {
+                        return@flatMap Single.just(false)
+                    }
+                }.subscribe({
+                    if (it == true) {
+                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ECategory::class.java.simpleName, false))
                     }
                 }, {
                     it.printStackTrace()

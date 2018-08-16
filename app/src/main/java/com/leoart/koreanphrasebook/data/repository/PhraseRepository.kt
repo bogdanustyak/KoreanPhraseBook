@@ -3,6 +3,7 @@ package com.leoart.koreanphrasebook.data.repository
 import android.content.Context
 import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
+import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
@@ -64,17 +65,25 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
     }
 
     private fun saveIntoDB(list: List<EPhrase>) {
-        localDB().subscribe { db ->
-            isEmpty().observeOn(Schedulers.io())
-                    .subscribe({
-                        if (it.isSyncNeeded) {
+        isEmpty().observeOn(Schedulers.io())
+                .flatMap {
+                    val syncResult: Single<Boolean>
+                    if (it.isSyncNeeded) {
+                        syncResult = localDB().flatMap { db ->
                             db.phraseDao().insertAll(*list.toTypedArray())
-                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EPhrase::class.java.simpleName, false))
-                        }
-                    }, {
-                        it.printStackTrace()
-                    })
-        }
+                            Observable.just(true)
+                        }.single(false)
+                        return@flatMap syncResult
+                    } else {
+                        return@flatMap Single.just(false)
+                    }
+                }.subscribe({
+                    if (it == true) {
+                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EPhrase::class.java.simpleName, false))
+                    }
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     fun localDB(): Observable<AppDataBase> {

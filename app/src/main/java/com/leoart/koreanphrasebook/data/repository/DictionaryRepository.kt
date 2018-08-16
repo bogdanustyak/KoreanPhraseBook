@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.DictionaryRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
+import com.leoart.koreanphrasebook.data.repository.models.EDialog
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
@@ -131,13 +132,22 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
                         ?: "", it["favourite"] ?: "false"))
             }
         }
+
         isEmpty().observeOn(Schedulers.io())
-                .subscribe({
+                .flatMap {
+                    val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
-                        localDB().subscribe { db ->
+                        syncResult = localDB().flatMap { db ->
                             db.dictionaryDao().insertAll(*dictionary.toTypedArray())
-                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EDictionary::class.java.simpleName, false))
-                        }
+                            Observable.just(true)
+                        }.single(false)
+                        return@flatMap syncResult
+                    } else {
+                        return@flatMap Single.just(false)
+                    }
+                }.subscribe({
+                    if (it == true) {
+                        DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EDictionary::class.java.simpleName, false))
                     }
                 }, {
                     it.printStackTrace()
