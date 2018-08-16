@@ -40,4 +40,5 @@ interface CachedRepository<ITEM> {
      * @return observable list of saved items
      */
     fun saveIntoDB(items: List<ITEM>)
+
 }

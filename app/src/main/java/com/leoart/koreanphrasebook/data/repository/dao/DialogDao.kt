@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query
 import com.leoart.koreanphrasebook.data.repository.models.EDialog
 import io.reactivex.Flowable
 import io.reactivex.Maybe
+import io.reactivex.Single
 
 
 /**
@@ -29,4 +30,10 @@ interface DialogDao {
 
     @Delete
     fun delete(dialog: EDialog)
+
+    @Query("SELECT count(*) FROM dialog")
+    fun count() : Single<Int>
+
+    @Query("DELETE FROM dialog")
+    fun deleteAll()
 }

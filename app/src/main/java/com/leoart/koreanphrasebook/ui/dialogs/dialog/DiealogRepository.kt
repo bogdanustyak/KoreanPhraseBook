@@ -1,52 +1,40 @@
-package com.leoart.koreanphrasebook.data.repository
+package com.leoart.koreanphrasebook.ui.dialogs.dialog
 
 import android.content.Context
 import android.util.Log
-import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
-import com.leoart.koreanphrasebook.data.repository.models.EChapter
-import com.leoart.koreanphrasebook.data.repository.models.EPhrase
-import com.leoart.koreanphrasebook.ui.models.Phrase
+import com.leoart.koreanphrasebook.data.network.firebase.DialogsRequest
+import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
+import com.leoart.koreanphrasebook.data.repository.AppDataBase
+import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
+import com.leoart.koreanphrasebook.data.repository.RefreshableRepository
+import com.leoart.koreanphrasebook.data.repository.models.EReplic
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
-import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.toCompletable
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
-class PhraseRepository(val context: Context) : RefreshableRepository {
+class DiealogRepository(val context: Context) : RefreshableRepository {
 
-    fun getPhrases(categoryName: String): Flowable<List<EPhrase>> {
+    fun getDialog(categoryName: String): Flowable<List<EReplic>> {
         Log.d(TAG, "getDictionary")
         return getDataFromDB(categoryName)
                 .doOnNext {
-                    if (it.isEmpty() && NetworkChecker(context).isNetworkAvailable) {
+                    if (it.isEmpty()) {
                         requestFromNetwork()
                     }
                 }
     }
 
-    fun markFavourite(phrase: EPhrase): Completable {
-        return Completable.create { emitter ->
-            localDB().subscribe({
-                try {
-                    it.phraseDao().updateFavorite(phrase)
-                    emitter.onComplete()
-                } catch (e: Exception) {
-                    emitter.onError(e)
-                }
-            }, {
-                emitter.onError(it)
-            })
-        }
-    }
-
-    private fun getDataFromDB(categoryName: String): Flowable<List<EPhrase>> {
-        return AppDataBase.getInstance(context).phraseDao().getByCategory(categoryName)
+    private fun getDataFromDB(categoryName: String): Flowable<List<EReplic>> {
+        return AppDataBase.getInstance(context).replicsDao().getByUid(categoryName)
     }
 
     private fun requestFromNetwork() {
-        PhrasesRequest().getPhrases()
+        DialogsRequest().getAllDialogsReplics()
                 .observeOn(Schedulers.io())
                 .subscribe {
                     if (it.isNotEmpty()) {
@@ -56,22 +44,22 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                 }
     }
 
-    private fun mapToRoomEntity(list: List<Phrase>): List<EPhrase> {
-        val ePhrases = ArrayList<EPhrase>()
+    private fun mapToRoomEntity(list: List<Replic>): List<EReplic> {
+        val eReplic = ArrayList<EReplic>()
         list.forEach {
-            ePhrases.add(EPhrase(it.word, it.translation, it.transcription, it.isFavourite, it.key))
+            eReplic.add(EReplic(it.uid, it.korean, it.ukrainian, it.number))
         }
-        return ePhrases
+        return eReplic
     }
 
-    private fun saveIntoDB(list: List<EPhrase>) {
+    private fun saveIntoDB(list: List<EReplic>) {
         isEmpty().observeOn(Schedulers.io())
                 .flatMap {
                     val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
-                            db.phraseDao().insertAll(*list.toTypedArray())
-                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EPhrase::class.java.simpleName, false))
+                            db.replicsDao().insertAll(*list.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EReplic::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
                         return@flatMap syncResult
@@ -79,7 +67,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    Log.d(TAG,"data saved")
+                    Log.d(TAG, "data saved")
                 }, {
                     it.printStackTrace()
                 })
@@ -95,7 +83,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                 .phraseDao()
                 .count()
                 .map {
-                    SyncModel(EPhrase::class.java.simpleName, it == 0)
+                    SyncModel(EReplic::class.java.simpleName, it == 0)
                 }
     }
 
@@ -104,7 +92,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
     }
 
     override fun refreshData(): Completable {
-        return PhrasesRequest().getPhrases()
+        return DialogsRequest().getAllDialogsReplics()
                 .observeOn(Schedulers.io())
                 .doOnNext {
                     if (it.isNotEmpty()) {
@@ -116,6 +104,6 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
     }
 
     companion object {
-        const val TAG = "PhraseRepository"
+        val TAG = "DialogRepository"
     }
 }

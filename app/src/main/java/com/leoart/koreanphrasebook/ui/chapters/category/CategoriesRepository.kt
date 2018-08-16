@@ -1,24 +1,29 @@
-package com.leoart.koreanphrasebook.data.repository
+package com.leoart.koreanphrasebook.ui.chapters.category
 
 import android.content.Context
 import android.util.Log
-import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
-import com.leoart.koreanphrasebook.data.repository.models.EChapter
-import com.leoart.koreanphrasebook.data.repository.models.EPhrase
-import com.leoart.koreanphrasebook.ui.models.Phrase
+import com.leoart.koreanphrasebook.data.network.firebase.CategoriesRequest
+import com.leoart.koreanphrasebook.data.repository.AlphabetRepository
+import com.leoart.koreanphrasebook.data.repository.AppDataBase
+import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
+import com.leoart.koreanphrasebook.data.repository.RefreshableRepository
+import com.leoart.koreanphrasebook.data.repository.models.ECategory
+import com.leoart.koreanphrasebook.ui.models.Category
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.toCompletable
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
-class PhraseRepository(val context: Context) : RefreshableRepository {
+class CategoriesRepository(val context: Context) : RefreshableRepository {
 
-    fun getPhrases(categoryName: String): Flowable<List<EPhrase>> {
+    fun getCategories(chapterName: String): Flowable<List<ECategory>> {
         Log.d(TAG, "getDictionary")
-        return getDataFromDB(categoryName)
+        return getDataFromDB(chapterName)
                 .doOnNext {
                     if (it.isEmpty() && NetworkChecker(context).isNetworkAvailable) {
                         requestFromNetwork()
@@ -26,27 +31,12 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                 }
     }
 
-    fun markFavourite(phrase: EPhrase): Completable {
-        return Completable.create { emitter ->
-            localDB().subscribe({
-                try {
-                    it.phraseDao().updateFavorite(phrase)
-                    emitter.onComplete()
-                } catch (e: Exception) {
-                    emitter.onError(e)
-                }
-            }, {
-                emitter.onError(it)
-            })
-        }
-    }
-
-    private fun getDataFromDB(categoryName: String): Flowable<List<EPhrase>> {
-        return AppDataBase.getInstance(context).phraseDao().getByCategory(categoryName)
+    private fun getDataFromDB(categoryName: String): Flowable<List<ECategory>> {
+        return AppDataBase.getInstance(context).categoryDao().findBy(categoryName)
     }
 
     private fun requestFromNetwork() {
-        PhrasesRequest().getPhrases()
+        CategoriesRequest().getAllCategories()
                 .observeOn(Schedulers.io())
                 .subscribe {
                     if (it.isNotEmpty()) {
@@ -56,22 +46,24 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                 }
     }
 
-    private fun mapToRoomEntity(list: List<Phrase>): List<EPhrase> {
-        val ePhrases = ArrayList<EPhrase>()
+    private fun mapToRoomEntity(list: List<Category>): List<ECategory> {
+        val eCategory = ArrayList<ECategory>()
         list.forEach {
-            ePhrases.add(EPhrase(it.word, it.translation, it.transcription, it.isFavourite, it.key))
+            it.name["word"]?.let { word ->
+                eCategory.add(ECategory(it.id, word, it.inId))
+            }
         }
-        return ePhrases
+        return eCategory
     }
 
-    private fun saveIntoDB(list: List<EPhrase>) {
+    private fun saveIntoDB(list: List<ECategory>) {
         isEmpty().observeOn(Schedulers.io())
                 .flatMap {
                     val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
-                            db.phraseDao().insertAll(*list.toTypedArray())
-                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EPhrase::class.java.simpleName, false))
+                            db.categoryDao().insertAll(*list.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ECategory::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
                         return@flatMap syncResult
@@ -79,7 +71,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    Log.d(TAG,"data saved")
+                    Log.d(AlphabetRepository.TAG,"data saved")
                 }, {
                     it.printStackTrace()
                 })
@@ -92,19 +84,19 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
 
     override fun isEmpty(): Single<SyncModel> {
         return AppDataBase.getInstance(context)
-                .phraseDao()
+                .categoryDao()
                 .count()
                 .map {
-                    SyncModel(EPhrase::class.java.simpleName, it == 0)
+                    SyncModel(ECategory::class.java.simpleName, it == 0)
                 }
     }
 
     private fun clearDB() {
-        AppDataBase.getInstance(context).phraseDao().deleteAll()
+        AppDataBase.getInstance(context).categoryDao().deleteAll()
     }
 
     override fun refreshData(): Completable {
-        return PhrasesRequest().getPhrases()
+        return CategoriesRequest().getAllCategories()
                 .observeOn(Schedulers.io())
                 .doOnNext {
                     if (it.isNotEmpty()) {
@@ -116,6 +108,6 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
     }
 
     companion object {
-        const val TAG = "PhraseRepository"
+        val TAG = "CategoriesRepository"
     }
 }

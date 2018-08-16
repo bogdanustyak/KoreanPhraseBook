@@ -15,11 +15,17 @@ import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
+import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
+import com.leoart.koreanphrasebook.data.repository.models.ECategory
+import com.leoart.koreanphrasebook.data.repository.models.EReplic
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
+import com.leoart.koreanphrasebook.ui.NoNetworkFragment
 import com.leoart.koreanphrasebook.ui.alphabet.AlphabetActivity
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesFragment
 import com.leoart.koreanphrasebook.ui.models.Chapter
+import com.leoart.koreanphrasebook.ui.sync.SyncModel
+import com.leoart.koreanphrasebook.utils.NetworkChecker
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -27,7 +33,7 @@ import javax.inject.Inject
 class ChapterFragment : BaseFragment(), ChaptersView,
         ChaptersRecyclerAdapter.ChaptersInteractionListener {
 
-    private var mainView: MainView? = null
+    private lateinit var mainView: MainView
     private val chapters: List<Chapter>? = null
     private var adapter: ChaptersRecyclerAdapter? = null
     @Inject
@@ -64,8 +70,11 @@ class ChapterFragment : BaseFragment(), ChaptersView,
         if (chapter.name == getString(R.string.alphabet_chapter_name)) {
             startActivity(Intent(context, AlphabetActivity::class.java))
         } else {
-            mainView?.let {
-                it.replace(
+            val syncInfo = DataInfoRepository.getInstance().getData()
+            if (!mainView.isNetworkAvailable() && syncInfo != null && syncInfo.contains(SyncModel(ECategory::class.java.simpleName, true))) {
+                mainView.replace(NoNetworkFragment.newInstance())
+            } else {
+                mainView.replace(
                         CategoriesFragment.newInstance(chapter.name, chapter, mainView)
                 )
             }
@@ -73,14 +82,16 @@ class ChapterFragment : BaseFragment(), ChaptersView,
     }
 
     override fun showChapters(chapters: List<Chapter>?) {
-        chapters?.let {
-            adapter?.setChapters(it)
+        activity?.let {
+            chapters?.let { itChapters ->
+                adapter?.setChapters(chapters)
+            }
         }
     }
 
     companion object {
 
-        fun newInstance(mainView: MainView?): ChapterFragment {
+        fun newInstance(mainView: MainView): ChapterFragment {
             val fragment = ChapterFragment()
             val args = Bundle()
             fragment.arguments = args

@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.ui.dialogs
 
+import android.app.FragmentManager
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
@@ -15,16 +16,23 @@ import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.DialogResponse
+import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
+import com.leoart.koreanphrasebook.data.repository.models.EDictionary
+import com.leoart.koreanphrasebook.data.repository.models.EReplic
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
+import com.leoart.koreanphrasebook.ui.NoNetworkFragment
 import com.leoart.koreanphrasebook.ui.dialogs.dialog.DialogFragment
+import com.leoart.koreanphrasebook.ui.sync.SyncModel
+import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
+import com.leoart.koreanphrasebook.utils.NetworkChecker
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 class DialogsFragment : BaseFragment(), DialogsView,
         DialogsRecyclerAdapter.DialogsListInteractionListener {
 
-    private var mainView: MainView? = null
+    private lateinit var mainView: MainView
     private var adapter: DialogsRecyclerAdapter? = null
     var rvDialogs: RecyclerView? = null
     @Inject
@@ -36,8 +44,8 @@ class DialogsFragment : BaseFragment(), DialogsView,
     }
 
     override fun showDialogs(chapters: List<DialogResponse>?) {
-        chapters?.let {
-            adapter?.setDialogs(it)
+            chapters?.let { itChapters ->
+                    adapter?.setDialogs(chapters)
         }
     }
 
@@ -71,7 +79,13 @@ class DialogsFragment : BaseFragment(), DialogsView,
     override fun onDialogClick(dialog: DialogResponse) {
         this.mainView?.let {
             analyticsManager.openDialog(dialog.name)
-            it.replace(DialogFragment.newInstance(dialog.name, dialog))
+            val syncInfo = DataInfoRepository.getInstance().getData()
+            if (!mainView.isNetworkAvailable() && syncInfo!= null && syncInfo.contains(SyncModel(EReplic::class.java.simpleName, true))) {
+                mainView.replace(NoNetworkFragment.newInstance())
+            } else {
+                it.replace(DialogFragment.newInstance(dialog.name, dialog))
+            }
+
         }
     }
 

@@ -11,11 +11,13 @@ import android.arch.persistence.room.PrimaryKey
 class EDictionary(
         @ColumnInfo(name = "letter")
         val letter: Char,
-        @PrimaryKey
         @ColumnInfo(name = "word")
         val word: String,
         @ColumnInfo(name = "definition")
         val definition: String,
         @ColumnInfo(name = "favourite")
         var isFavourite: String
-)
+) {
+    @PrimaryKey(autoGenerate = true)
+    var uid: Long? = null
+}

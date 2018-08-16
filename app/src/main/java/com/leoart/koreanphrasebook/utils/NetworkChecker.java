@@ -20,6 +20,6 @@ public class NetworkChecker {
     }
 
     public boolean isNetworkAvailable() {
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 }

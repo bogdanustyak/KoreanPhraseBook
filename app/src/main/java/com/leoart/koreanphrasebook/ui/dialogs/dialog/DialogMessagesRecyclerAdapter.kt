@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.leoart.koreanphrasebook.R
-import com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Replic
+import com.leoart.koreanphrasebook.data.repository.models.EReplic
 
 /**
  * Created by bogdan on 11/5/16.
  */
-internal class DialogMessagesRecyclerAdapter(private var messages: List<Replic>?) :
+internal class DialogMessagesRecyclerAdapter(private var messages: List<EReplic>?) :
         RecyclerView.Adapter<DialogMessagesRecyclerAdapter.MessageViewHolder>() {
 
     companion object {
@@ -70,8 +70,10 @@ internal class DialogMessagesRecyclerAdapter(private var messages: List<Replic>?
 
     }
 
-    fun updateReplics(list: List<Replic>?) {
-        this.messages = list
-        notifyDataSetChanged()
+    fun updateReplics(list: List<EReplic>?) {
+        list?.sortedWith(compareBy(EReplic::number))?.let {
+            this.messages = it
+            notifyDataSetChanged()
+        }
     }
 }

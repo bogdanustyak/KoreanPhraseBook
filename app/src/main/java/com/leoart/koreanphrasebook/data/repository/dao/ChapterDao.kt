@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query
 import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import io.reactivex.Flowable
 import io.reactivex.Maybe
+import io.reactivex.Single
 
 
 /**
@@ -29,4 +30,10 @@ interface ChapterDao {
 
     @Delete
     fun delete(chapter: EChapter)
+
+    @Query("SELECT count(*) FROM chapter")
+    fun count() : Single<Int>
+
+    @Query("DELETE FROM chapter")
+    fun deleteAll()
 }

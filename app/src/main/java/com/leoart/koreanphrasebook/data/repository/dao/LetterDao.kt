@@ -5,6 +5,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
 import com.leoart.koreanphrasebook.data.repository.models.ELetter
 import io.reactivex.Flowable
+import io.reactivex.Single
 import java.util.*
 
 @Dao
@@ -15,4 +16,10 @@ interface LetterDao {
 
     @Insert
     fun insertAll(vararg letters : ELetter)
+
+    @Query("SELECT count(*) FROM letter")
+    fun count() : Single<Int>
+
+    @Query("DELETE FROM letter")
+    fun deleteAll()
 }

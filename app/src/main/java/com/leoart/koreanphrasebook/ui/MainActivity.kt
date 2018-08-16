@@ -1,6 +1,5 @@
 package com.leoart.koreanphrasebook.ui
 
-import android.app.Fragment
 import android.app.FragmentManager
 import android.app.SearchManager
 import android.content.Context
@@ -9,17 +8,23 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
+import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
+import com.leoart.koreanphrasebook.data.repository.models.EChapter
+import com.leoart.koreanphrasebook.data.repository.models.EDialog
+import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.leoart.koreanphrasebook.ui.chapters.ChapterFragment
 import com.leoart.koreanphrasebook.ui.dialogs.DialogsFragment
 import com.leoart.koreanphrasebook.ui.favourite.FavouriteFragment
 import com.leoart.koreanphrasebook.ui.info.InfoFragment
 import com.leoart.koreanphrasebook.ui.search.SearchActivity
+import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.leoart.koreanphrasebook.utils.SoftKeyboard
@@ -30,9 +35,9 @@ import javax.inject.Inject
 class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
 
     var auth: Auth? = null
-
     @Inject
     lateinit var analyticsManager: AnalyticsManager
+    val syncDataList = DataInfoRepository.getInstance().getData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,15 +68,12 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
             }
             true
         }
-        if (NetworkChecker(this).isNetworkAvailable) {
-            chaptersSelected()
-        } else {
-            showNoNetworkFragment()
-        }
+        chaptersSelected()
     }
 
     private fun showNoNetworkFragment() {
-        this.replace(NoNetworkFragment.newInstance())
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        this.replace(NoNetworkFragment.newInstance(), false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -118,57 +120,53 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         startActivity(intent)
     }
 
+
+    override fun isNetworkAvailable(): Boolean {
+        return NetworkChecker(this).isNetworkAvailable
+    }
+
     override fun dictSelected() {
-        if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(VocabularyFragment.newInstance(), false)
-            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        } else {
+        if (!isNetworkAvailable() && syncDataList != null && syncDataList!!.contains(SyncModel(EDictionary::class.java.simpleName, true))) {
             showNoNetworkFragment()
+        } else {
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            this.replace(VocabularyFragment.newInstance(), false)
         }
     }
 
     override fun favouriteSelected() {
-        if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(FavouriteFragment.newInstance(), false)
-            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        } else {
-            showNoNetworkFragment()
-        }
-//        if (userSignedIn) {
-//
-//        } else {
-//            this.replace(AuthFragment.newInstance(getString(R.string.auth), this))
-//        }
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        this.replace(FavouriteFragment.newInstance(), false)
     }
 
     override fun chaptersSelected() {
-        if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(ChapterFragment.newInstance(this), false)
-            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        } else {
+        if (!isNetworkAvailable() && syncDataList != null && syncDataList!!.contains(SyncModel(EChapter::class.java.simpleName, true))) {
             showNoNetworkFragment()
+        } else {
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            this.replace(ChapterFragment.newInstance(this), false)
         }
     }
 
     override fun dialogsSelected() {
-        if (NetworkChecker(this).isNetworkAvailable) {
-            this.replace(DialogsFragment.newInstance(this), false)
-            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        } else {
+        if (!isNetworkAvailable() && syncDataList != null && syncDataList!!.contains(SyncModel(EDialog::class.java.simpleName, true))) {
             showNoNetworkFragment()
+        } else {
+            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            this.replace(DialogsFragment.newInstance(this), false)
         }
     }
 
     override fun infoSelected() {
-        this.replace(InfoFragment.newInstance(this), false)
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        this.replace(InfoFragment.newInstance(this), false)
     }
 
     override fun replace(fragment: BaseFragment, addToBackStack: Boolean) {
         val transaction = supportFragmentManager.beginTransaction()
                 .replace(R.id.main_content, fragment)
         if (addToBackStack) {
-            supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            transaction.addToBackStack(fragment.javaClass.name)
         }
         transaction.commit()
     }

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.leoart.koreanphrasebook.R
+import com.leoart.koreanphrasebook.data.repository.models.ECategory
 import com.leoart.koreanphrasebook.ui.SimpleTextItemUI
 import com.leoart.koreanphrasebook.ui.models.Category
 import org.jetbrains.anko.AnkoContext
@@ -13,7 +14,7 @@ import org.jetbrains.anko.AnkoContext
 /**
  * Created by bogdan on 11/5/16.
  */
-class CategoriesAdapter(private var chapterCategories: List<Category>?, private val interactionListener: CategoriesAdapter.CategoryInteractionListener?) : RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
+class CategoriesAdapter(private var chapterCategories: List<ECategory>?, private val interactionListener: CategoriesAdapter.CategoryInteractionListener?) : RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val viewHolder = CategoryViewHolder(SimpleTextItemUI().createView(AnkoContext.Companion.create(parent.context, parent)))
@@ -28,12 +29,12 @@ class CategoriesAdapter(private var chapterCategories: List<Category>?, private 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         chapterCategories?.let {
             it[position].let {
-                holder.tvCategoryName.text = it.name["word"]
+                holder.tvCategoryName.text = it.category
             }
         }
     }
 
-    fun setCategories(categories: List<Category>) {
+    fun setCategories(categories: List<ECategory>) {
         this.chapterCategories = categories
         notifyDataSetChanged()
     }
@@ -48,6 +49,6 @@ class CategoriesAdapter(private var chapterCategories: List<Category>?, private 
     }
 
     interface CategoryInteractionListener {
-        fun onCategoryClick(category: Category)
+        fun onCategoryClick(category: ECategory)
     }
 }

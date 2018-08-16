@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatDelegate;
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsModule;
 import com.leoart.koreanphrasebook.data.analytics.ApplicationComponent;
 import com.leoart.koreanphrasebook.data.analytics.DaggerApplicationComponent;
+import com.leoart.koreanphrasebook.data.repository.DataInfoRepository;
+import com.leoart.koreanphrasebook.data.repository.SharedPrefStorage;
 import com.leoart.koreanphrasebook.di.AppModule;
 
 import javax.inject.Inject;
@@ -42,6 +44,8 @@ public class KoreanPhrasebookApp extends MultiDexApplication implements HasActiv
                 .analyticsModule(new AnalyticsModule())
                 .build();
         applicationComponent.inject(this);
+        SharedPrefStorage syncDataStorage = DataInfoRepository.Companion.getInstance();
+        syncDataStorage.initialize(this);
     }
 
     public ApplicationComponent getApplicationComponent() {

@@ -2,20 +2,25 @@ package com.leoart.koreanphrasebook.data.repository
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.DictionaryRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
+import com.leoart.koreanphrasebook.data.repository.models.EDialog
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
-import io.reactivex.*
+import com.leoart.koreanphrasebook.data.repository.models.EPhrase
+import com.leoart.koreanphrasebook.ui.sync.SyncModel
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import com.leoart.koreanphrasebook.utils.toCompletable
 
 /**
  * DictionaryRepository
  *
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
-class DictionaryRepository(val context: Context) {
+class DictionaryRepository(val context: Context) : RefreshableRepository {
 
     fun getDictionary(): Flowable<Dictionary> {
         Log.d(DialogsRepository.TAG, "getDictionary")
@@ -50,6 +55,32 @@ class DictionaryRepository(val context: Context) {
                 }
     }
 
+    override fun isEmpty(): Single<SyncModel> {
+        return AppDataBase.getInstance(context)
+                .dictionaryDao()
+                .count()
+                .map {
+                    SyncModel(EDictionary::class.java.simpleName, it == 0)
+                }
+    }
+
+    private fun clearDB() {
+        AppDataBase.getInstance(context).dictionaryDao().deleteAll()
+    }
+
+    override fun refreshData(): Completable {
+        return DictionaryRequest().getDictionary()
+                .observeOn(Schedulers.io())
+                .doOnNext {
+                    if (it.data().isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(it)
+                    }
+                }
+                .toCompletable()
+    }
+
+
     private fun mapDict(dict: List<EDictionary>): Flowable<Dictionary> {
         if (dict.isEmpty()) return Flowable.just(Dictionary())
         val dictionary = Dictionary()
@@ -82,9 +113,12 @@ class DictionaryRepository(val context: Context) {
 
     fun requestFromNetwork() {
         DictionaryRequest().getDictionary()
-                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .subscribe {
-                    saveIntoDB(it)
+                    if (it.data().isNotEmpty()) {
+                        clearDB()
+                        saveIntoDB(it)
+                    }
                 }
     }
 
@@ -99,13 +133,33 @@ class DictionaryRepository(val context: Context) {
             }
         }
 
-        localDB().subscribe { db ->
-            db.dictionaryDao().insertAll(*dictionary.toTypedArray())
-        }
+        isEmpty().observeOn(Schedulers.io())
+                .flatMap {
+                    val syncResult: Single<Boolean>
+                    if (it.isSyncNeeded) {
+                        syncResult = localDB().flatMap { db ->
+                            db.dictionaryDao().insertAll(*dictionary.toTypedArray())
+                            DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EDictionary::class.java.simpleName, false))
+                            Observable.just(true)
+                        }.single(false)
+                        return@flatMap syncResult
+                    } else {
+                        return@flatMap Single.just(false)
+                    }
+                }.subscribe({
+                    Log.d(TAG,"data saved")
+                }, {
+                    it.printStackTrace()
+                })
     }
 
     fun localDB(): Observable<AppDataBase> {
         return Observable.just(AppDataBase.getInstance(context))
                 .subscribeOn(Schedulers.io())
     }
+
+    companion object {
+        const val TAG = "DictionaryRepository"
+    }
 }
+

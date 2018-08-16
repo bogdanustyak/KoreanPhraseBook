@@ -18,7 +18,9 @@ import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
+import com.leoart.koreanphrasebook.ui.NoNetworkFragment
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
+import com.leoart.koreanphrasebook.utils.NetworkChecker
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
@@ -36,6 +38,8 @@ class VocabularyFragment : BaseFragment() {
     private lateinit var adapter: DictionaryAdapter
     private lateinit var model: DictionaryViewModel
 
+    private var mainView: MainView? = null
+
     @Inject
     lateinit var analyticsManager: AnalyticsManager
 
@@ -48,6 +52,7 @@ class VocabularyFragment : BaseFragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
+        mainView = (context as MainView)
         AndroidSupportInjection.inject(this)
     }
 
@@ -62,9 +67,9 @@ class VocabularyFragment : BaseFragment() {
         initAdapter(view)
         model.geDictionary().observe(this, Observer<Dictionary> {
             it?.let {
-                Log.d("TAG", it.toString())
-                setDataInAdapter(it, view)
+                    setDataInAdapter(it, view)
             }
+
         })
         return view
     }
@@ -82,7 +87,7 @@ class VocabularyFragment : BaseFragment() {
             override fun onFavoriteCLick(position: Int) {
                 val word = adapter.getDictionaryByPosition(position)
                 word?.let {
-//                    model.onFavouriteClicked(it)
+                    //                    model.onFavouriteClicked(it)
                 }
             }
         })

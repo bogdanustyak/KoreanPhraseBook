@@ -14,5 +14,6 @@
     <color name="search_section_bg">#ffB0B0B0</color>
     <color name="favorite">#8BBFFF</color>
     <color name="black">#000000</color>
+    <color name="transparent_black">#cc000000</color>
     <color name="white">#FFFFFF</color>
 </resources>

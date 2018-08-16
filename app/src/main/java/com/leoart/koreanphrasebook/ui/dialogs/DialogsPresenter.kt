@@ -17,7 +17,7 @@ class DialogsPresenter(private val view: DialogsView?,
     private val dialogsRepository = DialogsRepository(context)
 
     fun requestDialogs() {
-        dialogsRepository.getDialogs()
+        dialogsRepository.getItems()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ dialogs ->
