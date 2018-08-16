@@ -17,6 +17,7 @@ import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
 import com.leoart.koreanphrasebook.data.repository.models.ECategory
+import com.leoart.koreanphrasebook.data.repository.models.ELetter
 import com.leoart.koreanphrasebook.data.repository.models.EReplic
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
@@ -67,10 +68,15 @@ class ChapterFragment : BaseFragment(), ChaptersView,
     }
 
     override fun onChapterClick(chapter: Chapter) {
+        val syncInfo = DataInfoRepository.getInstance().getData()
+
         if (chapter.name == getString(R.string.alphabet_chapter_name)) {
-            startActivity(Intent(context, AlphabetActivity::class.java))
+            if (!mainView.isNetworkAvailable() && syncInfo != null && syncInfo.contains(SyncModel(ELetter::class.java.simpleName, true))) {
+                mainView.replace(NoNetworkFragment.newInstance())
+            } else {
+                startActivity(Intent(context, AlphabetActivity::class.java))
+            }
         } else {
-            val syncInfo = DataInfoRepository.getInstance().getData()
             if (!mainView.isNetworkAvailable() && syncInfo != null && syncInfo.contains(SyncModel(ECategory::class.java.simpleName, true))) {
                 mainView.replace(NoNetworkFragment.newInstance())
             } else {
