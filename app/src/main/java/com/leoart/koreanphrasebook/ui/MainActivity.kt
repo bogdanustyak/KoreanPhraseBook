@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.leoart.koreanphrasebook.R
@@ -71,6 +70,30 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         chaptersSelected()
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    override fun onBackPressed() {
+        val backStackEntryCount = supportFragmentManager.backStackEntryCount
+        if (backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun hideBackArrow() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setDisplayShowHomeEnabled(false)
+    }
+
+    override fun showBackArrow() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
+
     private fun showNoNetworkFragment() {
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         this.replace(NoNetworkFragment.newInstance(), false)
@@ -108,6 +131,9 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         when (item.itemId) {
             R.id.action_search -> {
                 onSearchRequested()
+            }
+            R.id.home -> {
+                onBackPressed()
             }
         }
         return true

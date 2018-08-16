@@ -39,6 +39,10 @@ class SignUpFragment : BaseFragment() {
         (context as MainView).setTitle(getString(R.string.bt_register))
     }
 
+    override fun initToolbar() {
+        mainView?.hideBackArrow()
+    }
+
     private fun initUI(view: View) {
         etEmail = view.findViewById<EditText>(R.id.et_email)
         etPassword = view.findViewById<EditText>(R.id.et_password)

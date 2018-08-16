@@ -56,6 +56,10 @@ class DialogFragment : BaseFragment() {
         setTitle()
     }
 
+    override fun initToolbar() {
+        mainView?.showBackArrow()
+    }
+
     private fun initUI(view: View) {
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val rvDialog = view.findViewById<RecyclerView>(R.id.rv_dialog)

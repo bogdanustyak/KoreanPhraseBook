@@ -81,6 +81,10 @@ class ChapterFragment : BaseFragment(), ChaptersView,
         }
     }
 
+    override fun initToolbar() {
+        mainView.hideBackArrow()
+    }
+
     override fun showChapters(chapters: List<Chapter>?) {
         activity?.let {
             chapters?.let { itChapters ->

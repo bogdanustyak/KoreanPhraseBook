@@ -15,4 +15,11 @@ abstract class BaseFragment(var title: String) : Fragment() {
         }
         (context as MainView).setTitle(title)
     }
+
+    override fun onResume() {
+        super.onResume()
+        initToolbar()
+    }
+
+    abstract fun initToolbar()
 }

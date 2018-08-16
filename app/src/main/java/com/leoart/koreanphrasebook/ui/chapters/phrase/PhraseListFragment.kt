@@ -2,6 +2,7 @@ package com.leoart.koreanphrasebook.ui.chapters.phrase
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainActivity
+import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.leoart.koreanphrasebook.ui.chapters.phrase.PhrasesAdapter.OnPhrasesAdapterInteractionListener
 
@@ -25,6 +27,7 @@ class PhraseListFragment : BaseFragment(), OnPhrasesAdapterInteractionListener {
     var category = ""
     private lateinit var model: PhraseViewModel
     private var adapter: PhrasesAdapter? = null
+    private lateinit var mainView: MainView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -50,9 +53,18 @@ class PhraseListFragment : BaseFragment(), OnPhrasesAdapterInteractionListener {
         return view
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        mainView = context as MainView
+    }
+
     override fun onResume() {
         super.onResume()
         setTitle()
+    }
+
+    override fun initToolbar() {
+        mainView.showBackArrow()
     }
 
     override fun onFavouriteClicked(position: Int) {

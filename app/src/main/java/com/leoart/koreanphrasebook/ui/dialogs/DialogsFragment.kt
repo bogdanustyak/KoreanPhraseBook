@@ -76,6 +76,10 @@ class DialogsFragment : BaseFragment(), DialogsView,
         (context as MainView).setTitle(getString(R.string.dialogs))
     }
 
+    override fun initToolbar() {
+        mainView.hideBackArrow()
+    }
+
     override fun onDialogClick(dialog: DialogResponse) {
         this.mainView?.let {
             analyticsManager.openDialog(dialog.name)

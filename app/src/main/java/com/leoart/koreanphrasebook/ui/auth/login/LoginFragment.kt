@@ -13,6 +13,10 @@ import com.leoart.koreanphrasebook.ui.MainView
  */
 class LoginFragment : BaseFragment() {
 
+    override fun initToolbar() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private var mainView: MainView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
