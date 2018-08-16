@@ -31,7 +31,10 @@
     <string name="new_note">Нова нотатка</string>
     <string name="edit_note_title">Нотатка</string>
     <string name="about">Про додаток</string>
-    <string name="about_info">App info...</string>
+    <string name="about_info"> Корейський розмовник призначений насамперед для туристів, студентів та всіх хто вивчає корейську мову.\n\n
+        Застосунок містить основні слова та вирази, які допоможуть вам у побутовому спілкуванні з носіями мови.\n\n
+        Вивчайте алфавіт, додавайте улюблене, та робіть власні нотатки.\n\n
+        У розділі Діалоги ви знайдете різні життєві ситуації, представлені у вигляді діалогів між двома співрозмовниками. Це чудовий спосіб вивчення та практикування мови....</string>
     <string name="dev_mail">test@gmail.com</string>
     <string name="email_subject">"subject of email"</string>
     <string name="email_text">"body of email"</string>
@@ -55,5 +58,6 @@
     <string name="internet_exception_title">Ойй!</string>
     <string name="internet_exception_text">Немає інтернету або доступних даних</string>
     <string name="request_error_message">Помилка завантаження даних</string>
+    <string name="no_favourite_selected">У вас ще немає вибраних фраз.</string>
 
 </resources>
