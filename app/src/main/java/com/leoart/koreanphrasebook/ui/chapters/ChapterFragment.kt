@@ -65,13 +65,13 @@ class ChapterFragment : BaseFragment(), ChaptersView,
 
     override fun onChapterClick(chapter: Chapter) {
         if (chapter.name == getString(R.string.alphabet_chapter_name)) {
-            if (!mainView.isNetworkAvailable() && this.isSynced(ELetter::class.java.simpleName)) {
+            if (!mainView.isNetworkAvailable() && this.isNotSynced(ELetter::class.java.simpleName)) {
                 mainView.replace(NoNetworkFragment.newInstance())
             } else {
                 startActivity(Intent(context, AlphabetActivity::class.java))
             }
         } else {
-            if (!mainView.isNetworkAvailable() && isSynced(ECategory::class.java.simpleName)) {
+            if (!mainView.isNetworkAvailable() && isNotSynced(ECategory::class.java.simpleName)) {
                 mainView.replace(NoNetworkFragment.newInstance())
             } else {
                 mainView.replace(
@@ -81,7 +81,7 @@ class ChapterFragment : BaseFragment(), ChaptersView,
         }
     }
 
-    private fun isSynced(indicator: String): Boolean {
+    private fun isNotSynced(indicator: String): Boolean {
         val syncInfo = DataInfoRepository.getInstance().getData()
         return syncInfo != null && syncInfo.contains(SyncModel(indicator, true))
     }
