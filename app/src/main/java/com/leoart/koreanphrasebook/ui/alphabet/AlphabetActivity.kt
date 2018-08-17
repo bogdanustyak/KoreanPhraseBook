@@ -58,7 +58,6 @@ class AlphabetActivity : AppCompatActivity() {
         lettersList.layoutManager = GridLayoutManager(this, LETTERS_IN_ROW)
     }
 
-
     companion object {
         const val LETTERS_IN_ROW = 6
     }

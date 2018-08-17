@@ -127,18 +127,6 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_search -> {
-                onSearchRequested()
-            }
-            R.id.home -> {
-                onBackPressed()
-            }
-        }
-        return true
-    }
-
     private fun openSearch(query: String) {
         val intent = Intent(this, SearchActivity::class.java)
         intent.action = Intent.ACTION_SEARCH

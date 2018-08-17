@@ -71,6 +71,10 @@ class NotesActivity : AppCompatActivity(), OnNoteClickListener {
         startActivity(intent)
     }
 
+    override fun onBackPressed() {
+        this.finish()
+    }
+
     private fun openEditNote(note: Note) {
         val intent = Intent(this, EditNoteActivity::class.java).apply {
             putExtra(EditNoteActivity.NOTE_KEY, note)
