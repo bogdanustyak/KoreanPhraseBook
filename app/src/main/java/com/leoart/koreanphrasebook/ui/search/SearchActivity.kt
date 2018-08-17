@@ -95,10 +95,6 @@ class SearchActivity : BaseActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        this.finish()
-    }
-
     private fun searchQuery(query: String) {
         SearchRepository(this).search(query)
                 .subscribeOn(Schedulers.io())
