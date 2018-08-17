@@ -10,14 +10,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
-import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
 import com.leoart.koreanphrasebook.data.repository.models.ECategory
-import com.leoart.koreanphrasebook.data.repository.models.EReplic
+import com.leoart.koreanphrasebook.data.repository.models.ELetter
 import com.leoart.koreanphrasebook.ui.BaseFragment
 import com.leoart.koreanphrasebook.ui.MainView
 import com.leoart.koreanphrasebook.ui.NoNetworkFragment
@@ -25,7 +23,6 @@ import com.leoart.koreanphrasebook.ui.alphabet.AlphabetActivity
 import com.leoart.koreanphrasebook.ui.chapters.category.CategoriesFragment
 import com.leoart.koreanphrasebook.ui.models.Chapter
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
-import com.leoart.koreanphrasebook.utils.NetworkChecker
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -68,10 +65,13 @@ class ChapterFragment : BaseFragment(), ChaptersView,
 
     override fun onChapterClick(chapter: Chapter) {
         if (chapter.name == getString(R.string.alphabet_chapter_name)) {
-            startActivity(Intent(context, AlphabetActivity::class.java))
+            if (!mainView.isNetworkAvailable() && this.isNotSynced(ELetter::class.java.simpleName)) {
+                mainView.replace(NoNetworkFragment.newInstance())
+            } else {
+                startActivity(Intent(context, AlphabetActivity::class.java))
+            }
         } else {
-            val syncInfo = DataInfoRepository.getInstance().getData()
-            if (!mainView.isNetworkAvailable() && syncInfo != null && syncInfo.contains(SyncModel(ECategory::class.java.simpleName, true))) {
+            if (!mainView.isNetworkAvailable() && isNotSynced(ECategory::class.java.simpleName)) {
                 mainView.replace(NoNetworkFragment.newInstance())
             } else {
                 mainView.replace(
@@ -83,6 +83,11 @@ class ChapterFragment : BaseFragment(), ChaptersView,
 
     override fun initToolbar() {
         mainView.hideBackArrow()
+    }
+
+    private fun isNotSynced(indicator: String): Boolean {
+        val syncInfo = DataInfoRepository.getInstance().getData()
+        return syncInfo != null && syncInfo.contains(SyncModel(indicator, true))
     }
 
     override fun showChapters(chapters: List<Chapter>?) {
