@@ -62,6 +62,10 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
         return items
     }
 
+    override fun initToolbar() {
+        mainView.hideBackArrow()
+    }
+
     //todo
     override fun onItemClick(item: InfoItem) {
         when (item.name) {

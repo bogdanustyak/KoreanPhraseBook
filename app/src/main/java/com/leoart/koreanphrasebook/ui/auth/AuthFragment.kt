@@ -13,7 +13,6 @@ import com.leoart.koreanphrasebook.ui.MainView
  * Created by bogdan on 6/18/17.
  */
 class AuthFragment : BaseFragment() {
-
     private var mainView: MainView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +31,8 @@ class AuthFragment : BaseFragment() {
         super.onResume()
         (context as MainView).setTitle(getString(R.string.auth))
     }
+
+    override fun initToolbar() {}
 
     private fun onLoginClick() {
         this.mainView?.replace(

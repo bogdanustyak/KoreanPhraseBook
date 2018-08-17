@@ -79,6 +79,10 @@ class VocabularyFragment : BaseFragment() {
         (context as MainView).setTitle(getString(R.string.vocabulary))
     }
 
+    override fun initToolbar() {
+        mainView?.hideBackArrow()
+    }
+
     private fun initAdapter(view: View) {
         recyclerViewVocabulary = view.findViewById<RecyclerView>(R.id.rv_vocabulary)
         recyclerViewVocabulary?.layoutManager = stickyHeaderLayoutManager

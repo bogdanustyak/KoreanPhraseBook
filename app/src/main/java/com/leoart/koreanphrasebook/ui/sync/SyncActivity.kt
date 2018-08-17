@@ -76,7 +76,6 @@ class SyncActivity : BaseActivity() {
 
     private fun openMainScreen() {
         val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
         startActivity(intent)
         finish()
     }

@@ -13,6 +13,8 @@ import com.leoart.koreanphrasebook.ui.MainView
  */
 class LoginFragment : BaseFragment() {
 
+    override fun initToolbar() {}
+
     private var mainView: MainView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

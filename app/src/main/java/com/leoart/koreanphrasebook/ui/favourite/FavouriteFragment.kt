@@ -24,10 +24,10 @@ import android.view.ViewStub
  * Created by bogdan on 6/18/17.
  */
 class FavouriteFragment : BaseFragment() {
-
     private var adapter: FavouriteAdapter? = null
 
     private lateinit var model: FavouriteViewModel
+    private lateinit var mainView: MainView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -67,7 +67,12 @@ class FavouriteFragment : BaseFragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        (context as MainView).setTitle(getString(R.string.menu_favourite))
+        mainView = context as MainView
+        mainView.setTitle(getString(R.string.menu_favourite))
+    }
+
+    override fun initToolbar() {
+        mainView.hideBackArrow()
     }
 
     companion object {

@@ -4,10 +4,10 @@
 
     <item
         android:id="@+id/action_search"
-        android:orderInCategory="100"
-        app:showAsAction="ifRoom|collapseActionView"
         android:icon="@drawable/ic_search"
+        android:orderInCategory="50"
+        android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        android:title="@string/search"/>
+        app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>

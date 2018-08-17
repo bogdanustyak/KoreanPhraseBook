@@ -80,6 +80,10 @@ class CategoriesFragment : BaseFragment(), CategoriesAdapter.CategoryInteraction
         setTitle()
     }
 
+    override fun initToolbar() {
+        mainView.showBackArrow()
+    }
+
     override fun onCategoryClick(category: ECategory) {
         val syncInfo = DataInfoRepository.getInstance().getData()
         if (!mainView.isNetworkAvailable() && syncInfo != null && syncInfo.contains(SyncModel(EPhrase::class.java.simpleName, true))) {

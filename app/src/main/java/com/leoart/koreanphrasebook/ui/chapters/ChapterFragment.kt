@@ -81,6 +81,10 @@ class ChapterFragment : BaseFragment(), ChaptersView,
         }
     }
 
+    override fun initToolbar() {
+        mainView.hideBackArrow()
+    }
+
     private fun isNotSynced(indicator: String): Boolean {
         val syncInfo = DataInfoRepository.getInstance().getData()
         return syncInfo != null && syncInfo.contains(SyncModel(indicator, true))
