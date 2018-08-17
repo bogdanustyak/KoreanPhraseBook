@@ -32,9 +32,7 @@ class AuthFragment : BaseFragment() {
         (context as MainView).setTitle(getString(R.string.auth))
     }
 
-    override fun initToolbar() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun initToolbar() {}
 
     private fun onLoginClick() {
         this.mainView?.replace(

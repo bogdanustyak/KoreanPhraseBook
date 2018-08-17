@@ -9,9 +9,7 @@ import com.leoart.koreanphrasebook.R
 
 class NoNetworkFragment : BaseFragment("Помилка") {
 
-    override fun initToolbar() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun initToolbar() {}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
