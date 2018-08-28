@@ -69,24 +69,15 @@ class DialogsRequest : FireBaseRequest() {
                     for (item in dataSnapshot.children) {
 
                         item.key?.let {
-                            Log.d("ASD", item.value.toString())
-                            val data = item.value as HashMap<String, HashMap<String, Any>>
-                            data.forEach { s, replic ->
-                                list.add(Replic(it, replic["korean"]!! as String, replic["ukrainian"]!! as String, (replic["number"]!! as Long).toInt()))
+                            val id = it
+                            for (inItem in item.children) {
+                                inItem.key?.let {
+                                    val data = inItem.value as HashMap<String, Any>
+                                    list.add(Replic(id, data["korean"]!! as String, data["ukrainian"]!! as String, (data["number"]!! as Long).toInt()))
+                                }
                             }
-
-
-//                            val categoryPhrase = item
-//                                    .value
-//                                    as HashMap<String, String>
-//                            val category = Category(it, categoryPhrase)
-//                            categoryList.add(category)
                         }
-                    } //                    val replics = dataSnapshot.children.map {
-//                        it.getValue(Replic::class.java) as HashMap<String, Replic>
-//                    }
-
-
+                    }
                     subscriber.onNext(list)
                     subscriber.onComplete()
                 }
