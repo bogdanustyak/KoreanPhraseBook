@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.ui.models.Category
 import com.leoart.koreanphrasebook.ui.models.Chapter
 import io.reactivex.Observable
@@ -67,12 +68,13 @@ class CategoriesRequest : FireBaseRequest() {
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val categoryList = ArrayList<Category>()
-                    for (item in dataSnapshot.children) {
-                        item.key?.let {
-                            Log.d("ASD", item.toString())
-                            val list = item.value as HashMap<String, HashMap<String, String>>
-                            list.forEach { s, hashMap ->
-                                categoryList.add(Category(it, hashMap, s))
+                    for(item in dataSnapshot.children){
+                        item.key?.let{
+                            val id = it
+                            for (inItem in item.children){
+                                inItem.key?.let{
+                                    categoryList.add(Category(id,inItem.value as HashMap<String, String>, it))
+                                }
                             }
                         }
                     }
