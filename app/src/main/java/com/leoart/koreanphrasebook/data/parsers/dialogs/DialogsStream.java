@@ -31,10 +31,12 @@ public class DialogsStream extends DataStream implements TextFileParser<Dialog> 
         int number = 0;
         String ukrainian;
         String korean = "";
-        while ((ukrainian = br.readLine()) != null && (korean = br.readLine()) != null) {
+        String transcription = "";
+        while ((ukrainian = br.readLine()) != null && (korean = br.readLine()) != null
+                && (transcription = br.readLine()) != null) {
             number++;
             counter++;
-            dialog.addMessage(new Replic(korean, ukrainian, number));
+            dialog.addMessage(new Replic(korean, ukrainian, number, transcription));
         }
 
         //Close the input stream

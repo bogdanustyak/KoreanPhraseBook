@@ -59,7 +59,7 @@ class CategoriesRequest : FireBaseRequest() {
 //    }
 
     fun getAllCategories(): Observable<List<Category>> {
-        return Observable.create({ subscriber ->
+        return Observable.create { subscriber ->
             dataBase.reference.child(CATEGORIES).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
@@ -82,6 +82,6 @@ class CategoriesRequest : FireBaseRequest() {
                     subscriber.onComplete()
                 }
             })
-        })
+        }
     }
 }

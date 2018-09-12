@@ -42,7 +42,7 @@ class FavouriteRepository(val context: Context) {
                                     .subscribeOn(Schedulers.io())
                                     .subscribe(
                                             {
-                                                it.isFavourite = "false"
+                                                it.isFavourite = false
                                                 db.dictionaryDao().updateFavorite(it)
                                                 emitter.onComplete()
                                             },
