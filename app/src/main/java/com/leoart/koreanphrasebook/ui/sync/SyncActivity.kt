@@ -35,7 +35,6 @@ class SyncActivity : BaseActivity() {
 
     private fun initUI() {
         progressView = findViewById(R.id.progressLayout)
-
         dismissButton = findViewById(R.id.dismissButton)
         dismissButton?.setOnClickListener {
             openMainScreen()

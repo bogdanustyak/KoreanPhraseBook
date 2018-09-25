@@ -26,7 +26,7 @@ class PhrasesRequest : FireBaseRequest() {
     }
 
     fun getPhrases(): Observable<List<Phrase>> {
-        return Observable.create({ subscriber ->
+        return Observable.create { subscriber ->
             dataBase.reference.child(CATEGORY_PHRASES).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
@@ -48,6 +48,6 @@ class PhrasesRequest : FireBaseRequest() {
                     subscriber.onComplete()
                 }
             })
-        })
+        }
     }
 }

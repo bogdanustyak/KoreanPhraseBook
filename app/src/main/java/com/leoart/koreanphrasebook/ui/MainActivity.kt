@@ -9,7 +9,6 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
-import android.view.MenuItem
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
@@ -51,10 +50,6 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
     private fun initUI() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-
-        //        CategoryParser(baseContext).writeToFirebaseDB()
-        //        val data = PhrasesParser(baseContext, "phrases.txt").parse()
-        //        PhrasesRequest().writePhrases("category33", data)
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
         bottomNav.selectedItemId = R.id.action_chapters
         bottomNav.setOnNavigationItemSelectedListener {

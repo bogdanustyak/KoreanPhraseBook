@@ -1,6 +1,5 @@
 package com.leoart.koreanphrasebook.data.network.firebase
 
-import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -14,8 +13,20 @@ import io.reactivex.Observable
  */
 class DialogsRequest : FireBaseRequest() {
 
+    val DIALOG_REPLICS = "dialogReplics"
+
+    fun writeDialogReplics(dialog: com.leoart.koreanphrasebook.data.network.firebase.dialogs.models.Dialog) {
+        val dialogKey = "dialog5"
+        dialog.getMessages().forEach {
+            val key = dataBaseRef.child("$DIALOG_REPLICS/$dialogKey").push().key
+            val childUpdates = java.util.HashMap<String, Any>()
+            childUpdates["$DIALOG_REPLICS/$dialogKey/$key"] = it.toMap()
+            dataBaseRef.updateChildren(childUpdates)
+        }
+    }
+
     fun getAllDialogNames(): Observable<List<DialogResponse>> {
-        return Observable.create({ emmitter ->
+        return Observable.create { emmitter ->
             dataBase.reference.child("dialogs").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     emmitter.onError(Throwable("data was not found"))
@@ -34,12 +45,12 @@ class DialogsRequest : FireBaseRequest() {
                     emmitter.onComplete()
                 }
             })
-        })
+        }
     }
 
     fun getDialogReplics(dialogUID: String): Observable<List<Replic>> {
-        return Observable.create({ subscriber ->
-            dataBase.reference?.child("dialogReplics/" + dialogUID)?.addListenerForSingleValueEvent(object : ValueEventListener {
+        return Observable.create { subscriber ->
+            dataBase.reference?.child("$DIALOG_REPLICS/$dialogUID").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
                     subscriber.onComplete()
@@ -53,12 +64,12 @@ class DialogsRequest : FireBaseRequest() {
                     subscriber.onComplete()
                 }
             })
-        })
+        }
     }
 
     fun getAllDialogsReplics(): Observable<List<Replic>> {
-        return Observable.create({ subscriber ->
-            dataBase.reference?.child("dialogReplics")?.addListenerForSingleValueEvent(object : ValueEventListener {
+        return Observable.create { subscriber ->
+            dataBase.reference?.child(DIALOG_REPLICS).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
                     subscriber.onError(Throwable("data was not found"))
                     subscriber.onComplete()
@@ -73,7 +84,8 @@ class DialogsRequest : FireBaseRequest() {
                             for (inItem in item.children) {
                                 inItem.key?.let {
                                     val data = inItem.value as HashMap<String, Any>
-                                    list.add(Replic(id, data["korean"]!! as String, data["ukrainian"]!! as String, (data["number"]!! as Long).toInt()))
+                                    list.add(Replic(id, data["korean"]!! as String, data["ukrainian"]!! as String,
+                                            (data["number"]!! as Long).toInt()))
                                 }
                             }
                         }
@@ -82,6 +94,6 @@ class DialogsRequest : FireBaseRequest() {
                     subscriber.onComplete()
                 }
             })
-        })
+        }
     }
 }

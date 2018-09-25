@@ -4,16 +4,15 @@ import android.content.Context
 import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.DictionaryRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
-import com.leoart.koreanphrasebook.data.repository.models.EDialog
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
-import com.leoart.koreanphrasebook.data.repository.models.EPhrase
+import com.leoart.koreanphrasebook.ui.models.Word
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
+import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import com.leoart.koreanphrasebook.utils.toCompletable
 
 /**
  * DictionaryRepository
@@ -46,7 +45,6 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
             })
         }
     }
-
 
     fun getDataFromDB(): Flowable<Dictionary> {
         return AppDataBase.getInstance(context).dictionaryDao().getAll()
@@ -85,16 +83,16 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
         if (dict.isEmpty()) return Flowable.just(Dictionary())
         val dictionary = Dictionary()
         var previouseLetter: Char = dict.first().letter
-        var list: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
+        var list: ArrayList<Word> = ArrayList()
 
         dict.forEach { d ->
             if (previouseLetter == d.letter) {
-                list.add(generateDataMap(d.definition, d.word, d.isFavourite))
+                list.add(Word(d.word, d.definition, d.isFavourite))
             } else {
                 dictionary.add(previouseLetter, list)
                 previouseLetter = d.letter
-                list = ArrayList<HashMap<String, String>>()
-                list.add(generateDataMap(d.definition, d.word, d.isFavourite))
+                list = ArrayList()
+                list.add(Word(d.word, d.definition, d.isFavourite))
             }
         }
         if (list.size > 0) {
@@ -103,15 +101,7 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
         return Flowable.just(dictionary)
     }
 
-    private fun generateDataMap(translation: String, word: String, favourite: String): HashMap<String, String> {
-        var map = HashMap<String, String>()
-        map.put("translation", translation)
-        map.put("word", word)
-        map.put("favourite", favourite)
-        return map
-    }
-
-    fun requestFromNetwork() {
+    private fun requestFromNetwork() {
         DictionaryRequest().getDictionary()
                 .observeOn(Schedulers.io())
                 .subscribe {
@@ -128,8 +118,8 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
             val key = it.key
             val value = it.value
             value.forEach {
-                dictionary.add(EDictionary(key, it["word"] ?: "", it["translation"]
-                        ?: "", it["favourite"] ?: "false"))
+                dictionary.add(EDictionary(key, it.word ?: "", it.translation
+                        ?: "", it.isFavourite ?: false))
             }
         }
 
@@ -147,13 +137,13 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    Log.d(TAG,"data saved")
+                    Log.d(TAG, "data saved")
                 }, {
                     it.printStackTrace()
                 })
     }
 
-    fun localDB(): Observable<AppDataBase> {
+    private fun localDB(): Observable<AppDataBase> {
         return Observable.just(AppDataBase.getInstance(context))
                 .subscribeOn(Schedulers.io())
     }

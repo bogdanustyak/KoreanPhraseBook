@@ -1,6 +1,7 @@
 package com.leoart.koreanphrasebook.data.parsers.vocabulary
 
 import com.leoart.koreanphrasebook.data.parsers.TextFileParser
+import com.leoart.koreanphrasebook.ui.models.Word
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -21,25 +22,51 @@ class DictionaryStream(private val inputStream: InputStream) : TextFileParser<Di
 
         var letter = 'A'
         var words = ArrayList<Word>()
-        br.forEachLine {
+
+        var line = br.readLine()
+       do {
             try {
-                val line = it.substring(1, it.length)
-                if (lineIsLetter(line)) {
-                    if (readingFirstLetter) {
-                        readingFirstLetter = false
-                    } else {
-                       // dictionary.add(letter, words)
-                        words = ArrayList<Word>()
-                    }
+                if (line.startsWith("letter")) {
+                    dictionary.add(letter, words)
+                    words = ArrayList()
+                    line = br.readLine()
                     letter = line[0]
                 } else {
-                   // val word = parseWords(line)
-                    //words.add(word)
+                    try {
+                        val translation = br.readLine()
+                        val word = Word(line, translation)
+                        words.add(word)
+                    } catch (e: IllegalStateException) {
+                        print(line)
+                    }
                 }
+                line = br.readLine()
             } catch (e: Exception) {
+                print(line)
                 e.printStackTrace()
             }
-        }
+        } while (line != null)
+        dictionary.add(letter, words)
+
+//        br.forEachLine {
+//            try {
+//                val line = it.substring(1, it.length)
+//                if (lineIsLetter(line)) {
+//                    if (readingFirstLetter) {
+//                        readingFirstLetter = false
+//                    } else {
+//                        dictionary.add(letter, words)
+//                        words = ArrayList()
+//                    }
+//                    letter = line[0]
+//                } else {
+//                    val word = parseWords(line)
+//                    words.add(word)
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
 
         br.close()
 
@@ -47,10 +74,9 @@ class DictionaryStream(private val inputStream: InputStream) : TextFileParser<Di
     }
 
 //    private fun parseWords(line: String): Word {
-//        val spaceIndex = line.indexOfFirst { it == ' ' }
 //        val word = line.substring(0, spaceIndex)
 //        val translation = line.substring(spaceIndex, line.length)
-//        return Word()
+//        return Word(word, translation)
 //    }
 
     private fun lineIsLetter(line: String) = !line.isEmpty() && line.length == 1

@@ -7,9 +7,13 @@ import java.util.*
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
 
-class Replic(val uid: String = "", val korean: String = "", val ukrainian: String = "", val number: Int = 0) {
+class Replic(val uid: String = "", val korean: String = "", val ukrainian: String = "",
+             val number: Int = 0, val transcription: String = "") {
 
     constructor(korean: String, ukrainian: String, number: Int) : this("", korean, ukrainian, number)
+
+    constructor(korean: String, ukrainian: String, number: Int, transcription: String)
+            : this("", korean, ukrainian, number, transcription)
 
     override fun toString(): String {
         return "Replica{" +
@@ -23,10 +27,11 @@ class Replic(val uid: String = "", val korean: String = "", val ukrainian: Strin
     @Exclude
     fun toMap(): HashMap<String, Any> {
         val map = HashMap<String, Any>()
-        map.put("uid", uid)
+        // map.put("uid", uid)
         map.put("korean", korean)
         map.put("ukrainian", ukrainian)
         map.put("number", number)
+        map.put("transcription", transcription)
         return map
     }
 }

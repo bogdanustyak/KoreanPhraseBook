@@ -16,7 +16,7 @@ class EDictionary(
         @ColumnInfo(name = "definition")
         val definition: String,
         @ColumnInfo(name = "favourite")
-        var isFavourite: String
+        var isFavourite: Boolean
 ) {
     @PrimaryKey(autoGenerate = true)
     var uid: Long? = null

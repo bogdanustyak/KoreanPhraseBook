@@ -3,14 +3,13 @@ package com.leoart.koreanphrasebook.ui.vocabulary
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
+import com.leoart.koreanphrasebook.ui.models.Word
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
 import org.zakariya.stickyheaders.SectioningAdapter
-import java.util.*
 
 /**
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
@@ -20,7 +19,7 @@ import java.util.*
 //TODO create method to update single item on favourite state change ? ? ?
 class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrollRecyclerView.SectionedAdapter {
 
-    private var list: Map<Char, List<HashMap<String, String>>>?
+    private var list: Map<Char, List<Word>>?
     private var letters: Array<Char>?
     private var size = 0
     private var favoriteClickLisener: VocabularyFragment.Companion.OnFavoriteClickListener? = null
@@ -78,7 +77,7 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
                 list?.let { itList ->
                     val item = itList[s]?.get(itemIndex)
                     if (item != null) {
-                        val text = item["word"] + " - " + item["translation"]
+                        val text = item.word + " - " + item.translation
                         (viewHolder as DictViewHolder)
                                 .text.text = text
 //                        viewHolder.icFavourite.setImageResource(getFavoriteResource(item["favourite"]))
@@ -146,12 +145,8 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
                     }
                 }
         val item = section?.get(itemPositionInSection)
-        var isFavourite = "false"
         item?.let {
-            it["favourite"]?.let { favourite ->
-                isFavourite = favourite
-            }
-            dictionary = EDictionary(letter!!, it["word"]!!, it["translation"]!!, isFavourite)
+            dictionary = EDictionary(letter!!, it.word, it.translation, it.isFavourite)
         }
         return dictionary
     }

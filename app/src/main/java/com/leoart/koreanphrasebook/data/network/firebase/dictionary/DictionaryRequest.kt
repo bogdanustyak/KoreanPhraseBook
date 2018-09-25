@@ -5,6 +5,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.leoart.koreanphrasebook.data.network.firebase.FireBaseRequest
 import com.leoart.koreanphrasebook.data.parsers.vocabulary.Dictionary
+import com.leoart.koreanphrasebook.ui.models.Word
 import io.reactivex.Observable
 
 /**
@@ -17,15 +18,18 @@ class DictionaryRequest : FireBaseRequest() {
     fun initDict(dict: Dictionary) {
         for (entry in dict.data()) {
             val letter = entry.key
-            val words = entry.value
-            val childUpdates = HashMap<String, Any>()
-            childUpdates.put("/$DICTIONARY/$letter", words)
-            dataBaseRef.updateChildren(childUpdates)
+            entry.value.forEach {
+                val key = dataBaseRef.child("$DICTIONARY/$letter").push().key
+                val word = it.toMap()
+                val childUpdates = HashMap<String, Any>()
+                childUpdates.put("/$DICTIONARY/$letter/$key", word)
+                dataBaseRef.updateChildren(childUpdates)
+            }
         }
     }
 
     fun getDictionary(): Observable<Dictionary> {
-        return Observable.create({ subscriber ->
+        return Observable.create { subscriber ->
             dataBase.reference
                     .child(DICTIONARY)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -39,13 +43,14 @@ class DictionaryRequest : FireBaseRequest() {
                             val result = Dictionary()
                             for ((key, value) in dict) {
                                 val letter = (key as String)[0]
-                                val words = value as ArrayList<HashMap<String, String>>
+                                val words = (value as HashMap<String, HashMap<String, String>>)
+                                        .map { it -> Word(it.value["word"] ?:"", it.value["translation"] ?:"") }
                                 result.add(letter, words)
                             }
                             subscriber.onNext(result)
                             subscriber.onComplete()
                         }
                     })
-        })
+        }
     }
 }

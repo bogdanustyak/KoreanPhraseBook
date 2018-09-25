@@ -1,5 +1,6 @@
 package com.leoart.koreanphrasebook.data.parsers.vocabulary
 
+import com.leoart.koreanphrasebook.ui.models.Word
 import com.leoart.koreanphrasebook.utils.Alphabet
 import java.util.*
 
@@ -7,19 +8,19 @@ import java.util.*
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
 
-class Dictionary(private var data: HashMap<Char, List<HashMap<String, String>>>) {
+class Dictionary(private var data: HashMap<Char, List<Word>>) {
 
     constructor() : this(HashMap())
 
-    fun add(letter: Char, words: List<HashMap<String, String>>) {
-        this.data.put(letter, words)
+    fun add(letter: Char, words: List<Word>) {
+        this.data[letter] = words
     }
 
-    fun data(): HashMap<Char, List<HashMap<String, String>>> {
+    fun data(): HashMap<Char, List<Word>> {
         return data
     }
 
-    fun sortedData(): Map<Char, List<HashMap<String, String>>> {
+    fun sortedData(): Map<Char, List<Word>> {
         return data.toSortedMap(compareBy<Char> {
             Alphabet().getUkrAlphabet().indexOf(it)
         })
@@ -27,7 +28,7 @@ class Dictionary(private var data: HashMap<Char, List<HashMap<String, String>>>)
 
     fun wordsCount(): Int {
         var count = 0
-        for ((letter, words) in data) {
+        for ((_, words) in data) {
             count += words.size
         }
         return count
