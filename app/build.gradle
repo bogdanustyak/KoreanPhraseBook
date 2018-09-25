@@ -7,11 +7,11 @@ android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "com.leoart.koreanphrasebook"
+        applicationId 'com.keytotech.koreanphrasebook'
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 1
-        versionName "0.1"
+        versionCode 2
+        versionName "0.1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -20,7 +20,6 @@ android {
 
         vectorDrawables.useSupportLibrary = true
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -29,6 +28,8 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
+    }
+    productFlavors {
     }
 }
 
@@ -63,36 +64,27 @@ ext {
 
 dependencies {
     implementation "com.android.support:support-v4:$support_lib"
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-
     implementation "com.google.firebase:firebase-core:$firebase"
     implementation "com.google.firebase:firebase-database:$firebase"
-    implementation "com.google.firebase:firebase-auth:16.0.2"
-
+    implementation 'com.google.firebase:firebase-auth:16.0.2'
     implementation 'com.google.android.gms:play-services-analytics:16.0.1'
-
     implementation 'org.zakariya.stickyheaders:stickyheaders:0.7.6'
-
     implementation "com.android.support:appcompat-v7:$support_lib"
     implementation "com.android.support:support-v4:$support_lib"
     implementation "com.android.support:design:$support_lib"
     implementation "com.android.support:cardview-v7:$support_lib"
-
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
-
     implementation "org.jetbrains.anko:anko:$anko_version"
     implementation 'com.badoo.mobile:android-weak-handler:1.1'
     implementation 'com.android.support:multidex:1.0.3'
-
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.11'
     testCompile 'junit:junit:4.12'
 
@@ -117,7 +109,6 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     //Crash analytics
