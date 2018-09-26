@@ -1,29 +1,32 @@
 package com.leoart.koreanphrasebook.data.parsers.vocabulary
 
+import android.util.Log
 import com.leoart.koreanphrasebook.ui.models.Word
-import com.leoart.koreanphrasebook.utils.Alphabet
-import java.util.*
+import com.leoart.koreanphrasebook.utils.LetterComparator
+import com.leoart.koreanphrasebook.utils.WordComparator
 
 /**
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
 
-class Dictionary(private var data: HashMap<Char, List<Word>>) {
+class Dictionary(private var data: Map<Char, List<Word>>) {
 
     constructor() : this(HashMap())
 
     fun add(letter: Char, words: List<Word>) {
-        this.data[letter] = words
+        (this.data as HashMap)[letter] = words
     }
 
-    fun data(): HashMap<Char, List<Word>> {
-        return data
+    fun data(): Map<Char, List<Word>> {
+        return data.toList().sortedWith(LetterComparator()).toMap()
     }
 
     fun sortedData(): Map<Char, List<Word>> {
-        return data.toSortedMap(compareBy<Char> {
-            Alphabet().getUkrAlphabet().indexOf(it)
-        })
+        data.forEach {
+            (this.data as HashMap)[it.key] = it.value.sortedWith(WordComparator())
+        }
+        data = data.toList().sortedWith(LetterComparator()).toMap()
+        return data
     }
 
     fun wordsCount(): Int {
@@ -42,7 +45,7 @@ class Dictionary(private var data: HashMap<Char, List<Word>>) {
 
     fun positionOf(letter: Char): Int {
         var position = 0
-        val sorted = sortedData()
+        val sorted = data
         for ((key, value) in sorted) {
             if (letter == key) {
                 break
