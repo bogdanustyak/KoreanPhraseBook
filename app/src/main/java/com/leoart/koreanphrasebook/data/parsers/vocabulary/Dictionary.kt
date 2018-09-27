@@ -42,17 +42,4 @@ class Dictionary(private var data: Map<Char, List<Word>>) {
         count += data.keys.size
         return count
     }
-
-    fun positionOf(letter: Char): Int {
-        var position = 0
-        val sorted = data
-        for ((key, value) in sorted) {
-            if (letter == key) {
-                break
-            } else {
-                position += value.size
-            }
-        }
-        return position
-    }
 }

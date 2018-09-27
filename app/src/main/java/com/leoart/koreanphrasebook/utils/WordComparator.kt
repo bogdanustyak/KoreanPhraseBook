@@ -7,10 +7,10 @@ import java.util.*
 /**
  * Created by Maryan Onysko (maryan.onysko@gmail.com)
  */
-class WordComparator() : Comparator<Word> {
+class WordComparator : Comparator<Word> {
     override fun compare(p0: Word?, p1: Word?): Int {
-        val usCollator = Collator.getInstance(Locale.UK)
-        usCollator.strength = Collator.PRIMARY
-        return usCollator.compare(p0?.word, p1?.word)
+        val collator = Collator.getInstance(Locale.UK)
+        collator.strength = Collator.PRIMARY
+        return collator.compare(p0?.word, p1?.word)
     }
 }
