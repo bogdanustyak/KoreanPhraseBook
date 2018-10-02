@@ -107,7 +107,7 @@ class VocabularyFragment : BaseFragment() {
         val fastScrollingRecycler = view.findViewById<FastScrollRecyclerView>(R.id.recycler)
         val linearLayoutManager = LinearLayoutManager(activity)
         fastScrollingRecycler.layoutManager = linearLayoutManager
-        val letters = data.sortedData().keys.toTypedArray()
+        val letters = data.data().keys.toTypedArray()
         fastScrollingRecycler.adapter = FastScrollingAdapter(
                 letters,
                 FastScrollingAdapter.FastScrollingAdapterInteractionListener {

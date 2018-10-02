@@ -114,7 +114,7 @@ class DictionaryRepository(val context: Context) : RefreshableRepository {
 
     fun saveIntoDB(dict: Dictionary) {
         val dictionary: ArrayList<EDictionary> = ArrayList()
-        dict.data().forEach {
+        dict.sortedData().forEach {
             val key = it.key
             val value = it.value
             value.forEach {

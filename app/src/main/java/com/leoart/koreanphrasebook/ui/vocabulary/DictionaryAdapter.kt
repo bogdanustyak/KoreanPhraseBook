@@ -25,7 +25,7 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
     private var favoriteClickLisener: VocabularyFragment.Companion.OnFavoriteClickListener? = null
 
     init {
-        this.list = dictionary.sortedData()
+        this.list = dictionary.data()
         this.letters = list?.keys?.toTypedArray()
         this.size = dictionary.totalCount()
     }
@@ -152,7 +152,7 @@ class DictionaryAdapter(dictionary: Dictionary) : SectioningAdapter(), FastScrol
     }
 
     fun setData(dictionary: Dictionary) {
-        this.list = dictionary.sortedData()
+        this.list = dictionary.data()
         this.letters = list?.keys?.toTypedArray()
         this.size = dictionary.totalCount()
         notifyDataSetChanged()
