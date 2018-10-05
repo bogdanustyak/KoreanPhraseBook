@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.leoart.koreanphrasebook.R
+import android.support.v7.util.DiffUtil
+
 
 /**
  * SearchResultsAdapter
@@ -49,6 +51,16 @@ class SearchResultsAdapter(private var items: MutableList<SectionOrRow>)
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    fun itemCount(): Int {
+        return items.size
+    }
+
+    fun updateList(newList: ArrayList<SectionOrRow>) {
+        val diffResult = DiffUtil.calculateDiff(SearchDiffUtilCallback(this.items, newList))
+        this.items = newList
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun getItemViewType(position: Int): Int {
