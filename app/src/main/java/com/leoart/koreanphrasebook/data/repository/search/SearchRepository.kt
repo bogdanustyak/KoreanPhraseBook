@@ -3,8 +3,11 @@ package com.leoart.koreanphrasebook.data.repository.search
 import android.content.Context
 import com.leoart.koreanphrasebook.data.network.firebase.search.DictType
 import com.leoart.koreanphrasebook.data.network.firebase.search.SearchResult
+import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteModel
 import com.leoart.koreanphrasebook.data.repository.AppDataBase
+import com.leoart.koreanphrasebook.ui.search.SearchResultsAdapter
 import io.reactivex.Flowable
+import io.reactivex.functions.Function5
 import java.util.*
 
 
@@ -17,12 +20,21 @@ class SearchRepository(val context: Context) : Search {
 
     override fun search(query: String): Flowable<List<SearchResult>> {
         val searchQuery = "%$query%"
-        return Flowable.merge(
-                Arrays.asList(searchDictionary(searchQuery),
-                        searchDialogs(searchQuery),
-                        searchChapters(searchQuery),
-                        searchReplic(searchQuery),
-                        searchPhrase(searchQuery))
+        return Flowable.combineLatest(
+                searchDictionary(searchQuery),
+                searchDialogs(searchQuery),
+                searchChapters(searchQuery),
+                searchReplic(searchQuery),
+                searchPhrase(searchQuery),
+                Function5 { l1, l2, l3, l4, l5 ->
+                    val list = ArrayList<SearchResult>()
+                    list.addAll(l1)
+                    list.addAll(l2)
+                    list.addAll(l3)
+                    list.addAll(l4)
+                    list.addAll(l5)
+                    return@Function5 list
+                }
         )
     }
 
