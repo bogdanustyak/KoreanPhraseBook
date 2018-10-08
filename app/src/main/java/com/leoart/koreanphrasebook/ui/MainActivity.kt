@@ -9,6 +9,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
+import android.view.MenuItem
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
@@ -97,35 +98,22 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.main, menu)
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = menu.findItem(R.id.action_search).actionView as? SearchView
-        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView?.setIconifiedByDefault(true)
-        searchView?.isSubmitButtonEnabled = true
-        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let {
-                    searchView.isIconified = true
-                    searchView.clearFocus()
-                    (menu.findItem(R.id.action_search)).collapseActionView()
-                    SoftKeyboard(this@MainActivity).hide()
-                    openSearch(it)
-                }
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
-
-        })
         return true
     }
 
-    private fun openSearch(query: String) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_search -> {
+                openSearch()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun openSearch() {
         val intent = Intent(this, SearchActivity::class.java)
         intent.action = Intent.ACTION_SEARCH
-        intent.putExtra(SearchManager.QUERY, query)
         startActivity(intent)
     }
 
