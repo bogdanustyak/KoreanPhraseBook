@@ -60,4 +60,7 @@
     <string name="request_error_message">Помилка завантаження даних</string>
     <string name="no_favourite_selected">У вас ще немає вибраних фраз.</string>
 
+    <string name="search_screen_initial_message">Пошук здійснюється по фразах і словах в словнику</string>
+    <string name="search_screen_empty_search">Нічого не знайдено. Пошук здійснюється по фразах і словах в словнику. Спробуйте,будь ласка, іншу фразу</string>
+
 </resources>

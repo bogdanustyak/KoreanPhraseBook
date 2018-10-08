@@ -2,17 +2,14 @@ package com.leoart.koreanphrasebook.ui.search
 
 import android.app.SearchManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.text.InputType
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.widget.RxSearchView
-import com.leoart.koreanphrasebook.KoreanPhrasebookApp
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
-import com.leoart.koreanphrasebook.data.analytics.AnalyticsManagerImpl
 import com.leoart.koreanphrasebook.data.analytics.ScreenNavigator
 import com.leoart.koreanphrasebook.data.network.firebase.search.DictType
 import com.leoart.koreanphrasebook.data.repository.search.SearchRepository
@@ -41,7 +38,6 @@ class SearchActivity : BaseActivity() {
         AndroidInjection.inject(this)
         analyticsManager.onOpenScreen(ScreenNavigator.SEARCH_SCREEN.screenName)
         initUI()
-        handleIntent(intent)
     }
 
     private fun initUI() {
@@ -49,7 +45,6 @@ class SearchActivity : BaseActivity() {
         val rvSearchResults = findViewById<RecyclerView>(R.id.rv_search_results)
         adapter = SearchResultsAdapter(mutableListOf())
         rvSearchResults.adapter = adapter
-
         rvSearchResults?.setOnTouchListener { _, _ ->
             SoftKeyboard(this).hide()
             return@setOnTouchListener false
@@ -57,6 +52,7 @@ class SearchActivity : BaseActivity() {
         searchback.setOnClickListener {
             onBackPressed()
         }
+        showInitialMessage()
     }
 
     private fun setupSearchView() {
@@ -74,25 +70,32 @@ class SearchActivity : BaseActivity() {
         compositeDisposable.add(inputSubscription
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    clearResults()
-                    if (it.length >= MIN_QUERY_LENTH)
+                    if (it.isNotEmpty() && it.length < MIN_QUERY_LENGTH) {
+                        clearResults()
+                        showNoSearchResult()
+                    }
+                    if (it.length >= MIN_QUERY_LENGTH) {
                         searchQuery(it.toString())
+                    }
                 })
     }
 
-    fun clearResults() {
+    private fun clearResults() {
         adapter.clear()
     }
 
-    private fun handleIntent(intent: Intent) {
-        if (Intent.ACTION_SEARCH == intent.action) {
-            val query = intent.getStringExtra(SearchManager.QUERY)
-            if (!query.isNullOrBlank()) {
-                searchView.setQuery(query, false)
-                searchView.requestFocus()
-                searchQuery(query)
-            }
-        }
+    private fun showInitialMessage() {
+        tvEmptySearch.text = getString(R.string.search_screen_initial_message)
+        tvEmptySearch.visibility = View.VISIBLE
+    }
+
+    private fun showNoSearchResult() {
+        tvEmptySearch.text = getString(R.string.search_screen_empty_search)
+        tvEmptySearch.visibility = View.VISIBLE
+    }
+
+    private fun hideNoSearchResult() {
+        tvEmptySearch.visibility = View.GONE
     }
 
     private fun searchQuery(query: String) {
@@ -109,7 +112,11 @@ class SearchActivity : BaseActivity() {
                                         data.add(SectionOrRow.createRow(it.title))
                                     }
                                 }
-                        adapter.append(data)
+                        adapter.updateList(data)
+                        hideNoSearchResult()
+                    } else {
+                        showNoSearchResult()
+                        adapter.clear()
                     }
                 }, { throwable ->
                     throw UnsupportedOperationException("not implemented")
@@ -133,7 +140,7 @@ class SearchActivity : BaseActivity() {
 
     companion object {
         const val TIMEOUT = 300L
-        const val MIN_QUERY_LENTH = 3
+        const val MIN_QUERY_LENGTH = 3
     }
 
 }
