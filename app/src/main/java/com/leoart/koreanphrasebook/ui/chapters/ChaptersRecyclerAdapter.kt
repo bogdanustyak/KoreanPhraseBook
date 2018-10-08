@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -27,7 +28,10 @@ class ChaptersRecyclerAdapter(private var chapters: List<Chapter>?,
     : RecyclerView.Adapter<ChaptersRecyclerAdapter.ChapterViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChapterViewHolder {
-        val viewHolder = ChapterViewHolder(ChapterItemUI().createView(AnkoContext.create(parent.context, parent)))
+        val viewHolder = ChapterViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.item_chapter, parent, false)
+        )
+        //    ChapterItemUI().createView(AnkoContext.create(parent.context, parent)))
         viewHolder.ll_chapter.setOnClickListener {
             interactionListener?.onChapterClick(chapters!![viewHolder.adapterPosition])
         }
@@ -95,7 +99,7 @@ class ChaptersRecyclerAdapter(private var chapters: List<Chapter>?,
                         text = "My light text"
                         textSize = 18f
                         typeface = light
-                        textColor = R.color.black
+                        textColor = R.color.colorPrimaryDark
                     }
                 }
             }

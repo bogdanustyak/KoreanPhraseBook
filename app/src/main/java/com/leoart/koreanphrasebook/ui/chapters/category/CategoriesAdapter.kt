@@ -1,6 +1,7 @@
 package com.leoart.koreanphrasebook.ui.chapters.category
 
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -17,7 +18,10 @@ import org.jetbrains.anko.AnkoContext
 class CategoriesAdapter(private var chapterCategories: List<ECategory>?, private val interactionListener: CategoriesAdapter.CategoryInteractionListener?) : RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val viewHolder = CategoryViewHolder(SimpleTextItemUI().createView(AnkoContext.create(parent.context, parent)))
+        val viewHolder = CategoryViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false)
+              //  SimpleTextItemUI().createView(AnkoContext.create(parent.context, parent))
+        )
         viewHolder.ll_chapter.setOnClickListener {
             if (interactionListener != null && chapterCategories != null) {
                 interactionListener.onCategoryClick(chapterCategories!![viewHolder.adapterPosition])

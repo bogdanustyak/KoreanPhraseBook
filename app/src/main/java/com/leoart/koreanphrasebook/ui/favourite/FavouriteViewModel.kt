@@ -21,9 +21,11 @@ class FavouriteViewModel(private val favouriteRepository: FavouriteRepository) :
     }
 
     fun onFavouriteClicked(favourite: FavouriteModel) {
-        favouriteRepository.markFavourite(favourite).subscribe({}, {
-            it.printStackTrace()
-        })
+        favouriteRepository
+                .markFavourite(favourite)
+                .subscribe({}, {
+                    it.printStackTrace()
+                })
     }
 
     private fun loadDictionary() {
