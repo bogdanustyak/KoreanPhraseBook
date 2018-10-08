@@ -9,7 +9,7 @@
         android:id="@+id/charHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorAccent"
         android:textAllCaps="true"
         android:layout_marginStart="10dp"
         android:textSize="22sp"

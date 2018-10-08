@@ -1,6 +1,7 @@
 package com.leoart.koreanphrasebook.ui.chapters
 
 import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.Gravity
@@ -15,6 +16,7 @@ import com.leoart.koreanphrasebook.ui.SimpleTextItemUI
 import com.leoart.koreanphrasebook.ui.models.Chapter
 import com.leoart.koreanphrasebook.utils.light
 import org.jetbrains.anko.*
+import org.jetbrains.anko.appcompat.v7.tintedImageView
 
 /**
  * Created by bogdan on 11/5/16.
@@ -78,17 +80,22 @@ class ChaptersRecyclerAdapter(private var chapters: List<Chapter>?,
                     orientation = LinearLayout.HORIZONTAL
                     padding = dip(10)
                     gravity = Gravity.CENTER_VERTICAL
-                    imageView {
+                    tintedImageView {
                         id = R.id.iv_icon
                         scaleType = ImageView.ScaleType.CENTER_INSIDE
-                    }
-                            .lparams(width = dip(50), height = dip(50))
+
+                    }.lparams(width = dip(50), height = dip(50))
+                            .setColorFilter(
+                                    ContextCompat.getColor(context, R.color.colorPrimaryDark),
+                                    android.graphics.PorterDuff.Mode.MULTIPLY
+                            )
+
                     textView {
                         id = R.id.tv_name
                         text = "My light text"
                         textSize = 18f
                         typeface = light
-                        textColor = R.color.list_text_color
+                        textColor = R.color.black
                     }
                 }
             }

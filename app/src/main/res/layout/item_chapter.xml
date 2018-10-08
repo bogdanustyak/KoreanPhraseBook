@@ -3,9 +3,9 @@
     android:id="@+id/ll_chapter"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:layout_marginEnd="10dp"
     android:layout_marginStart="10dp"
     android:layout_marginTop="10dp"
+    android:layout_marginEnd="10dp"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -13,6 +13,7 @@
         android:id="@+id/iv_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:tint="@color/colorPrimaryDark"
         android:src="@mipmap/ic_launcher" />
 
     <TextView
@@ -20,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:textSize="18sp"/>
+        android:textColor="@color/black"
+        android:textSize="18sp" />
 
 </LinearLayout>

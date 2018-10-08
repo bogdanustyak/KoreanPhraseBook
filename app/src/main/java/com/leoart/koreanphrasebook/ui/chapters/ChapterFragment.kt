@@ -47,8 +47,8 @@ class ChapterFragment : BaseFragment(), ChaptersView,
         val rvChapters = view.findViewById<RecyclerView>(R.id.rv_chapters)
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvChapters.layoutManager = layoutManager
-        rvChapters.itemAnimator = DefaultItemAnimator()
-        rvChapters.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+//        rvChapters.itemAnimator = DefaultItemAnimator()
+//        rvChapters.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
         adapter = ChaptersRecyclerAdapter(chapters, this, context)
         rvChapters.adapter = adapter
         context?.let {
