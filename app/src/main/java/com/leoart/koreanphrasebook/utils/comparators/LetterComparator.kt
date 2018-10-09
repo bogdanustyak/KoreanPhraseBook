@@ -1,4 +1,4 @@
-package com.leoart.koreanphrasebook.utils
+package com.leoart.koreanphrasebook.utils.comparators
 
 import com.leoart.koreanphrasebook.ui.models.Word
 import java.text.Collator

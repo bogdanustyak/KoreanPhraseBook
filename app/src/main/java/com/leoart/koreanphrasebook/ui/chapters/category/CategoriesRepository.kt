@@ -11,6 +11,7 @@ import com.leoart.koreanphrasebook.data.repository.models.ECategory
 import com.leoart.koreanphrasebook.ui.models.Category
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.NetworkChecker
+import com.leoart.koreanphrasebook.utils.comparators.CategoryComparator
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -62,7 +63,7 @@ class CategoriesRepository(val context: Context) : RefreshableRepository {
                     val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
-                            db.categoryDao().insertAll(*list.toTypedArray())
+                            db.categoryDao().insertAll(*list.sortedWith(CategoryComparator()).toTypedArray())
                             DataInfoRepository.getInstance().updateSyncInfo(SyncModel(ECategory::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
