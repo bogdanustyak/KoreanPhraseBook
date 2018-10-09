@@ -52,6 +52,7 @@
 
     <string name="refresh_data">Для використання повного функціоналу додатку рекомендуємо синхронізувати дані</string>
     <string name="sync_data">Синхронізувати</string>
+    <string name="syncing">Синхронізація</string>
     <string name="data_dismiss_sync">Пропустити</string>
     <string name="author">Author:</string>
     <string name="message">Message:</string>

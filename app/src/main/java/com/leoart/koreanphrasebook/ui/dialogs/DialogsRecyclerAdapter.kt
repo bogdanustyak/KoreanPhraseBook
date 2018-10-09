@@ -2,6 +2,7 @@ package com.leoart.koreanphrasebook.ui.dialogs
 
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -17,7 +18,10 @@ import org.jetbrains.anko.AnkoContext
 class DialogsRecyclerAdapter(private var dialogs: List<DialogResponse>?, private val interactionListener: DialogsRecyclerAdapter.DialogsListInteractionListener?) : RecyclerView.Adapter<DialogsRecyclerAdapter.DialogViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DialogViewHolder {
-        val viewHolder = DialogViewHolder(SimpleTextItemUI().createView(AnkoContext.create(parent.context, parent)))
+        val viewHolder = DialogViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false)
+               // SimpleTextItemUI().createView(AnkoContext.create(parent.context, parent))
+        )
         viewHolder.llHolder.setOnClickListener {
             interactionListener?.onDialogClick(dialogs!![viewHolder.adapterPosition])
         }
