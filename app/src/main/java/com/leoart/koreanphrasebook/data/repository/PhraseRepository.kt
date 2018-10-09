@@ -8,6 +8,7 @@ import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.NetworkChecker
+import com.leoart.koreanphrasebook.utils.comparators.PhraseComparator
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.*
 import io.reactivex.Observable
@@ -70,7 +71,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                     val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
-                            db.phraseDao().insertAll(*list.toTypedArray())
+                            db.phraseDao().insertAll(*list.sortedWith(PhraseComparator()).toTypedArray())
                             DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EPhrase::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
