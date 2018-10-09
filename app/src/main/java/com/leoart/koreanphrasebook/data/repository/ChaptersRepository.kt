@@ -6,6 +6,7 @@ import com.leoart.koreanphrasebook.data.network.firebase.ChaptersRequest
 import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import com.leoart.koreanphrasebook.ui.models.Chapter
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
+import com.leoart.koreanphrasebook.utils.comparators.ChapterComparator
 import com.leoart.koreanphrasebook.utils.toCompletable
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -90,7 +91,7 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
                     val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
-                            db.chaptersDao().insertAll(*eChapters)
+                            db.chaptersDao().insertAll(*eChapters.sortedWith(ChapterComparator()).toTypedArray())
                             DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EChapter::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
@@ -99,7 +100,7 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    Log.d(TAG,"data saved")
+                    Log.d(TAG, "data saved")
                 }, {
                     it.printStackTrace()
                 })

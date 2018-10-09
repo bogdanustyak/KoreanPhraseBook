@@ -1,9 +1,8 @@
 package com.leoart.koreanphrasebook.data.parsers.vocabulary
 
-import android.util.Log
 import com.leoart.koreanphrasebook.ui.models.Word
-import com.leoart.koreanphrasebook.utils.LetterComparator
-import com.leoart.koreanphrasebook.utils.WordComparator
+import com.leoart.koreanphrasebook.utils.comparators.LetterComparator
+import com.leoart.koreanphrasebook.utils.comparators.WordComparator
 
 /**
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
