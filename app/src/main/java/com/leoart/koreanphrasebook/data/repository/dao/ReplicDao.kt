@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query
 import com.leoart.koreanphrasebook.data.repository.models.EReplic
 import io.reactivex.Flowable
 import io.reactivex.Maybe
+import io.reactivex.Single
 
 
 /**
@@ -30,6 +31,12 @@ interface ReplicDao {
     @Insert
     fun insertAll(vararg replic: EReplic)
 
+    @Query("SELECT count(*) FROM replic")
+    fun count() : Single<Int>
+
     @Delete
     fun delete(replic: EReplic)
+
+    @Query("DELETE FROM replic")
+    fun deleteAll()
 }

@@ -80,7 +80,7 @@ class DiealogRepository(val context: Context) : RefreshableRepository {
 
     override fun isEmpty(): Single<SyncModel> {
         return AppDataBase.getInstance(context)
-                .phraseDao()
+                .replicsDao()
                 .count()
                 .map {
                     SyncModel(EReplic::class.java.simpleName, it == 0)
@@ -88,7 +88,7 @@ class DiealogRepository(val context: Context) : RefreshableRepository {
     }
 
     private fun clearDB() {
-        AppDataBase.getInstance(context).phraseDao().deleteAll()
+        AppDataBase.getInstance(context).replicsDao().deleteAll()
     }
 
     override fun refreshData(): Completable {
