@@ -4,7 +4,8 @@
 
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_search"
+        android:icon="@drawable/seaaarch"
+        android:iconTint="@color/white"
         android:orderInCategory="50"
         android:title="@string/search"
         app:showAsAction="ifRoom|collapseActionView" />

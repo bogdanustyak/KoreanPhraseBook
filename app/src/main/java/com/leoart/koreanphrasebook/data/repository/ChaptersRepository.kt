@@ -91,7 +91,7 @@ class ChaptersRepository(private val context: Context) : CachedRepository<Chapte
                     val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
-                            db.chaptersDao().insertAll(*eChapters.sortedWith(ChapterComparator()).toTypedArray())
+                            db.chaptersDao().insertAll(*eChapters)
                             DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EChapter::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)

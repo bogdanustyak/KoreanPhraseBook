@@ -3,15 +3,15 @@ package com.leoart.koreanphrasebook.data.repository
 import android.content.Context
 import android.util.Log
 import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
-import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import com.leoart.koreanphrasebook.ui.models.Phrase
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.utils.NetworkChecker
-import com.leoart.koreanphrasebook.utils.comparators.PhraseComparator
 import com.leoart.koreanphrasebook.utils.toCompletable
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
@@ -71,7 +71,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                     val syncResult: Single<Boolean>
                     if (it.isSyncNeeded) {
                         syncResult = localDB().flatMap { db ->
-                            db.phraseDao().insertAll(*list.sortedWith(PhraseComparator()).toTypedArray())
+                            db.phraseDao().insertAll(*list.toTypedArray())
                             DataInfoRepository.getInstance().updateSyncInfo(SyncModel(EPhrase::class.java.simpleName, false))
                             Observable.just(true)
                         }.single(false)
@@ -80,7 +80,7 @@ class PhraseRepository(val context: Context) : RefreshableRepository {
                         return@flatMap Single.just(false)
                     }
                 }.subscribe({
-                    Log.d(TAG,"data saved")
+                    Log.d(TAG, "data saved")
                 }, {
                     it.printStackTrace()
                 })

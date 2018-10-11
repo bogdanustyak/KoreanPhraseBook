@@ -3,9 +3,7 @@ package com.leoart.koreanphrasebook.data.repository.search
 import android.content.Context
 import com.leoart.koreanphrasebook.data.network.firebase.search.DictType
 import com.leoart.koreanphrasebook.data.network.firebase.search.SearchResult
-import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteModel
 import com.leoart.koreanphrasebook.data.repository.AppDataBase
-import com.leoart.koreanphrasebook.ui.search.SearchResultsAdapter
 import io.reactivex.Flowable
 import io.reactivex.functions.Function5
 import java.util.*
@@ -89,7 +87,7 @@ class SearchRepository(val context: Context) : Search {
                 .toFlowable()
                 .flatMap { replics ->
                     val searchResults = replics.map {
-                        SearchResult("Path", it.word + " " + it.translation + " " + it.transcription, DictType.REPLICS)
+                        SearchResult("Path", it.word + " " + it.translation, DictType.REPLICS)
                     }
                     Flowable.fromArray(searchResults)
                 }

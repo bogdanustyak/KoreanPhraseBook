@@ -30,13 +30,13 @@ public class PhraseStream extends DataStream implements TextFileParser<List<Phra
         BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 
         String word = "";
-        String translation = "";
         String transcription = "";
+        String translation = "";
         int count = 0;
 
         while ((word = br.readLine()) != null
-                && (translation = br.readLine()) != null
                 && (transcription = br.readLine()) != null
+                && (translation = br.readLine()) != null
                 ) {
             phrases.add(new Phrase(word, translation, transcription, count++, false));
         }
