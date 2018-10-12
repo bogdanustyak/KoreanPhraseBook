@@ -13,6 +13,8 @@
     <string name="menu_chapters">Розділи</string>
     <string name="menu_dialogs">Діалоги</string>
     <string name="menu_info">Інфо</string>
+    <string name="menu_phrase">Фрази</string>
+    <string name="menu_dialog_replics">Репліки</string>
 
     <string name="search">Пошук</string>
 
