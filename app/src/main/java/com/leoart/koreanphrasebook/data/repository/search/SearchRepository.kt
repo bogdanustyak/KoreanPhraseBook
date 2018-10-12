@@ -45,7 +45,7 @@ class SearchRepository(val context: Context) : Search {
                 .flatMap { chapters ->
                     val searchResults = ArrayList<SearchResult>()
                     chapters.forEach {
-                        if (asd(searchQuery, it.name)) {
+                        if (validate(searchQuery, it.name)) {
                             searchResults.add(SearchResult("Path", it.name, DictType.CHAPTERS))
                         }
                     }
@@ -59,7 +59,7 @@ class SearchRepository(val context: Context) : Search {
                 .flatMap { dialogs ->
                     val searchResults = ArrayList<SearchResult>()
                     dialogs.forEach {
-                        if (asd(searchQuery, it.dialogTitle)) {
+                        if (validate(searchQuery, it.dialogTitle)) {
                             searchResults.add(SearchResult("Path", it.dialogTitle, DictType.DIALOGS))
                         }
                     }
@@ -73,7 +73,7 @@ class SearchRepository(val context: Context) : Search {
                 .flatMap { dict ->
                     val searchResults = ArrayList<SearchResult>()
                     dict.forEach {
-                        if (asd(searchQuery, it.word)) {
+                        if (validate(searchQuery, it.word)) {
                             searchResults.add(SearchResult("Path", it.word + " " + it.definition, DictType.DICTIONARY))
                         }
                     }
@@ -87,7 +87,7 @@ class SearchRepository(val context: Context) : Search {
                 .flatMap { replics ->
                     val searchResults = ArrayList<SearchResult>()
                     replics.forEach {
-                        if (asd(searchQuery, it.ukrainian)) {
+                        if (validate(searchQuery, it.ukrainian)) {
                             searchResults.add(SearchResult("Path", it.ukrainian, DictType.REPLICS))
                         }
                     }
@@ -101,7 +101,7 @@ class SearchRepository(val context: Context) : Search {
                 .flatMap { replics ->
                     val searchResults = ArrayList<SearchResult>()
                     replics.forEach {
-                        if (asd(searchQuery, it.word)) {
+                        if (validate(searchQuery, it.word)) {
                             searchResults.add(SearchResult("Path", it.word + " " + it.translation, DictType.PHRASE))
                         }
                     }
@@ -109,7 +109,7 @@ class SearchRepository(val context: Context) : Search {
                 }
     }
 
-    private fun asd(query: String, matcher: String): Boolean {
+    private fun validate(query: String, matcher: String): Boolean {
         return (query.length == minSearchQueryLength && matcher.length < minResultLength)
                 || (query.length > minSearchQueryLength)
     }
