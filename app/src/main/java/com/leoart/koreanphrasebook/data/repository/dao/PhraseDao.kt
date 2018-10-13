@@ -21,11 +21,11 @@ interface PhraseDao {
     @Query("SELECT *FROM phrase WHERE category LIKE :query")
     fun getByCategory(query: String): Flowable<List<EPhrase>>
 
-    @Query("SELECT * FROM phrase WHERE word LIKE :query OR transcription OR translation LIKE :query")
+    @Query("SELECT * FROM phrase WHERE word LIKE :query")
     fun findBy(query: String): Maybe<List<EPhrase>>
 
-    @Query("SELECT * FROM phrase WHERE word LIKE :query")
-    fun findByWord(query: String): Maybe<EPhrase>
+    @Query("SELECT * FROM phrase WHERE word LIKE :word AND category LIKE :category")
+    fun findByWordAndCategory(word: String, category: String): Maybe<EPhrase>
 
     @Query("SELECT * FROM phrase WHERE favourite LIKE :query")
     fun getFavourite(query: Boolean): Flowable<List<EPhrase>>
@@ -40,7 +40,7 @@ interface PhraseDao {
     fun delete(dict: EPhrase)
 
     @Query("SELECT count(*) FROM phrase")
-    fun count() : Single<Int>
+    fun count(): Single<Int>
 
     @Query("DELETE FROM phrase")
     fun deleteAll()

@@ -2,6 +2,7 @@ package com.leoart.koreanphrasebook.ui.chapters
 
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -17,7 +18,10 @@ import org.jetbrains.anko.AnkoContext
 class InfoRecyclerAdapter(private var items: List<InfoItem>?, private val interactionListener: InfoInteractionListener?) : RecyclerView.Adapter<InfoRecyclerAdapter.InfoItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InfoItemViewHolder {
-        val viewHolder = InfoItemViewHolder(SimpleTextItemUI().createView(AnkoContext.create(parent.context, parent)))
+        val viewHolder = InfoItemViewHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false)
+              //  SimpleTextItemUI().createView(AnkoContext.create(parent.context, parent))
+        )
         viewHolder.llItemHolder.setOnClickListener {
             interactionListener?.onItemClick(items!![viewHolder.adapterPosition])
         }

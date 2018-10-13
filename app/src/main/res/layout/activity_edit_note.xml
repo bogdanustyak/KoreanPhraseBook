@@ -9,24 +9,24 @@
         android:id="@+id/edit_note_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
-
-    </android.support.v7.widget.Toolbar>
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/colorPrimary"/>
 
     <EditText
         android:id="@+id/note_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:background="@null"
+        android:hint="@string/note_title_hint"
         android:inputType="text"
         android:padding="8dp"
         android:textColor="@color/black"
+        android:fontFamily="sans-serif-light"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:hint="@string/note_title_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_note_toolbar"
@@ -34,9 +34,9 @@
 
     <View
         style="@style/Divider"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/note_title" />
@@ -45,17 +45,18 @@
         android:id="@+id/note_desc"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@null"
         android:gravity="top"
-        android:padding="8dp"
-        android:textColor="@color/black"
         android:hint="@string/note_body_hint"
         android:inputType="textMultiLine"
+        android:fontFamily="sans-serif-light"
+        android:padding="8dp"
         android:scrollbars="vertical"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

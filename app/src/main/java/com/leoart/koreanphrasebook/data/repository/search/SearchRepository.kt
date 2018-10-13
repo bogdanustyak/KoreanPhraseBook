@@ -3,12 +3,9 @@ package com.leoart.koreanphrasebook.data.repository.search
 import android.content.Context
 import com.leoart.koreanphrasebook.data.network.firebase.search.DictType
 import com.leoart.koreanphrasebook.data.network.firebase.search.SearchResult
-import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteModel
 import com.leoart.koreanphrasebook.data.repository.AppDataBase
-import com.leoart.koreanphrasebook.ui.search.SearchResultsAdapter
 import io.reactivex.Flowable
 import io.reactivex.functions.Function5
-import java.util.*
 
 
 /**
@@ -16,6 +13,10 @@ import java.util.*
  *
  * @author Bogdan Ustyak (bogdan.ustyak@gmail.com)
  */
+
+private const val minSearchQueryLength = 3
+private const val minResultLength = 4
+
 class SearchRepository(val context: Context) : Search {
 
     override fun search(query: String): Flowable<List<SearchResult>> {
@@ -42,8 +43,11 @@ class SearchRepository(val context: Context) : Search {
         return getDB().chaptersDao().findByName(searchQuery)
                 .toFlowable()
                 .flatMap { chapters ->
-                    val searchResults = chapters.map {
-                        SearchResult("Path", it.name, DictType.CHAPTERS)
+                    val searchResults = ArrayList<SearchResult>()
+                    chapters.forEach {
+                        if (validate(searchQuery, it.name)) {
+                            searchResults.add(SearchResult("Path", it.name, DictType.CHAPTERS))
+                        }
                     }
                     Flowable.fromArray(searchResults)
                 }
@@ -53,8 +57,11 @@ class SearchRepository(val context: Context) : Search {
         return getDB().dialogDao().findByName(searchQuery)
                 .toFlowable()
                 .flatMap { dialogs ->
-                    val searchResults = dialogs.map {
-                        SearchResult("Path", it.dialogTitle, DictType.DIALOGS)
+                    val searchResults = ArrayList<SearchResult>()
+                    dialogs.forEach {
+                        if (validate(searchQuery, it.dialogTitle)) {
+                            searchResults.add(SearchResult("Path", it.dialogTitle, DictType.DIALOGS))
+                        }
                     }
                     Flowable.fromArray(searchResults)
                 }
@@ -66,8 +73,9 @@ class SearchRepository(val context: Context) : Search {
                 .flatMap { dict ->
                     val searchResults = ArrayList<SearchResult>()
                     dict.forEach {
-                        val title = it.word + " " + it.definition
-                        searchResults.add(SearchResult("Path", title, DictType.DICTIONARY))
+                        if (validate(searchQuery, it.word)) {
+                            searchResults.add(SearchResult("Path", it.word + " " + it.definition, DictType.DICTIONARY))
+                        }
                     }
                     Flowable.fromArray(searchResults)
                 }
@@ -77,8 +85,11 @@ class SearchRepository(val context: Context) : Search {
         return getDB().replicsDao().findByReplic(searchQuery)
                 .toFlowable()
                 .flatMap { replics ->
-                    val searchResults = replics.map {
-                        SearchResult("Path", it.ukrainian, DictType.REPLICS)
+                    val searchResults = ArrayList<SearchResult>()
+                    replics.forEach {
+                        if (validate(searchQuery, it.ukrainian)) {
+                            searchResults.add(SearchResult("Path", it.ukrainian, DictType.REPLICS))
+                        }
                     }
                     Flowable.fromArray(searchResults)
                 }
@@ -88,11 +99,19 @@ class SearchRepository(val context: Context) : Search {
         return getDB().phraseDao().findBy(searchQuery)
                 .toFlowable()
                 .flatMap { replics ->
-                    val searchResults = replics.map {
-                        SearchResult("Path", it.word + " " + it.translation + " " + it.transcription, DictType.REPLICS)
+                    val searchResults = ArrayList<SearchResult>()
+                    replics.forEach {
+                        if (validate(searchQuery, it.word)) {
+                            searchResults.add(SearchResult("Path", it.word + " " + it.translation, DictType.PHRASE))
+                        }
                     }
                     Flowable.fromArray(searchResults)
                 }
+    }
+
+    private fun validate(query: String, matcher: String): Boolean {
+        return (query.length == minSearchQueryLength && matcher.length < minResultLength)
+                || (query.length > minSearchQueryLength)
     }
 
     fun getDB(): AppDataBase {

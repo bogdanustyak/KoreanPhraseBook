@@ -4,7 +4,6 @@ import android.content.Context
 import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteModel
 import com.leoart.koreanphrasebook.data.parsers.favourite.FavouriteType
-import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import com.leoart.koreanphrasebook.data.repository.models.EDictionary
 import com.leoart.koreanphrasebook.data.repository.models.EPhrase
 import io.reactivex.Completable
@@ -18,8 +17,8 @@ class FavouriteRepository(val context: Context) {
     fun getData(): Flowable<List<FavouriteModel>> {
         return Flowable.combineLatest(getPhrases(), getVocabulary(), BiFunction { phrase, vocabulary ->
             val list = ArrayList<FavouriteModel>()
-            phrase.forEach { list.add(FavouriteModel(it.word, it.translation, it.transcription, FavouriteType.PHRASE)) }
-            vocabulary.forEach { list.add(FavouriteModel(it.word, it.definition, null, FavouriteType.VOCABULARY)) }
+            phrase.forEach { list.add(FavouriteModel(it.word, it.translation, it.transcription, FavouriteType.PHRASE, it.category)) }
+            vocabulary.forEach { list.add(FavouriteModel(it.word, it.definition, null, FavouriteType.VOCABULARY, null)) }
             list
         })
     }
@@ -52,18 +51,20 @@ class FavouriteRepository(val context: Context) {
                                     )
                         }
                         FavouriteType.PHRASE -> {
-                            db.phraseDao().findByWord(favourite.word)
-                                    .subscribeOn(Schedulers.io())
-                                    .subscribe(
-                                            {
-                                                it.isFavourite = false
-                                                db.phraseDao().updateFavorite(it)
-                                                emitter.onComplete()
-                                            },
-                                            {
-                                                emitter.onError(it)
-                                            }
-                                    )
+                            favourite.category?.let { category ->
+                                db.phraseDao().findByWordAndCategory(favourite.word, category)
+                                        .subscribeOn(Schedulers.io())
+                                        .subscribe(
+                                                {
+                                                    it.isFavourite = false
+                                                    db.phraseDao().updateFavorite(it)
+                                                    emitter.onComplete()
+                                                },
+                                                {
+                                                    emitter.onError(it)
+                                                }
+                                        )
+                            }
                         }
                     }
                 } catch (e: Exception) {

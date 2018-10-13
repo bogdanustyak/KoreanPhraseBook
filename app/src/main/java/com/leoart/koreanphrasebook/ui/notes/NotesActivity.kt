@@ -16,8 +16,6 @@ import com.leoart.koreanphrasebook.ui.ViewModelFactory
 import com.leoart.koreanphrasebook.ui.models.Note
 import android.support.v7.widget.DividerItemDecoration
 
-
-
 class NotesActivity : AppCompatActivity(), OnNoteClickListener {
 
     private lateinit var viewModel: NotesViewModel

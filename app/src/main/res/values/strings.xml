@@ -13,6 +13,8 @@
     <string name="menu_chapters">Розділи</string>
     <string name="menu_dialogs">Діалоги</string>
     <string name="menu_info">Інфо</string>
+    <string name="menu_phrase">Фрази</string>
+    <string name="menu_dialog_replics">Репліки</string>
 
     <string name="search">Пошук</string>
 
@@ -35,9 +37,9 @@
         Застосунок містить основні слова та вирази, які допоможуть вам у побутовому спілкуванні з носіями мови.\n\n
         Вивчайте алфавіт, додавайте улюблене, та робіть власні нотатки.\n\n
         У розділі Діалоги ви знайдете різні життєві ситуації, представлені у вигляді діалогів між двома співрозмовниками. Це чудовий спосіб вивчення та практикування мови....</string>
-    <string name="dev_mail">test@gmail.com</string>
-    <string name="email_subject">"subject of email"</string>
-    <string name="email_text">"body of email"</string>
+    <string name="dev_mail" translatable="false">info@keytotech.com</string>
+    <string name="email_subject">Корейський розмовник</string>
+    <string name="email_text"></string>
     <string name="share_title">Поділитися</string>
     <string name="email_share_title">Надіслати лист</string>
     <string name="share_error">Неможливо здійснити дію</string>
@@ -52,6 +54,7 @@
 
     <string name="refresh_data">Для використання повного функціоналу додатку рекомендуємо синхронізувати дані</string>
     <string name="sync_data">Синхронізувати</string>
+    <string name="syncing">Синхронізація</string>
     <string name="data_dismiss_sync">Пропустити</string>
     <string name="author">Author:</string>
     <string name="message">Message:</string>

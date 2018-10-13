@@ -14,6 +14,8 @@ import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
+import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
+import com.leoart.koreanphrasebook.data.parsers.phrases.PhrasesParser
 import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
 import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import com.leoart.koreanphrasebook.data.repository.models.EDialog

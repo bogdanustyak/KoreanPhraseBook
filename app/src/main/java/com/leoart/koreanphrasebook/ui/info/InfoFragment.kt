@@ -21,6 +21,9 @@ import com.leoart.koreanphrasebook.ui.chapters.InfoRecyclerAdapter
 import com.leoart.koreanphrasebook.ui.notes.NotesActivity
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
+import android.content.ActivityNotFoundException
+import android.net.Uri
+
 
 /**
  * Created by bogdan on 6/14/17.
@@ -70,12 +73,28 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
     override fun onItemClick(item: InfoItem) {
         when (item.name) {
             getString(R.string.share) -> share()
-            getString(R.string.rate) ->
-                Toast.makeText(context, "Rate", Toast.LENGTH_SHORT).show()
+            getString(R.string.rate) -> rate()
             getString(R.string.notes_title) -> openNotesScreen()
             getString(R.string.send_email) -> sendEmail()
             getString(R.string.about) -> about()
         }
+    }
+
+    private fun rate() {
+        val uri = Uri.parse("market://details?id=" + context?.packageName)
+        val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+        goToMarket.addFlags(
+                Intent.FLAG_ACTIVITY_NO_HISTORY
+                        and Intent.FLAG_ACTIVITY_NEW_DOCUMENT
+                        and Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+        )
+        try {
+            startActivity(goToMarket)
+        } catch (e: ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + context?.packageName)))
+        }
+
     }
 
     private fun openNotesScreen() {
@@ -115,7 +134,7 @@ class InfoFragment : BaseFragment(), InfoRecyclerAdapter.InfoInteractionListener
         val alertDialog = AlertDialog.Builder(this@InfoFragment.context, R.style.AboutDialogTheme).create()
         alertDialog.setTitle(getString(R.string.about))
         alertDialog.setMessage(getString(R.string.about_info))
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", { dialog, which -> dialog.dismiss() })
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ -> dialog.dismiss() }
         alertDialog.show()
     }
 

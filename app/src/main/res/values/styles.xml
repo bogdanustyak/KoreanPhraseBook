@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:actionBarWidgetTheme">@style/MyActionBarWidgetTheme</item>
     </style>
 
     <style name="BottomMenuTextView" parent="@android:style/TextAppearance.Widget.TextView">
@@ -28,9 +29,9 @@
 
     <style name="AboutDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!--buttons color-->
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
         <!--title and message color-->
-        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/black</item>
         <!--dialog background-->
         <item name="android:windowBackground">@android:color/white</item>
     </style>
@@ -38,6 +39,10 @@
 
     <style name="LinearProgress" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@android:color/white</item>
+    </style>
+
+    <style name="MyActionBarWidgetTheme" parent="@android:style/Theme.Holo">
+        <item name="android:textColorHint">@color/white</item>
     </style>
 
 </resources>
