@@ -4,5 +4,6 @@ class FavouriteModel(
         val word: String,
         val translation: String,
         val transcription: String?,
-        val type: FavouriteType
+        val type: FavouriteType,
+        val category: String? = null
 )
