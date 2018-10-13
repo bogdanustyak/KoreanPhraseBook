@@ -63,10 +63,8 @@ class SearchActivity : BaseActivity() {
         searchView.inputType = InputType.TYPE_TEXT_FLAG_CAP_WORDS
         searchView.imeOptions = searchView.imeOptions or EditorInfo.IME_ACTION_SEARCH or
                 EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN
-
         val inputSubscription = RxSearchView.queryTextChanges(searchView)
                 .debounce(TIMEOUT, TimeUnit.MILLISECONDS)
-
         compositeDisposable.add(inputSubscription
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -128,7 +126,8 @@ class SearchActivity : BaseActivity() {
             DictType.DIALOGS -> getString(R.string.menu_dialogs)
             DictType.CHAPTERS -> getString(R.string.menu_chapters)
             DictType.DICTIONARY -> getString(R.string.menu_dict)
-            DictType.REPLICS -> getString(R.string.menu_chapters)
+            DictType.REPLICS -> getString(R.string.menu_dialog_replics)
+            DictType.PHRASE -> getString(R.string.menu_phrase)
             else -> ""
         }
     }
@@ -140,7 +139,7 @@ class SearchActivity : BaseActivity() {
 
     companion object {
         const val TIMEOUT = 300L
-        const val MIN_QUERY_LENGTH = 3
+        const val MIN_QUERY_LENGTH = 1
     }
 
 }
