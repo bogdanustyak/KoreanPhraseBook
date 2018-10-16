@@ -1,12 +1,9 @@
 package com.leoart.koreanphrasebook.ui
 
 import android.app.FragmentManager
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -14,8 +11,7 @@ import com.leoart.koreanphrasebook.R
 import com.leoart.koreanphrasebook.data.Auth
 import com.leoart.koreanphrasebook.data.analytics.AnalyticsManager
 import com.leoart.koreanphrasebook.data.network.firebase.auth.FRAuth
-import com.leoart.koreanphrasebook.data.network.firebase.dictionary.PhrasesRequest
-import com.leoart.koreanphrasebook.data.parsers.phrases.PhrasesParser
+import com.leoart.koreanphrasebook.data.parsers.alphabet.AlphabetParser
 import com.leoart.koreanphrasebook.data.repository.DataInfoRepository
 import com.leoart.koreanphrasebook.data.repository.models.EChapter
 import com.leoart.koreanphrasebook.data.repository.models.EDialog
@@ -28,7 +24,6 @@ import com.leoart.koreanphrasebook.ui.search.SearchActivity
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 import com.leoart.koreanphrasebook.ui.vocabulary.VocabularyFragment
 import com.leoart.koreanphrasebook.utils.NetworkChecker
-import com.leoart.koreanphrasebook.utils.SoftKeyboard
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 

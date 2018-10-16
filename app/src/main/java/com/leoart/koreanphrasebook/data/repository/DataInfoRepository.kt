@@ -5,7 +5,9 @@ import android.content.SharedPreferences
 import android.content.SyncInfo
 import android.text.TextUtils
 import android.widget.ArrayAdapter
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 
 import com.leoart.koreanphrasebook.ui.sync.SyncModel
 
@@ -21,8 +23,13 @@ class DataInfoRepository : SharedPrefStorage {
         }
         val userString = preferences.getString(DATA, "")
         if (!TextUtils.isEmpty(userString)) {
-            val turns = Gson().fromJson<List<SyncModel>>(userString, SyncModel::class.java)
-            data = turns
+            try {
+                val turns = Gson().fromJson<List<SyncModel>>(userString, SyncModel::class.java)
+                data = turns
+            } catch (e: JsonSyntaxException){
+                e.printStackTrace()
+                //TODO add external error logging
+            }
         }
         return data
     }

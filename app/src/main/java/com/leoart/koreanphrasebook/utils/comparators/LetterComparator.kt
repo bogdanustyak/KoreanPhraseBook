@@ -11,7 +11,7 @@ import java.util.*
 class LetterComparator : Comparator<Pair<Char, List<Word>>> {
     override fun compare(p0: Pair<Char, List<Word>>?, p1: Pair<Char, List<Word>>?): Int {
         val collator = Collator.getInstance(Locale.UK)
-        collator.strength = Collator.PRIMARY
+        collator.strength = Collator.CANONICAL_DECOMPOSITION
         return collator.compare(p0?.first.toString(), p1?.first.toString())
     }
 }
