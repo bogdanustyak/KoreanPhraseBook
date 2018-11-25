@@ -21,7 +21,7 @@ interface PhraseDao {
     @Query("SELECT *FROM phrase WHERE category LIKE :query")
     fun getByCategory(query: String): Flowable<List<EPhrase>>
 
-    @Query("SELECT * FROM phrase WHERE word LIKE :query")
+    @Query("SELECT * FROM phrase WHERE word LIKE :query OR translation LIKE :query")
     fun findBy(query: String): Maybe<List<EPhrase>>
 
     @Query("SELECT * FROM phrase WHERE word LIKE :word AND category LIKE :category")

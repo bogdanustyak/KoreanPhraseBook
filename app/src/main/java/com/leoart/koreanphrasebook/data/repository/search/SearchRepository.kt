@@ -88,7 +88,8 @@ class SearchRepository(val context: Context) : Search {
                     val searchResults = ArrayList<SearchResult>()
                     replics.forEach {
                         if (validate(searchQuery, it.ukrainian)) {
-                            searchResults.add(SearchResult("Path", it.ukrainian, DictType.REPLICS))
+                            searchResults.add(SearchResult("Path", it.ukrainian + " \n"
+                                    + it.korean, DictType.REPLICS))
                         }
                     }
                     Flowable.fromArray(searchResults)

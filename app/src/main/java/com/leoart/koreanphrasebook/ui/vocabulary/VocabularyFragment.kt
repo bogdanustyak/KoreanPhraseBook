@@ -84,7 +84,7 @@ class VocabularyFragment : BaseFragment() {
     }
 
     private fun initAdapter(view: View) {
-        recyclerViewVocabulary = view.findViewById<RecyclerView>(R.id.rv_vocabulary)
+        recyclerViewVocabulary = view.findViewById(R.id.rv_vocabulary)
         recyclerViewVocabulary?.layoutManager = stickyHeaderLayoutManager
         adapter = DictionaryAdapter(Dictionary())
         adapter.setFavoriteClickListener(object : OnFavoriteClickListener {

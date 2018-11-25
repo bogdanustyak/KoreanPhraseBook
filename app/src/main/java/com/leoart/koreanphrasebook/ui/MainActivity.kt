@@ -61,6 +61,7 @@ class MainActivity : BaseActivity(), BottomMenu.BottomMenuListener, MainView {
             true
         }
         chaptersSelected()
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
